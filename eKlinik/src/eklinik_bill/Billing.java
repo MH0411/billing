@@ -14,14 +14,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import main.RMIConnector;
@@ -42,8 +39,8 @@ public class Billing extends javax.swing.JFrame {
      */
     public Billing() {
         initComponents();
-        Table4();
-        Table2();
+        tablePatientInformation();
+        tableBillDescription();
     }
 
     public static String setValue() {
@@ -72,8 +69,8 @@ public class Billing extends javax.swing.JFrame {
         jtf_search = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jtf_mm_itemCd = new javax.swing.JTextField();
-        jtf_mm_ItemDesc = new javax.swing.JTextField();
-        jtf_mm_BuyPrice = new javax.swing.JTextField();
+        jtf_mm_itemDesc = new javax.swing.JTextField();
+        jtf_mm_buyPrice = new javax.swing.JTextField();
         jtf_mm_sellPrice = new javax.swing.JTextField();
         jtf_mm_disc = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -227,11 +224,6 @@ public class Billing extends javax.swing.JFrame {
         jLabel1.setText("Enter Patient Information:");
 
         jtf_search.setToolTipText("Example : Patient Name, IC No. Other ID");
-        jtf_search.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtf_searchActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -279,12 +271,6 @@ public class Billing extends javax.swing.JFrame {
         jTabbedPane3.addTab("Billing", jPanel3);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
-        jtf_mm_itemCd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtf_mm_itemCdActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Item Code");
 
@@ -369,11 +355,11 @@ public class Billing extends javax.swing.JFrame {
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jtf_mm_ItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtf_mm_itemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtf_mm_itemCd, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jtf_mm_disc)
-                                .addComponent(jtf_mm_BuyPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                .addComponent(jtf_mm_buyPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                                 .addComponent(jtf_mm_sellPrice, javax.swing.GroupLayout.Alignment.LEADING))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(85, 85, 85)
@@ -400,11 +386,11 @@ public class Billing extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtf_mm_ItemDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                            .addComponent(jtf_mm_itemDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtf_mm_BuyPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                            .addComponent(jtf_mm_buyPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -708,26 +694,21 @@ public class Billing extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jtf_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf_searchActionPerformed
-        // searching field
-
-    }//GEN-LAST:event_jtf_searchActionPerformed
-
     private void btn_BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BackActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_BackActionPerformed
 
     private void btn_GenerateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GenerateBillActionPerformed
         // TODO add your handling code here:
-        // generate.jButton4(this);
-        // generate.();
-        Generate m = new Generate(); //set new window
-        m.setVisible(true);//set new window visible
+        Generate generate = new Generate(); //set new window
+        generate.setVisible(true);//set new window visible
         dispose(); // for hide current window
-
     }//GEN-LAST:event_btn_GenerateBillActionPerformed
 
-
+/**
+ * search patient information to bill description
+ * @param evt 
+ */
     private void jt_PatientInformationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_PatientInformationMouseClicked
         // TODO add your handling code here:
         try {
@@ -736,12 +717,9 @@ public class Billing extends javax.swing.JFrame {
             row = jt_PatientInformation.getSelectedRow(); //get no of row
             Table_click = (jt_PatientInformation.getModel().getValueAt(row, 0).toString()); //assign row value to select
 
-            //System.out.println(Table_click);
-//            System.out.println(Table_click.getClass().getName()); // to check out their variable type
             DateFormat dateFormat;
             dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06 
             Date date = new Date();
-            //System.out.println(date);
             
             String sql = "SELECT DISTINCT "
                     + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, ec.PMI_NO, pb.PMI_NO "
@@ -767,22 +745,15 @@ public class Billing extends javax.swing.JFrame {
 //                    + "AND substring(pdm.ORDER_DATE,1,10)='2015-12-21'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
 
-            // System.out.println(Table_click);
             DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
 
             //remove all row
             int rowCount = model.getRowCount();
             for (int i = rowCount - 1; i >= 0; i--) {
                 model.removeRow(i);
-                //System.out.println("i " + i);
             }
 
             //add row and show value
-//            JFormattedTextField fmtTxtField = new JFormattedTextField(df);
-//            TableCellEditor cellEditor = new DefaultCellEditor(fmtTxtField);
-//            jTable1.setDefaultEditor(Double.class, new DefaultCellEditor(fmtTxtField));
-//            
-            // jTable1.setCellEditor(cellEditor);
             for (int i = 0; i < data.size(); i++) {
 
                 DecimalFormat df = new DecimalFormat("0.00"); // decimal format
@@ -791,24 +762,9 @@ public class Billing extends javax.swing.JFrame {
                 jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
                 jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
                 jt_BillDescription.setValueAt(data.get(i).get(2), i, 2);
-                jt_BillDescription.setValueAt(data.get(i).get(3), i, 3);
-                jt_BillDescription.setValueAt(data.get(i).get(4), i, 4);
-//                String row3 = data.get(i).get(2);
-//                double row33 = Integer.parseInt(row3);
-//                //System.out.println(row33);
-//                String row333 = df.format(row33);
-//                
-//                String row4 = df.format(data.get(i).get(3));
-//                double row44 = Integer.parseInt(row4);
-//                
-//                String row5 = df.format(data.get(i).get(4));
-//                double row55 = Integer.parseInt(row5);
-//                
-//                jTable1.setValueAt(row333,i, 2);
-////                jTable1.setValueAt(row44,i, 3);
-////                jTable1.setValueAt(row55,i, 4);
+                jt_BillDescription.setValueAt(df.format(data.get(i).get(3)), i, 3);
+                jt_BillDescription.setValueAt(df.format(data.get(i).get(4)), i, 4);
             }
-            //System.out.println(data.size());
 
             if (data.size() > 0) {
                 btn_GenerateBill.setEnabled(true);
@@ -823,18 +779,17 @@ public class Billing extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jt_PatientInformationMouseClicked
 
-
-    private void jtf_mm_itemCdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf_mm_itemCdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtf_mm_itemCdActionPerformed
-
+/**
+ * Add new item
+ * @param evt 
+ */
     private void btn_mm_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_addActionPerformed
         // TODO add your handling code here:
         String itemCode = (String) jtf_mm_itemCd.getText();
-        String itemDesc = (String) jtf_mm_ItemDesc.getText();
-        String Jtext3 = (String) jtf_mm_BuyPrice.getText();
-        String Jtext4 = (String) jtf_mm_sellPrice.getText();
-        String Jtext5 = (String) jtf_mm_disc.getText();
+        String itemDesc = (String) jtf_mm_itemDesc.getText();
+        String buyPrice = (String) jtf_mm_buyPrice.getText();
+        String sellPrice = (String) jtf_mm_sellPrice.getText();
+        String disc = (String) jtf_mm_disc.getText();
 
         if (itemCode == null) {
             String infoMessage = "Please insert data in Item Code text field.";
@@ -844,32 +799,32 @@ public class Billing extends javax.swing.JFrame {
             String infoMessage = "Please insert data in Item Description text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext3 == null) {
+        } else if (buyPrice == null) {
             String infoMessage = "Please insert data in Buying price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext4 == null) {
+        } else if (sellPrice == null) {
             String infoMessage = "Please insert data in Selling Price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext5 == null) {
+        } else if (disc == null) {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
         } else if (itemCode != null) {
             try {
 
-                String sqlinsert2 = "insert into miscellaneous_item(item_code, item_desc, buying_price, selling_price, discount)"
-                        + "values('" + itemCode + "','" + itemDesc + "','" + Jtext3 + "','" + Jtext4 + "'," + Jtext5 + " )";
+                String sqlInsert2 = "insert into miscellaneous_item(item_code, item_desc, buying_price, selling_price, discount)"
+                        + "values('" + itemCode + "','" + itemDesc + "','" + buyPrice + "','" + sellPrice + "'," + disc + " )";
 
-                boolean insert2 = rc.setQuerySQL(host, port, sqlinsert2);
+                boolean insert2 = rc.setQuerySQL(host, port, sqlInsert2);
                 String infoMessage = "Success add data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
-                Table2();
+                tableBillDescription();
                 jtf_mm_itemCd.setText("");
-                jtf_mm_ItemDesc.setText("");
-                jtf_mm_BuyPrice.setText("");
+                jtf_mm_itemDesc.setText("");
+                jtf_mm_buyPrice.setText("");
                 jtf_mm_sellPrice.setText("");
                 jtf_mm_disc.setText("");
             } catch (Exception e) {
@@ -885,8 +840,8 @@ public class Billing extends javax.swing.JFrame {
         btn_mm_delete.setEnabled(false);
         jtf_mm_itemCd.setEditable(true);
         jtf_mm_itemCd.setText("");
-        jtf_mm_ItemDesc.setText("");
-        jtf_mm_BuyPrice.setText("");
+        jtf_mm_itemDesc.setText("");
+        jtf_mm_buyPrice.setText("");
         jtf_mm_sellPrice.setText("");
         jtf_mm_disc.setText("");
 
@@ -898,48 +853,50 @@ public class Billing extends javax.swing.JFrame {
         btn_mm_update.setEnabled(false);
         btn_mm_delete.setEnabled(false);
         jtf_mm_itemCd.setEditable(true);
-        String Jtext1 = (String) jtf_mm_itemCd.getText();
-        String Jtext2 = (String) jtf_mm_ItemDesc.getText();
-        String Jtext3 = (String) jtf_mm_BuyPrice.getText();
-        String Jtext4 = (String) jtf_mm_sellPrice.getText();
-        String Jtext5 = (String) jtf_mm_disc.getText();
-        if (Jtext1 == null) {
+        String mm_ItemCode = (String) jtf_mm_itemCd.getText();
+        String mm_ItemDesc = (String) jtf_mm_itemDesc.getText();
+        String mm_BuyPrice = (String) jtf_mm_buyPrice.getText();
+        String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
+        String mm_Disc = (String) jtf_mm_disc.getText();
+        
+        if (mm_ItemCode == null) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext2 == null) {
+        } else if (mm_ItemDesc == null) {
             String infoMessage = "Please insert data in Item Description text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext3 == null) {
+        } else if (mm_BuyPrice == null) {
             String infoMessage = "Please insert data in Buying price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext4 == null) {
+        } else if (mm_SellPrice == null) {
             String infoMessage = "Please insert data in Selling Price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext5 == null) {
+        } else if (mm_Disc == null) {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext1 != null) {
+        } else if (mm_ItemCode != null) {
             try {
 
-                String sqlinsert2 = "UPDATE miscellaneous_item\n"
-                        + "SET item_desc='" + Jtext2 + "', buying_price='" + Jtext3 + "', selling_price='" + Jtext4 + "', discount='" + Jtext5 + "' \n"
-                        + "WHERE item_code='" + Jtext1 + "'";
+                String sqlInsert2 = "UPDATE miscellaneous_item\n"
+                        + "SET item_desc='" + mm_ItemDesc + "', buying_price='" + mm_BuyPrice + "', selling_price='" + mm_SellPrice + "', discount='" + mm_Disc + "' \n"
+                        + "WHERE item_code='" + mm_ItemCode + "'";
 
-                boolean insert2 = rc.setQuerySQL(host, port, sqlinsert2);
+                boolean insert2 = rc.setQuerySQL(host, port, sqlInsert2);
                 String infoMessage = "Success update data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
-                Table2();
+                tableBillDescription();
                 jtf_mm_itemCd.setText("");
-                jtf_mm_ItemDesc.setText("");
-                jtf_mm_BuyPrice.setText("");
+                jtf_mm_itemDesc.setText("");
+                jtf_mm_buyPrice.setText("");
                 jtf_mm_sellPrice.setText("");
                 jtf_mm_disc.setText("");
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -953,14 +910,15 @@ public class Billing extends javax.swing.JFrame {
             btn_mm_update.setEnabled(true);
             btn_mm_delete.setEnabled(true);
             jtf_mm_itemCd.setEditable(false);
+            
             int row = jt_MM.getSelectedRow();
             String Table_click = (jt_MM.getModel().getValueAt(row, 0).toString());
-            String sqlclick = "select * from miscellaneous_item where item_code='" + Table_click + "'";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sqlclick);// execute query
+            String sqlClick = "select * from miscellaneous_item where item_code='" + Table_click + "'";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sqlClick);// execute query
 
             jtf_mm_itemCd.setText(data.get(0).get(1));
-            jtf_mm_ItemDesc.setText(data.get(0).get(2));
-            jtf_mm_BuyPrice.setText(data.get(0).get(3));
+            jtf_mm_itemDesc.setText(data.get(0).get(2));
+            jtf_mm_buyPrice.setText(data.get(0).get(3));
             jtf_mm_sellPrice.setText(data.get(0).get(4));
             jtf_mm_disc.setText(data.get(0).get(5));
 
@@ -975,46 +933,49 @@ public class Billing extends javax.swing.JFrame {
         btn_mm_update.setEnabled(false);
         btn_mm_delete.setEnabled(false);
         jtf_mm_itemCd.setEditable(true);
-        String Jtext1 = (String) jtf_mm_itemCd.getText();
-        String Jtext2 = (String) jtf_mm_ItemDesc.getText();
-        String Jtext3 = (String) jtf_mm_BuyPrice.getText();
-        String Jtext4 = (String) jtf_mm_sellPrice.getText();
-        String Jtext5 = (String) jtf_mm_disc.getText();
-        if (Jtext1 == null) {
+        
+        String mm_ItemCode = (String) jtf_mm_itemCd.getText();
+        String mm_ItemDesc = (String) jtf_mm_itemDesc.getText();
+        String mm_BuyPrice = (String) jtf_mm_buyPrice.getText();
+        String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
+        String mm_Disc = (String) jtf_mm_disc.getText();
+        
+        if (mm_ItemCode == null) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext2 == null) {
+        } else if (mm_ItemDesc == null) {
             String infoMessage = "Please insert data in Item Description text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext3 == null) {
+        } else if (mm_BuyPrice == null) {
             String infoMessage = "Please insert data in Buying price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext4 == null) {
+        } else if (mm_SellPrice == null) {
             String infoMessage = "Please insert data in Selling Price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext5 == null) {
+        } else if (mm_Disc == null) {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext1 != null) {
+        } else if (mm_ItemCode != null) {
             try {
 
-                String sqlinsert2 = "DELETE FROM miscellaneous_item WHERE item_code='" + Jtext1 + "'";
+                String sqlInsert2 = "DELETE FROM miscellaneous_item WHERE item_code='" + mm_ItemCode + "'";
 
-                boolean insert2 = rc.setQuerySQL(host, port, sqlinsert2);
+                boolean insert2 = rc.setQuerySQL(host, port, sqlInsert2);
                 String infoMessage = "Success delete data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
-                Table2();
+                tableBillDescription();
                 jtf_mm_itemCd.setText("");
-                jtf_mm_ItemDesc.setText("");
-                jtf_mm_BuyPrice.setText("");
+                jtf_mm_itemDesc.setText("");
+                jtf_mm_buyPrice.setText("");
                 jtf_mm_sellPrice.setText("");
                 jtf_mm_disc.setText("");
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -1058,12 +1019,8 @@ public class Billing extends javax.swing.JFrame {
         });
     }
 
-    private void Table4() {
+    private void tablePatientInformation() {
 
-        DateFormat dateFormat;
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06 
-        Date date = new Date();
-        // System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48
         try {
             String sql = "SELECT DISTINCT "
                     + "pe.PMI_NO, pb.NEW_IC_NO, pb.ID_NO, pb.PATIENT_NAME,  pb.HOME_ADDRESS, pb.MOBILE_PHONE "
@@ -1076,10 +1033,7 @@ public class Billing extends javax.swing.JFrame {
                     + "AND pe.STATUS ='Discharge' "
                     + "AND pb.ID_NO NOT IN "
                 + "(SELECT customer_id FROM customer_hdr WHERE customer_id = pb.ID_NO)";
-                    //+ "AND ID_NO NOT IN ch.customer_id ";
-//            + "AND substring(ec.C_TXNDATE,1,10)='"+ dateFormat.format(date) +"'";
-            //+ "AND substring(ec.C_TXNDATE,1,10)='2015-12-21'";
-            //substring(DiagnosisCd,1,2)
+            
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
             DefaultTableModel model = (DefaultTableModel) jt_PatientInformation.getModel();
 
@@ -1107,7 +1061,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
-    private void Table2() {
+    private void tableBillDescription() {
         try {
             String sql = "SELECT * FROM miscellaneous_item";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
@@ -1231,10 +1185,10 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JTextField jtf_mb_quantity;
     private javax.swing.JTextField jtf_mb_total;
     private javax.swing.JTextField jtf_mb_unitPrice;
-    private javax.swing.JTextField jtf_mm_BuyPrice;
-    private javax.swing.JTextField jtf_mm_ItemDesc;
+    private javax.swing.JTextField jtf_mm_buyPrice;
     private javax.swing.JTextField jtf_mm_disc;
     private javax.swing.JTextField jtf_mm_itemCd;
+    private javax.swing.JTextField jtf_mm_itemDesc;
     private javax.swing.JTextField jtf_mm_sellPrice;
     private javax.swing.JTextField jtf_search;
     // End of variables declaration//GEN-END:variables
