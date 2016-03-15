@@ -756,14 +756,14 @@ public class Billing extends javax.swing.JFrame {
             //add row and show value
             for (int i = 0; i < data.size(); i++) {
 
-                DecimalFormat df = new DecimalFormat("0.00"); // decimal format
+                DecimalFormat df = new DecimalFormat("#.00"); // decimal format
                 model.addRow(new Object[]{"", "", "", "", ""});
 
                 jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
                 jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
-                jt_BillDescription.setValueAt(data.get(i).get(2), i, 2);
-                jt_BillDescription.setValueAt(df.format(data.get(i).get(3)), i, 3);
-                jt_BillDescription.setValueAt(df.format(data.get(i).get(4)), i, 4);
+                jt_BillDescription.setValueAt((int) Double.parseDouble(data.get(i).get(2)), i, 2);
+                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
+                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
             }
 
             if (data.size() > 0) {
