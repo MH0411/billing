@@ -635,10 +635,6 @@ AfterModify m = new AfterModify(); //set new window
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
                     + "AND ec.PMI_NO = '" + Table_click1 + "' ";
-//            + "AND substring(pom.EPISODE_CODE,1,10)='2015-12-21' "
-//            + "AND substring(pdm.ORDER_DATE,1,10)='2015-12-21'";
-//                    + "AND substring(pom.EPISODE_CODE,1,10)='" + dateFormat.format(date) + "' "
-//                    + "AND substring(pdm.ORDER_DATE,1,10)='" + dateFormat.format(date) + "'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
 
             cust_id = data.get(0).get(3);
@@ -949,6 +945,7 @@ AfterModify m = new AfterModify(); //set new window
             table.addCell(cell65);
             table.addCell(cell66);
 
+           
             for (int i = 0; i < data.size(); i++) {
 
                 String NO = Integer.toString(num);
@@ -958,8 +955,7 @@ AfterModify m = new AfterModify(); //set new window
                 String quantity = data.get(i).get(9);
                 String price = data.get(i).get(10);
                 String total = data.get(i).get(11);
-                // String grandtotal = data.get(i).get(10);
-                //System.out.println(name);
+                
 
                 PdfPCell cell71 = new PdfPCell(new Phrase(NO, rectemja));
                 cell71.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -991,11 +987,10 @@ AfterModify m = new AfterModify(); //set new window
             //--------------------------table bill------------------------------------------>
 
             String gt2 = data.get(0).get(12);
-//            System.out.println(gt);
             PdfPCell cell81 = new PdfPCell(new Phrase("Grand Total : RM  ", rectem));
             cell81.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell81.setColspan(5);
-            PdfPCell cell86 = new PdfPCell(new Phrase("2218.00", rectemjabold));
+            PdfPCell cell86 = new PdfPCell(new Phrase(String.valueOf(totalPrice), rectemjabold));
             cell86.setHorizontalAlignment(Element.ALIGN_CENTER);
 
             total.addCell(cell81);
