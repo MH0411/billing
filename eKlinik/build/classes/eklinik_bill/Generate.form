@@ -70,7 +70,7 @@
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="jtf_ic" alignment="1" max="32767" attributes="0"/>
                                       <Component id="jtf_id" max="32767" attributes="0"/>
-                                      <Component id="jtf_telNum" max="32767" attributes="0"/>
+                                      <Component id="jtf_telNo" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -88,13 +88,13 @@
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="btn_cancel" min="-2" pref="104" max="-2" attributes="0"/>
+                          <Component id="btn_Cancel" min="-2" pref="104" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btn_modify" min="-2" pref="106" max="-2" attributes="0"/>
+                          <Component id="btn_Modify" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btn_confirm" min="-2" pref="106" max="-2" attributes="0"/>
+                          <Component id="btn_Confirm" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btn_print" min="-2" pref="106" max="-2" attributes="0"/>
+                          <Component id="btn_Print" min="-2" pref="106" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
@@ -128,7 +128,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jtf_telNum" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="jtf_telNo" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                       <Component id="jtf_date" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                       <Component id="jLabel7" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="jLabel5" max="32767" attributes="0"/>
@@ -137,10 +137,10 @@
                   <Component id="jScrollPane1" min="-2" pref="327" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btn_print" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="btn_confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="btn_modify" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="btn_cancel" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_Print" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_Confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_Modify" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_Cancel" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
               </Group>
@@ -168,7 +168,7 @@
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtf_telNum">
+        <Component class="javax.swing.JTextField" name="jtf_telNo">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
@@ -177,17 +177,11 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtf_billNoActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jtf_date">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtf_dateActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -281,38 +275,38 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btn_print">
+        <Component class="javax.swing.JButton" name="btn_Print">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print Receipt"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_printActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_PrintActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_confirm">
+        <Component class="javax.swing.JButton" name="btn_Confirm">
           <Properties>
             <Property name="text" type="java.lang.String" value="Confirm"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_confirmActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ConfirmActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_modify">
+        <Component class="javax.swing.JButton" name="btn_Modify">
           <Properties>
             <Property name="text" type="java.lang.String" value="Modify"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_modifyActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ModifyActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_cancel">
+        <Component class="javax.swing.JButton" name="btn_Cancel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cancel"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_cancelActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_CancelActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
