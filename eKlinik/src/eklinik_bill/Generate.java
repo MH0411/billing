@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
 import main.RMIConnector;
-import static jdk.nashorn.internal.objects.NativeString.substring;
 import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
@@ -75,11 +73,11 @@ public class Generate extends javax.swing.JFrame {
     public Generate() {
         initComponents();
         billDetails();
+        super.pack();
+        super.setLocationRelativeTo(null);
+        super.setVisible(true);
         tableClick3 = tableClick1;
-
-        //  System.out.println(Table_click1); 
     }
-    // static String Table_click1;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,6 +88,7 @@ public class Generate extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jtf_name = new javax.swing.JTextField();
         jtf_address = new javax.swing.JTextField();
@@ -111,6 +110,9 @@ public class Generate extends javax.swing.JFrame {
         btn_Confirm = new javax.swing.JButton();
         btn_Modify = new javax.swing.JButton();
         btn_Cancel = new javax.swing.JButton();
+        btn_Payment = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -201,6 +203,13 @@ public class Generate extends javax.swing.JFrame {
             }
         });
 
+        btn_Payment.setText("Payment");
+        btn_Payment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_PaymentActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -235,6 +244,8 @@ public class Generate extends javax.swing.JFrame {
                             .addComponent(jtf_address)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_Modify, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -277,6 +288,7 @@ public class Generate extends javax.swing.JFrame {
                     .addComponent(btn_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Modify, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
         );
@@ -308,7 +320,6 @@ public class Generate extends javax.swing.JFrame {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "Receipt.pdf");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
-            printStackTrace(e);
         }     
 
     }//GEN-LAST:event_btn_PrintActionPerformed
@@ -491,13 +502,18 @@ public class Generate extends javax.swing.JFrame {
                         break;
                 }
             }
-
-            String sql3 = "insert into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity)"
-                    + "values('" + id + "','" + billNo + "','" + date + "','" + name + "','" + totalPrice + "','" + datasize + "' )";
-            rc.setQuerySQL(host, port, sql3);
             
+            /**
+             * haven complete
+             * get last month credit and debit to calculate this month credit
+             * get this month credit add to current bill
+             */
+            String sql3 = "insert into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity)"
+                    + "values('" + pmi_no + "','" + billNo + "','" + stringDate + "','" + name + "','" + totalPrice + "','" + datasize + "' )";
+            rc.setQuerySQL(host, port, sql3);
+                
             String sql4 = "insert into customer_ledger(customer_id, txn_date, bill_no, bill_desc, bill_amt, " + credit + " )"
-                    + "values('" + id + "', '" + date + "', '" + billNo + "', '" + name + "', '" + totalPrice + "', '" + totalPrice + "' )";
+                    + "values('" + pmi_no + "', '" + stringDate + "', '" + billNo + "', '" + name + "', '" + totalPrice + "', '" + totalPrice + "' )";
             rc.setQuerySQL(host, port, sql4);
 
             String infoMessage = "Success add data";
@@ -544,6 +560,12 @@ public class Generate extends javax.swing.JFrame {
 //        System.out.println("test order no: " + orderno);
 
     }//GEN-LAST:event_jt_BillDetailsMouseClicked
+
+    private void btn_PaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PaymentActionPerformed
+        // TODO add your handling code here:
+        Payment payment = new Payment();
+        payment.setVisible(true);
+    }//GEN-LAST:event_btn_PaymentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -643,7 +665,7 @@ public class Generate extends javax.swing.JFrame {
             jtf_date.setText(data.get(0).get(5));
             
             pmi_no = data.get(0).get(11);
-//            System.out.println(pmi_no);
+            System.out.println(pmi_no);
 //            System.out.println("cust id no : " + custId);
 //            System.out.println("bill no : " + billNo);
 //            System.out.println("cust pmi no : " + billNo);
@@ -1003,7 +1025,9 @@ public class Generate extends javax.swing.JFrame {
     private javax.swing.JButton btn_Cancel;
     private javax.swing.JButton btn_Confirm;
     private javax.swing.JButton btn_Modify;
+    private javax.swing.JButton btn_Payment;
     private javax.swing.JButton btn_Print;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

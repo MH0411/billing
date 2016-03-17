@@ -39,6 +39,9 @@ public class Billing extends javax.swing.JFrame {
      */
     public Billing() {
         initComponents();
+        super.pack();
+        super.setLocationRelativeTo(null);
+        super.setVisible(true);
         tablePatientInformation();
         tableManageMiscellaneous();
     }
@@ -122,6 +125,7 @@ public class Billing extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jTabbedPane3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -988,7 +992,7 @@ public class Billing extends javax.swing.JFrame {
 
                 String sqlInsert2 = "DELETE FROM miscellaneous_item WHERE item_code='" + mm_ItemCode + "'";
 
-                boolean insert2 = rc.setQuerySQL(host, port, sqlInsert2);
+                rc.setQuerySQL(host, port, sqlInsert2);
                 String infoMessage = "Success delete data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
