@@ -763,7 +763,7 @@ public class Billing extends javax.swing.JFrame {
             //add row and show value
             for (int i = 0; i < data.size(); i++) {
 
-                DecimalFormat df = new DecimalFormat("#.00"); // decimal format
+                DecimalFormat df = new DecimalFormat("#.00"); 
                 model.addRow(new Object[]{"", "", "", "", ""});
                 
                 jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);

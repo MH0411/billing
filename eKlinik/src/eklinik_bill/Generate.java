@@ -17,11 +17,13 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
 import main.RMIConnector;
 import static jdk.nashorn.internal.objects.NativeString.substring;
 import static jdk.nashorn.internal.objects.NativeString.substring;
@@ -46,6 +48,7 @@ public class Generate extends javax.swing.JFrame {
     private static String tableClick2;
     private static String tableClick3;
     private static String orderNo;
+    private String pmi_no;
     private double totalPrice;
 
     public static String setValue1() {
@@ -301,11 +304,12 @@ public class Generate extends javax.swing.JFrame {
 
         pdf();
 
-        try { //keluarkan pdf after click
+        try {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "Receipt.pdf");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
-        }        // TODO add your handling code here:
+            printStackTrace(e);
+        }     
 
     }//GEN-LAST:event_btn_PrintActionPerformed
 
@@ -425,7 +429,7 @@ public class Generate extends javax.swing.JFrame {
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
 
                 String sql1 = "insert into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "values('" + billNo + "','" + stringDate + "','" + itemCode + "','" + itemDesc + "','" + unitPrice + "','" + quantity + "','" + id + "' )";
+                        + "values('" + billNo + "','" + stringDate + "','" + itemCode + "','" + itemDesc + "','" + unitPrice + "','" + quantity + "','" + pmi_no + "' )";
                 rc.setQuerySQL(host, port, sql1);
 
                 String sql2 = "insert into last_seq_no(last_seq_no )" + "values('" + last_seq + "' )";
@@ -581,10 +585,12 @@ public class Generate extends javax.swing.JFrame {
      */
     public void billDetails() {
         try {
-            DateFormat df;
-            df = new SimpleDateFormat("MMyyyy");
+            DateFormat dateFormat;
+            dateFormat = new SimpleDateFormat("MMyyyy");
             Date date = new Date();
-            String getDate = df.format(date);
+            String getDate = dateFormat.format(date);
+            
+            DecimalFormat df = new DecimalFormat("0.00"); 
             
             //Check count of bills
             String sqlSeqNo = "SELECT MAX(last_seq_no) AS no FROM last_seq_no";
@@ -608,7 +614,9 @@ public class Generate extends javax.swing.JFrame {
 
             String sql = "SELECT DISTINCT "
                     + "pb.PATIENT_NAME,  pb.HOME_ADDRESS, pb.NEW_IC_NO, pb.ID_NO, pb.MOBILE_PHONE, NOW(), "
-                    + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL "
+                    + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
+                    + "mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, "
+                    + "pb.PMI_NO "
                     + "FROM ehr_central ec "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON ec.PMI_NO = pb.PMI_NO "
@@ -623,9 +631,8 @@ public class Generate extends javax.swing.JFrame {
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
                     + "AND ec.PMI_NO = '" + tableClick1 + "' ";
             
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
-            custId = data.get(0).get(3);
             custId = data.get(0).get(3);
             jtf_name.setText(data.get(0).get(0));
             jtf_address.setText(data.get(0).get(1));
@@ -634,6 +641,9 @@ public class Generate extends javax.swing.JFrame {
             jtf_telNo.setText(data.get(0).get(4));
             jtf_billNo.setText(billNo);
             jtf_date.setText(data.get(0).get(5));
+            
+            pmi_no = data.get(0).get(11);
+//            System.out.println(pmi_no);
 //            System.out.println("cust id no : " + custId);
 //            System.out.println("bill no : " + billNo);
 //            System.out.println("cust pmi no : " + billNo);
@@ -650,12 +660,11 @@ public class Generate extends javax.swing.JFrame {
             for (int i = 0; i < data.size(); i++) {
                 model.addRow(new Object[]{"", "", "", "", ""});
 
-                //jTable1.setValueAt((Object)i, 1, 1);
                 jt_BillDetails.setValueAt(data.get(i).get(6), i, 0);
                 jt_BillDetails.setValueAt(data.get(i).get(7), i, 1);
-                jt_BillDetails.setValueAt(data.get(i).get(8), i, 2);
-                jt_BillDetails.setValueAt(data.get(i).get(9), i, 3);
-                jt_BillDetails.setValueAt(data.get(i).get(10), i, 4);
+                jt_BillDetails.setValueAt((int) Double.parseDouble(data.get(i).get(8)), i, 2);
+                jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(9))), i, 3);
+                jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(10))), i, 4);
 
             }
 
@@ -670,7 +679,7 @@ public class Generate extends javax.swing.JFrame {
                 String desc = dataItem.get(0).get(2);
                 String price = dataItem.get(0).get(4);
                 String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, price, total};
+                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
                 model.addRow(row);
                 
             } else if (lengthId == 5) {
@@ -680,7 +689,7 @@ public class Generate extends javax.swing.JFrame {
                 String desc = dataItem.get(0).get(2);
                 String price = dataItem.get(0).get(4);
                 String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, price, total};
+                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
                 model.addRow(row);
                 
             } else {
@@ -690,13 +699,13 @@ public class Generate extends javax.swing.JFrame {
                 String desc = dataItem.get(0).get(2);
                 String price = dataItem.get(0).get(4);
                 String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, price, total};
+                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
                 model.addRow(row);
             }
             
             //Get temporary item add to table
-            df = new SimpleDateFormat("yyyy-MM-dd");
-            String getDate1 = df.format(new Date());
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String getDate1 = dateFormat.format(new Date());
             String sql2 = "SELECT * FROM temp_item WHERE customer_id ='" + tableClick1 + "' AND date = '" + getDate1 + "' ";
 
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
@@ -711,7 +720,7 @@ public class Generate extends javax.swing.JFrame {
                 int subTot = (int) subTotal;
                 String tot = Integer.toString(subTot);
 
-                Object[] row = {code, desc, qt, price, tot};
+                Object[] row = {code, desc, qt, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(tot))};
                 model.addRow(row);
             }
             
