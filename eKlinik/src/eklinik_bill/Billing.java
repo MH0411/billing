@@ -8,6 +8,7 @@ package eklinik_bill;
 /**
  *
  * @author Amalina
+ * @author Ho Zhen Hong
  */
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -32,7 +33,7 @@ public class Billing extends javax.swing.JFrame {
     String host = "biocore-devp.utem.edu.my";
     int port = 1099; // for now, stick to this port
 
-    static String Table_click;
+    static String selectedPatient;
 
     /**
      * Creates new form billing
@@ -40,11 +41,11 @@ public class Billing extends javax.swing.JFrame {
     public Billing() {
         initComponents();
         tablePatientInformation();
-        tableBillDescription();
+        tableManageMiscellaneous();
     }
 
     public static String setValue() {
-        return Table_click;
+        return selectedPatient;
     }
 
     /**
@@ -720,22 +721,25 @@ public class Billing extends javax.swing.JFrame {
     private void jt_PatientInformationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_PatientInformationMouseClicked
         // TODO add your handling code here:
         try {
-            int row = 0;
+            int rowIndex = 0;
 
-            row = jt_PatientInformation.getSelectedRow(); //get no of row
-            Table_click = (jt_PatientInformation.getModel().getValueAt(row, 0).toString()); //assign row value to select
+            //Get no of row
+            rowIndex = jt_PatientInformation.getSelectedRow(); 
+            rowIndex = jt_PatientInformation.convertRowIndexToModel(rowIndex);
+            //Assign row value to select
+            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString(); 
 
             DateFormat dateFormat;
             dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06 
             Date date = new Date();
             
             String sql = "SELECT DISTINCT "
-                    + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, ec.PMI_NO, pb.PMI_NO "
-                    + "FROM ehr_central ec "
+                    + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
+                    + "mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, "
+                    + "ec.PMI_NO, pb.PMI_NO "
+                    + "FROM ehr_central ec " 
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON ec.PMI_NO = pb.PMI_NO "
-//                    + "INNER JOIN customer_hdr ch "
-//                    + "ON pb.ID_NO = ch.customer_id "
                     + "INNER JOIN pis_order_master pom "
                     + "ON ec.PMI_NO = pom.PMI_NO "
                     + "INNER JOIN pis_dispense_master pdm "
@@ -744,14 +748,11 @@ public class Billing extends javax.swing.JFrame {
                     + "ON pdm.ORDER_NO = pdd.ORDER_NO "
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "WHERE ec.PMI_NO = '" + Table_click + "' "
+                    + "WHERE ec.PMI_NO = '" + selectedPatient + "' "
                     + "AND (ec.status = 1 OR ec.status = 3) ";
-//                    + "AND ID_NO NOT IN ch.customer_id ";
-//                    + "AND substring(pom.EPISODE_CODE,1,10)='" + dateFormat.format(date) + "' "
-//                    + "AND substring(pdm.ORDER_DATE,1,10)='" + dateFormat.format(date) + "'";
-//                    + "AND substring(pom.EPISODE_CODE,1,10)='2015-12-21' "
-//                    + "AND substring(pdm.ORDER_DATE,1,10)='2015-12-21'";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
+            
+            //Execute query
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
             DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
 
@@ -829,7 +830,7 @@ public class Billing extends javax.swing.JFrame {
                 String infoMessage = "Success add data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
-                tableBillDescription();
+                tableManageMiscellaneous();
                 jtf_mm_itemCd.setText("");
                 jtf_mm_itemDesc.setText("");
                 jtf_mm_buyPrice.setText("");
@@ -906,7 +907,7 @@ public class Billing extends javax.swing.JFrame {
                 String infoMessage = "Success update data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
-                tableBillDescription();
+                tableManageMiscellaneous();
                 jtf_mm_itemCd.setText("");
                 jtf_mm_itemDesc.setText("");
                 jtf_mm_buyPrice.setText("");
@@ -993,7 +994,7 @@ public class Billing extends javax.swing.JFrame {
                 String infoMessage = "Success delete data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 //fillcombo();
-                tableBillDescription();
+                tableManageMiscellaneous();
                 jtf_mm_itemCd.setText("");
                 jtf_mm_itemDesc.setText("");
                 jtf_mm_buyPrice.setText("");
@@ -1057,9 +1058,7 @@ public class Billing extends javax.swing.JFrame {
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON ec.PMI_NO = pb.PMI_NO "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
-                    + "AND pe.STATUS ='Discharge' "
-                    + "AND pb.ID_NO NOT IN "
-                + "(SELECT customer_id FROM customer_hdr WHERE customer_id = pb.ID_NO)";
+                    + "AND pe.STATUS ='Discharge' ";
             
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
             DefaultTableModel model = (DefaultTableModel) jt_PatientInformation.getModel();
@@ -1070,7 +1069,7 @@ public class Billing extends javax.swing.JFrame {
                 model.removeRow(i);
             }
 
-            //add row and show value
+            //Add row and show value
             for (int i = 0; i < data.size(); i++) {
                 model.addRow(new Object[]{"", "", "", "", ""});
 
@@ -1089,9 +1088,9 @@ public class Billing extends javax.swing.JFrame {
     }
 
     /**
-     * Display selected patient's bill description
+     * Display manage miscellaneous items.
      */
-    private void tableBillDescription() {
+    private void tableManageMiscellaneous() {
         try {
             String sql = "SELECT * FROM miscellaneous_item";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
@@ -1119,10 +1118,10 @@ public class Billing extends javax.swing.JFrame {
     }
 
     /**
-     * ??
+     * Detect and sort table content based on the input
      */
     public void test() {
-        TableRowSorter<TableModel> rowSorter
+        TableRowSorter<TableModel> rowSorter 
                 = new TableRowSorter<TableModel>(jt_PatientInformation.getModel());
         jt_PatientInformation.setRowSorter(rowSorter);
 
@@ -1134,6 +1133,7 @@ public class Billing extends javax.swing.JFrame {
 
                 if (text.trim().length() == 0) {
                     rowSorter.setRowFilter(null);
+            
                 } else {
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
