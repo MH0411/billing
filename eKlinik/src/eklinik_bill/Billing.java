@@ -26,12 +26,11 @@ import main.RMIConnector;
 
 public class Billing extends javax.swing.JFrame {
 
-    // call library
+    //Call library
     RMIConnector rc = new RMIConnector();
-
-    // declaration host and port
+    //Declaration host and port
     String host = "biocore-devp.utem.edu.my";
-    int port = 1099; // for now, stick to this port
+    int port = 1099;
 
     static String selectedPatient;
 
@@ -694,7 +693,7 @@ public class Billing extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     /**
      * Back to Main Menu
      * @param evt 
@@ -753,7 +752,6 @@ public class Billing extends javax.swing.JFrame {
             
             //Execute query
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-
             DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
 
             //remove all row
@@ -767,7 +765,7 @@ public class Billing extends javax.swing.JFrame {
 
                 DecimalFormat df = new DecimalFormat("#.00"); // decimal format
                 model.addRow(new Object[]{"", "", "", "", ""});
-
+                
                 jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
                 jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
                 jt_BillDescription.setValueAt((int) Double.parseDouble(data.get(i).get(2)), i, 2);
