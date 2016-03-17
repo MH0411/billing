@@ -9,18 +9,26 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 import javax.swing.JFormattedTextField;
+import main.RMIConnector;
 
 /**
  *
  * @author user
  */
 public class Payment extends javax.swing.JFrame {
-
+    
+    //Call library
+    RMIConnector rc = new RMIConnector();
+    //Declaration host and port
+    private String host = "biocore-devp.utem.edu.my";
+    private int port = 1099;
+   
     /**
      * Creates new form Payment
      */
     public Payment() {
         initComponents();
+        displayCurrentCredit();
         
         super.pack();
         super.setLocationRelativeTo(null);
@@ -131,10 +139,13 @@ public class Payment extends javax.swing.JFrame {
      */
     private void btn_MakePaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_MakePaymentActionPerformed
         // TODO add your handling code here:
+        //cash = csh
+        //credit card = crc
+        //cheque = chq
     }//GEN-LAST:event_btn_MakePaymentActionPerformed
 
     /**
-     * Allow only numerical value and a dot
+     * Allow only numerical value and dot
      * @param evt 
      */
     private void jtf_AmountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_AmountKeyTyped
@@ -181,6 +192,11 @@ public class Payment extends javax.swing.JFrame {
                 new Payment().setVisible(true);
             }
         });
+    }
+    
+    public void displayCurrentCredit(){
+        
+       String sql = "Select * from customer_ledge"; 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

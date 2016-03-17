@@ -29,8 +29,8 @@ public class Billing extends javax.swing.JFrame {
     //Call library
     RMIConnector rc = new RMIConnector();
     //Declaration host and port
-    String host = "biocore-devp.utem.edu.my";
-    int port = 1099;
+    private String host = "biocore-devp.utem.edu.my";
+    private int port = 1099;
 
     static String selectedPatient;
 
