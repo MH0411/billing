@@ -694,10 +694,18 @@ public class Billing extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Back to Main Menu
+     * @param evt 
+     */
     private void btn_BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BackActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_BackActionPerformed
 
+    /**
+     * Generate bill details
+     * @param evt 
+     */
     private void btn_GenerateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GenerateBillActionPerformed
         // TODO add your handling code here:
         Generate generate = new Generate(); //set new window
@@ -705,10 +713,10 @@ public class Billing extends javax.swing.JFrame {
         dispose(); // for hide current window
     }//GEN-LAST:event_btn_GenerateBillActionPerformed
 
-/**
- * search patient information to bill description
- * @param evt 
- */
+    /**
+     * Search patient information to bill description
+     * @param evt 
+     */
     private void jt_PatientInformationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_PatientInformationMouseClicked
         // TODO add your handling code here:
         try {
@@ -779,10 +787,10 @@ public class Billing extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jt_PatientInformationMouseClicked
 
-/**
- * Add new item
- * @param evt 
- */
+    /**
+     * Add new item
+     * @param evt 
+     */
     private void btn_mm_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_addActionPerformed
         // TODO add your handling code here:
         String itemCode = (String) jtf_mm_itemCd.getText();
@@ -833,6 +841,10 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_mm_addActionPerformed
 
+    /**
+     * Cancel modify process
+     * @param evt 
+     */
     private void btn_mm_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_cancelActionPerformed
         // TODO add your handling code here:
         btn_mm_add.setEnabled(true);
@@ -847,6 +859,10 @@ public class Billing extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btn_mm_cancelActionPerformed
 
+    /**
+     * Update the item details
+     * @param evt 
+     */
     private void btn_mm_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_updateActionPerformed
         // TODO add your handling code here:
         btn_mm_add.setEnabled(true);
@@ -903,6 +919,10 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_mm_updateActionPerformed
 
+    /**
+     * Send the select item details to text fields
+     * @param evt 
+     */
     private void jt_MMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_MMMouseClicked
         // TODO add your handling code here:
         try {
@@ -927,6 +947,10 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jt_MMMouseClicked
 
+    /**
+     * Delete the selected item
+     * @param evt 
+     */
     private void btn_mm_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_deleteActionPerformed
         // TODO add your handling code here:
         btn_mm_add.setEnabled(true);
@@ -1019,6 +1043,9 @@ public class Billing extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Display list of patient
+     */
     private void tablePatientInformation() {
 
         try {
@@ -1061,6 +1088,9 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Display selected patient's bill description
+     */
     private void tableBillDescription() {
         try {
             String sql = "SELECT * FROM miscellaneous_item";
@@ -1088,6 +1118,9 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * ??
+     */
     public void test() {
         TableRowSorter<TableModel> rowSorter
                 = new TableRowSorter<TableModel>(jt_PatientInformation.getModel());
