@@ -21,12 +21,12 @@ public class Edit extends javax.swing.JFrame {
     String host = "biocore-devp.utem.edu.my";
     int port = 1099; // for now, stick to this port
 
-    String Table_click1 = AfterModify.setValue();
-    String Table_click2 = AfterModify.setValue1();
+    String Table_click1 = AfterModify.getValue();
+    String Table_click2 = AfterModify.getValue1();
    // String orderno = generate.setValue2();
-    String id_no = Generate.setValueCustId();
-    String bill_no = Generate.setValueBillNo();
-    String itemCode = AfterModify.setValueitemCode();
+    String id_no = Generate.getCustId();
+    String bill_no = Generate.getBillNo();
+    String itemCode = AfterModify.getValueitemCode();
 
     /**
      * Creates new form edit

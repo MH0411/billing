@@ -40,33 +40,13 @@ public class Generate extends javax.swing.JFrame {
     private String host = "biocore-devp.utem.edu.my";
     private int port = 1099; // for now, stick to this port
 
-    private String tableClick1 = Billing.setValue();
-    private static String billNo;
-    private static String custId;
-    private static String tableClick2;
-    private static String tableClick3;
-    private static String orderNo;
-    private String pmi_no;
+    public final String tableClick1 = Billing.getValue();
+    public static String billNo;
+    public static String custId;
+    public static String tableClick2;
+    public static String orderNo;
     private double totalPrice;
-
-    public static String setValue1() {
-        return tableClick2;
-    }
-
-    public static String setValue() {
-        return tableClick3;
-    }
-
-    public static String setValue2() {
-        return orderNo;
-    }
-
-    public static String setValueBillNo() {
-        return billNo;
-    }
-    public static String setValueCustId() {
-        return custId;
-    }
+    
     /**
      * Creates new form generate
      */
@@ -76,7 +56,69 @@ public class Generate extends javax.swing.JFrame {
         super.pack();
         super.setLocationRelativeTo(null);
         super.setVisible(true);
-        tableClick3 = tableClick1;
+    }
+
+    /**
+     * @return the tableClick1
+     */
+    public String getTableClick1() {
+        return tableClick1;
+    }
+
+    /**
+     * @return the billNo
+     */
+    public static String getBillNo() {
+        return billNo;
+    }
+
+    /**
+     * @param aBillNo the billNo to set
+     */
+    public static void setBillNo(String aBillNo) {
+        billNo = aBillNo;
+    }
+
+    /**
+     * @return the custId
+     */
+    public static String getCustId() {
+        return custId;
+    }
+
+    /**
+     * @param aCustId the custId to set
+     */
+    public static void setCustId(String aCustId) {
+        custId = aCustId;
+    }
+
+    /**
+     * @return the tableClick2
+     */
+    public static String getTableClick2() {
+        return tableClick2;
+    }
+
+    /**
+     * @param aTableClick2 the tableClick2 to set
+     */
+    public static void setTableClick2(String aTableClick2) {
+        tableClick2 = aTableClick2;
+    }
+
+    /**
+     * @return the orderNo
+     */
+    public static String getOrderNo() {
+        return orderNo;
+    }
+
+    /**
+     * @param aOrderNo the orderNo to set
+     */
+    public static void setOrderNo(String aOrderNo) {
+        orderNo = aOrderNo;
     }
 
     /**
@@ -440,7 +482,7 @@ public class Generate extends javax.swing.JFrame {
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
 
                 String sql1 = "insert into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "values('" + billNo + "','" + stringDate + "','" + itemCode + "','" + itemDesc + "','" + unitPrice + "','" + quantity + "','" + pmi_no + "' )";
+                        + "values('" + billNo + "','" + stringDate + "','" + itemCode + "','" + itemDesc + "','" + unitPrice + "','" + quantity + "','" + getCustId() + "' )";
                 rc.setQuerySQL(host, port, sql1);
 
                 String sql2 = "insert into last_seq_no(last_seq_no )" + "values('" + last_seq + "' )";
@@ -456,47 +498,47 @@ public class Generate extends javax.swing.JFrame {
             dateFormat = new SimpleDateFormat("MM");
             Date date = new Date();
 
-            String credit = null;
-            String bulan = dateFormat.format(date);
+            String creditMonth = null;
+            String month = dateFormat.format(date);
             
             //Check current month
-            if (null != bulan) {
-                switch (bulan) {
+            if (null != month) {
+                switch (month) {
                     case "01":
-                        credit = "cr_amt_1";
+                        creditMonth = "cr_amt_1";
                         break;
                     case "02":
-                        credit = "cr_amt_2";
+                        creditMonth = "cr_amt_2";
                         break;
                     case "03":
-                        credit = "cr_amt_3";
+                        creditMonth = "cr_amt_3";
                         break;
                     case "04":
-                        credit = "cr_amt_4";
+                        creditMonth = "cr_amt_4";
                         break;
                     case "05":
-                        credit = "cr_amt_5";
+                        creditMonth = "cr_amt_5";
                         break;
                     case "06":
-                        credit = "cr_amt_6";
+                        creditMonth = "cr_amt_6";
                         break;
                     case "07":
-                        credit = "cr_amt_7";
+                        creditMonth = "cr_amt_7";
                         break;
                     case "08":
-                        credit = "cr_amt_8";
+                        creditMonth = "cr_amt_8";
                         break;
                     case "09":
-                        credit = "cr_amt_9";
+                        creditMonth = "cr_amt_9";
                         break;
                     case "10":
-                        credit = "cr_amt_10";
+                        creditMonth = "cr_amt_10";
                         break;
                     case "11":
-                        credit = "cr_amt_11";
+                        creditMonth = "cr_amt_11";
                         break;
                     case "12":
-                        credit = "cr_amt_12";
+                        creditMonth = "cr_amt_12";
                         break;
                     default:
                         break;
@@ -509,11 +551,11 @@ public class Generate extends javax.swing.JFrame {
              * get this month credit add to current bill
              */
             String sql3 = "insert into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity)"
-                    + "values('" + pmi_no + "','" + billNo + "','" + stringDate + "','" + name + "','" + totalPrice + "','" + datasize + "' )";
+                    + "values('" + getCustId() + "','" + billNo + "','" + stringDate + "','" + name + "','" + totalPrice + "','" + datasize + "' )";
             rc.setQuerySQL(host, port, sql3);
                 
-            String sql4 = "insert into customer_ledger(customer_id, txn_date, bill_no, bill_desc, bill_amt, " + credit + " )"
-                    + "values('" + pmi_no + "', '" + stringDate + "', '" + billNo + "', '" + name + "', '" + totalPrice + "', '" + totalPrice + "' )";
+            String sql4 = "insert into customer_ledger(customer_id, txn_date, bill_no, bill_desc, bill_amt, " + creditMonth + " )"
+                    + "values('" + getCustId() + "', '" + stringDate + "', '" + billNo + "', '" + name + "', '" + totalPrice + "', '" + totalPrice + "' )";
             rc.setQuerySQL(host, port, sql4);
 
             String infoMessage = "Success add data";
@@ -632,7 +674,7 @@ public class Generate extends javax.swing.JFrame {
             for (count = length; count < 10; count++) {
                 num = zero + num;
             }
-            billNo = num + getDate;
+            setBillNo(num + getDate);
 
             String sql = "SELECT DISTINCT "
                     + "pb.PATIENT_NAME,  pb.HOME_ADDRESS, pb.NEW_IC_NO, pb.ID_NO, pb.MOBILE_PHONE, NOW(), "
@@ -651,21 +693,24 @@ public class Generate extends javax.swing.JFrame {
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
-                    + "AND ec.PMI_NO = '" + tableClick1 + "' ";
+                    + "AND ec.PMI_NO = '" + getTableClick1() + "' ";
             
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+            
+            System.out.println(data.get(0).get(0));
 
-            custId = data.get(0).get(3);
             jtf_name.setText(data.get(0).get(0));
             jtf_address.setText(data.get(0).get(1));
             jtf_ic.setText(data.get(0).get(2));
             jtf_id.setText(data.get(0).get(3));
             jtf_telNo.setText(data.get(0).get(4));
-            jtf_billNo.setText(billNo);
+            jtf_billNo.setText(getBillNo());
             jtf_date.setText(data.get(0).get(5));
+
+            setCustId(data.get(0).get(11));
+            System.out.println(getCustId());
             
-            pmi_no = data.get(0).get(11);
-            System.out.println(pmi_no);
+            
 //            System.out.println("cust id no : " + custId);
 //            System.out.println("bill no : " + billNo);
 //            System.out.println("cust pmi no : " + billNo);
@@ -728,7 +773,7 @@ public class Generate extends javax.swing.JFrame {
             //Get temporary item add to table
             dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String getDate1 = dateFormat.format(new Date());
-            String sql2 = "SELECT * FROM temp_item WHERE customer_id ='" + tableClick1 + "' AND date = '" + getDate1 + "' ";
+            String sql2 = "SELECT * FROM temp_item WHERE customer_id ='" + getTableClick1() + "' AND date = '" + getDate1 + "' ";
 
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
             
@@ -783,7 +828,7 @@ public class Generate extends javax.swing.JFrame {
                     + "ON ch.customer_id = cd.customer_id "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON cd.customer_id = pb.ID_NO "
-                    + "WHERE ch.customer_id = '" + custId + "'  and ch.bill_no = '" + billNo + "' ";
+                    + "WHERE ch.customer_id = '" + getCustId() + "'  and ch.bill_no = '" + getBillNo() + "' ";
             //+ "AND ch.txn_date = '2016-02-01'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
 

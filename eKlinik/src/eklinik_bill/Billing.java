@@ -32,7 +32,7 @@ public class Billing extends javax.swing.JFrame {
     private String host = "biocore-devp.utem.edu.my";
     private int port = 1099;
 
-    static String selectedPatient;
+    private static String selectedPatient;
 
     /**
      * Creates new form billing
@@ -46,7 +46,7 @@ public class Billing extends javax.swing.JFrame {
         tableManageMiscellaneous();
     }
 
-    public static String setValue() {
+    public static String getValue() {
         return selectedPatient;
     }
 

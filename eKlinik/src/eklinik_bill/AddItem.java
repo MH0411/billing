@@ -25,8 +25,8 @@ public class AddItem extends javax.swing.JFrame {
     String host = "biocore-devp.utem.edu.my";
     int port = 1099; // for now, stick to this port
 
-    String id_no = Generate.setValueCustId();
-    String bill_no = Generate.setValueBillNo();
+    String id_no = Generate.getCustId();
+    String bill_no = Generate.getBillNo();
 
     /**
      * Creates new form addItem

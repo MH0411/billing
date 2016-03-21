@@ -7,8 +7,14 @@ package eklinik_bill;
 
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JFormattedTextField;
+import javax.swing.table.DefaultTableModel;
 import main.RMIConnector;
 
 /**
@@ -22,6 +28,10 @@ public class Payment extends javax.swing.JFrame {
     //Declaration host and port
     private String host = "biocore-devp.utem.edu.my";
     private int port = 1099;
+    
+    private DateFormat dateFormat;
+    private Date date = new Date();
+    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
    
     /**
      * Creates new form Payment
@@ -194,9 +204,69 @@ public class Payment extends javax.swing.JFrame {
         });
     }
     
+    /**
+     * Display current credit of current month
+     */
     public void displayCurrentCredit(){
+       
+        dateFormat = new SimpleDateFormat("MM");
+
+        String creditMonth = null;
+        String month = dateFormat.format(date);
+
+        //Check current month
+        if (null != month) {
+            switch (month) {
+                case "01":
+                    creditMonth = "cr_amt_1";
+                    break;
+                case "02":
+                    creditMonth = "cr_amt_2";
+                    break;
+                case "03":
+                    creditMonth = "cr_amt_3";
+                    break;
+                case "04":
+                    creditMonth = "cr_amt_4";
+                    break;
+                case "05":
+                    creditMonth = "cr_amt_5";
+                    break;
+                case "06":
+                    creditMonth = "cr_amt_6";
+                    break;
+                case "07":
+                    creditMonth = "cr_amt_7";
+                    break;
+                case "08":
+                    creditMonth = "cr_amt_8";
+                    break;
+                case "09":
+                    creditMonth = "cr_amt_9";
+                    break;
+                case "10":
+                    creditMonth = "cr_amt_10";
+                    break;
+                case "11":
+                    creditMonth = "cr_amt_11";
+                    break;
+                case "12":
+                    creditMonth = "cr_amt_12";
+                    break;
+                default:
+                    break;
+            }
+        }
         
-       String sql = "Select * from customer_ledge"; 
+        String sql = "Select '"+creditMonth+"' from customer_ledger where customer_id = '"+Generate.getCustId()+"' "; 
+        ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+        
+        System.out.println(data.size());
+        System.out.println(creditMonth);
+        System.out.println(data.get(0).get(0));
+        
+       
+//        jl_Credit.setText(decimalFormat.format(Double.parseDouble(data.get(0).get(0))));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
