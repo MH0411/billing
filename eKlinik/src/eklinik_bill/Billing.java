@@ -46,7 +46,7 @@ public class Billing extends javax.swing.JFrame {
         tableManageMiscellaneous();
     }
 
-    public static String getValue() {
+    public static String getSelectedPatient() {
         return selectedPatient;
     }
 

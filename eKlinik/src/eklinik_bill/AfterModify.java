@@ -37,7 +37,7 @@ public class AfterModify extends javax.swing.JFrame {
     String host = "biocore-devp.utem.edu.my";
     int port = 1099; // for now, stick to this port
 
-    String Table_click1 = Billing.getValue();
+    String Table_click1 = Billing.getSelectedPatient();
     String id_no = Generate.getCustId();
     String bill_no = Generate.getBillNo();
     String cust_id = id_no;

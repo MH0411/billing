@@ -256,17 +256,18 @@ public class Payment extends javax.swing.JFrame {
                 default:
                     break;
             }
+            
+            String sql = "SELECT DISTINCT "+creditMonth+" "
+                    + "FROM customer_ledger "
+                    + "WHERE customer_id = '"+Generate.getCustId()+"' ";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+
+            System.out.println(data.size());
+            System.out.println(Generate.getCustId());
+            System.out.println(creditMonth);
+            
+            jl_Credit.setText(data.get(0).get(0));
         }
-        
-        String sql = "Select '"+creditMonth+"' from customer_ledger where customer_id = '"+Generate.getCustId()+"' "; 
-        ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-        
-        System.out.println(data.size());
-        System.out.println(creditMonth);
-        System.out.println(data.get(0).get(0));
-        
-       
-//        jl_Credit.setText(decimalFormat.format(Double.parseDouble(data.get(0).get(0))));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
