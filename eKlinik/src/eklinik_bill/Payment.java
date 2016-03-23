@@ -168,12 +168,16 @@ public class Payment extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
             
         } else {
-            String sql = "insert into customer_ledger(pay_method, "+currentMonth.getDebitMonth()+") "
-                    + "values('"+method+"', '"+debit+"') "
-                    + "WHERE customer_id = '"+Generate.getCustId()+"' ";
-//                    + "AND bill_no = '"+Generate.getBillNo()+"' ";
+            String sql = "update customer_ledger "
+                    + "set pay_method = '"+method+"', "
+                    + ""+currentMonth.getDebitMonth()+" = '"+debit+"' "
+                    + "where bill_no = '"+Generate.getBillNo()+"' ";
             rc.setQuerySQL(host, port, sql);
-
+            
+            System.out.println(currentMonth.getDebitMonth());
+            System.out.println(method);
+            System.out.println(Generate.getBillNo());
+            
             String infoMessage = "Success add data.";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
 
