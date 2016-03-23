@@ -20,13 +20,13 @@ public class AddItem extends javax.swing.JFrame {
 // call library
 
     RMIConnector rc = new RMIConnector();
-
+    private ServerDetail sd = new ServerDetail();
     // declaration host and port
-    String host = "biocore-devp.utem.edu.my";
-    int port = 1099; // for now, stick to this port
+    private String host = sd.getHost();
+    private int port = sd.getPort();
 
-    String id_no = Generate.getCustId();
-    String bill_no = Generate.getBillNo();
+    private String id_no = Generate.getCustId();
+    private String bill_no = Generate.getBillNo();
 
     /**
      * Creates new form addItem

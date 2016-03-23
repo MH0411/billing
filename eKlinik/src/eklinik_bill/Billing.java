@@ -27,11 +27,10 @@ import main.RMIConnector;
 public class Billing extends javax.swing.JFrame {
 
     //Call library
-    RMIConnector rc = new RMIConnector();
-    //Declaration host and port
-    private String host = "biocore-devp.utem.edu.my";
-    private int port = 1099;
-
+    private RMIConnector rc = new RMIConnector();
+    private ServerDetail sd = new ServerDetail();
+    private String host = sd.getHost();
+    private int port = sd.getPort();
     private static String selectedPatient;
 
     /**
@@ -1045,6 +1044,13 @@ public class Billing extends javax.swing.JFrame {
         String quantity = jtf_mb_quantity.getText();
         String unitPrice = jtf_mb_unitPrice.getText();
         String totalPrice = jtf_mb_total.getText();        
+        
+//        if (name.equals("")){
+//        } else if (address.equals("")){
+//        } else if (ic.equals("")){
+//        } else if (id.equals("")){
+//        } else if (tel.equals("")){
+//        } else if 
     }//GEN-LAST:event_btn_mb_addActionPerformed
 
     /**

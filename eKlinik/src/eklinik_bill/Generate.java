@@ -35,10 +35,10 @@ public class Generate extends javax.swing.JFrame {
 
     //Connect to RMI
     RMIConnector rc = new RMIConnector();
-
+    private ServerDetail sd = new ServerDetail();
     //Declaration host and port
-    private String host = "biocore-devp.utem.edu.my";
-    private int port = 1099; // for now, stick to this port
+    private String host = sd.getHost();
+    private int port = sd.getPort();
 
     public final String selectedPatient = Billing.getSelectedPatient();
     public static String billNo;

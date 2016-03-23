@@ -18,9 +18,10 @@ public class Payment extends javax.swing.JFrame {
     
     //Call library
     RMIConnector rc = new RMIConnector();
+    private ServerDetail sd = new ServerDetail();
     //Declaration host and port
-    private String host = "biocore-devp.utem.edu.my";
-    private int port = 1099;
+    private String host = sd.getHost();
+    private int port = sd.getPort();
     
     private Month currentMonth = new Month();
    
@@ -147,13 +148,30 @@ public class Payment extends javax.swing.JFrame {
         String debit = jtf_Amount.getText();
         String method = jcb_PaymentMethod.getSelectedItem().toString();
         
+        if (method != null){
+            switch (method){
+                
+                case "Cash": 
+                    method = "csh";
+                    break;
+                case "Credit Card":
+                    method = "crc";
+                    break;
+                case "Cheque":
+                    method = "chq";
+                    break;
+            }
+        }
+        
         if (debit.equals("")){
             String infoMessage = "Please insert an amount first.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
             
         } else {
             String sql = "insert into customer_ledger(pay_method, "+currentMonth.getDebitMonth()+") "
-                    + "values('"+method+"', '"+debit+"')";
+                    + "values('"+method+"', '"+debit+"') "
+                    + "WHERE customer_id = '"+Generate.getCustId()+"' ";
+//                    + "AND bill_no = '"+Generate.getBillNo()+"' ";
             rc.setQuerySQL(host, port, sql);
 
             String infoMessage = "Success add data.";
@@ -220,7 +238,8 @@ public class Payment extends javax.swing.JFrame {
         
         String sql = "SELECT DISTINCT "+currentMonth.getCreditMonth()+" "
                 + "FROM customer_ledger "
-                + "WHERE customer_id = '"+Generate.getCustId()+"' ";
+                + "WHERE customer_id = '"+Generate.getCustId()+"' "
+                + "AND bill_no = '"+Generate.getBillNo()+"' ";
         ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
         jl_Credit.setText(data.get(0).get(0));
