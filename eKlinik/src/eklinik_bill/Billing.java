@@ -791,7 +791,7 @@ public class Billing extends javax.swing.JFrame {
     }//GEN-LAST:event_jt_PatientInformationMouseClicked
 
     /**
-     * Add new item
+     * Add new miscellaneous item
      * @param evt 
      */
     private void btn_mm_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_addActionPerformed
@@ -802,27 +802,27 @@ public class Billing extends javax.swing.JFrame {
         String sellPrice = (String) jtf_mm_sellPrice.getText();
         String disc = (String) jtf_mm_disc.getText();
 
-        if (itemCode == null) {
+        if (itemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (itemDesc == null) {
+        } else if (itemDesc.equals("")) {
             String infoMessage = "Please insert data in Item Description text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (buyPrice == null) {
+        } else if (buyPrice.equals("")) {
             String infoMessage = "Please insert data in Buying price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (sellPrice == null) {
+        } else if (sellPrice.equals("")) {
             String infoMessage = "Please insert data in Selling Price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (disc == null) {
+        } else if (disc.equals("")) {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (itemCode != null) {
+        } else {
             try {
 
                 String sqlInsert2 = "insert into miscellaneous_item(item_code, item_desc, buying_price, selling_price, discount)"
@@ -878,23 +878,23 @@ public class Billing extends javax.swing.JFrame {
         String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
         String mm_Disc = (String) jtf_mm_disc.getText();
         
-        if (mm_ItemCode == null) {
+        if (mm_ItemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_ItemDesc == null) {
+        } else if (mm_ItemDesc.equals("")) {
             String infoMessage = "Please insert data in Item Description text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_BuyPrice == null) {
+        } else if (mm_BuyPrice.equals("")) {
             String infoMessage = "Please insert data in Buying price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_SellPrice == null) {
+        } else if (mm_SellPrice.equals("")) {
             String infoMessage = "Please insert data in Selling Price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_Disc == null) {
+        } else if (mm_Disc.equals("")) {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
@@ -967,27 +967,27 @@ public class Billing extends javax.swing.JFrame {
         String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
         String mm_Disc = (String) jtf_mm_disc.getText();
         
-        if (mm_ItemCode == null) {
+        if (mm_ItemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_ItemDesc == null) {
+        } else if (mm_ItemDesc.equals("")) {
             String infoMessage = "Please insert data in Item Description text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_BuyPrice == null) {
+        } else if (mm_BuyPrice.equals("")) {
             String infoMessage = "Please insert data in Buying price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_SellPrice == null) {
+        } else if (mm_SellPrice.equals("")) {
             String infoMessage = "Please insert data in Selling Price text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_Disc == null) {
+        } else if (mm_Disc.equals("")) {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_ItemCode != null) {
+        } else {
             try {
 
                 String sqlInsert2 = "DELETE FROM miscellaneous_item WHERE item_code='" + mm_ItemCode + "'";

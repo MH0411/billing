@@ -147,14 +147,20 @@ public class Payment extends javax.swing.JFrame {
         String debit = jtf_Amount.getText();
         String method = jcb_PaymentMethod.getSelectedItem().toString();
         
-        String sql = "insert into customer_ledger(pay_method, "+currentMonth.getDebitMonth()+") "
-                + "values('"+method+"', '"+debit+"')";
-        rc.setQuerySQL(host, port, sql);
-        
-        String infoMessage = "Success add data.";
-            JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+        if (debit.equals("")){
+            String infoMessage = "Please insert an amount first.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
             
-        dispose();
+        } else {
+            String sql = "insert into customer_ledger(pay_method, "+currentMonth.getDebitMonth()+") "
+                    + "values('"+method+"', '"+debit+"')";
+            rc.setQuerySQL(host, port, sql);
+
+            String infoMessage = "Success add data.";
+                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            dispose();
+        }
     }//GEN-LAST:event_btn_MakePaymentActionPerformed
 
     /**
