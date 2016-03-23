@@ -424,10 +424,7 @@ public class Billing extends javax.swing.JFrame {
 
         jt_ListPatient.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Bill No", "Patient Id", "Amount", "Quantity"
@@ -465,10 +462,7 @@ public class Billing extends javax.swing.JFrame {
 
         jt_ListItemPerPatient.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Item Code", "Item Description", "Item Quantity", "Item Amount", "Total Amount"
@@ -529,8 +523,18 @@ public class Billing extends javax.swing.JFrame {
         jLabel19.setText("Total Price");
 
         btn_mb_add.setText("Add Item");
+        btn_mb_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_mb_addActionPerformed(evt);
+            }
+        });
 
         btn_mb_cancel.setText("Cancel");
+        btn_mb_cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_mb_cancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -1008,6 +1012,40 @@ public class Billing extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btn_mm_deleteActionPerformed
+
+    private void btn_mb_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mb_cancelActionPerformed
+        // TODO add your handling code here:\
+        btn_mb_add.setEnabled(true);
+        jtf_mb_name.setText("");
+        jtf_mb_address.setText("");
+        jtf_mb_ic.setText("");
+        jtf_mb_id.setText("");
+        jtf_mb_phoneNum.setText("");
+        jtf_mb_billNo.setText("");
+        jtf_mb_date.setText("");
+        jtf_mb_itemCd.setText("");
+        jtf_mb_itemDesc.setText("");
+        jtf_mb_quantity.setText("");
+        jtf_mb_unitPrice.setText("");
+        jtf_mb_total.setText("");
+    }//GEN-LAST:event_btn_mb_cancelActionPerformed
+
+    private void btn_mb_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mb_addActionPerformed
+        // TODO add your handling code here:
+        
+        String name = jtf_mb_name.getText();
+        String address = jtf_mb_address.getText();
+        String ic = jtf_mb_ic.getText();
+        String id = jtf_mb_id.getText();
+        String tel = jtf_mb_phoneNum.getText();
+        String billNo = jtf_mb_billNo.getText();
+        String date = jtf_mb_date.getText();
+        String itemCd = jtf_mb_itemCd.getText();
+        String itemDesc = jtf_mb_itemDesc.getText();
+        String quantity = jtf_mb_quantity.getText();
+        String unitPrice = jtf_mb_unitPrice.getText();
+        String totalPrice = jtf_mb_total.getText();        
+    }//GEN-LAST:event_btn_mb_addActionPerformed
 
     /**
      * @param args the command line arguments
