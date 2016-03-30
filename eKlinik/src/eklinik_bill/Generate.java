@@ -15,6 +15,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -24,6 +25,9 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import main.RMIConnector;
+import static jdk.nashorn.internal.objects.NativeString.substring;
+import org.jdatepicker.DateModel;
+import org.jdatepicker.JDatePicker;
 import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
@@ -39,6 +43,63 @@ public class Generate extends javax.swing.JFrame {
     //Declaration host and port
     private String host = sd.getHost();
     private int port = sd.getPort();
+    
+    JDatePicker datePicker = new JDatePicker() {
+        @Override
+        public void setTextEditable(boolean bln) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public boolean isTextEditable() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void setButtonFocusable(boolean bln) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public boolean getButtonFocusable() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void setShowYearButtons(boolean bln) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public boolean isShowYearButtons() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void setDoubleClickAction(boolean bln) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public boolean isDoubleClickAction() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DateModel<?> getModel() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void addActionListener(ActionListener al) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void removeActionListener(ActionListener al) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
 
     public final String selectedPatient = Billing.getSelectedPatient();
     public static String billNo;
@@ -61,7 +122,7 @@ public class Generate extends javax.swing.JFrame {
     /**
      * @return the tableClick1
      */
-    public String getTableClick1() {
+    public String getSelectedPatientPMINo() {
         return selectedPatient;
     }
 
@@ -153,6 +214,7 @@ public class Generate extends javax.swing.JFrame {
         btn_Modify = new javax.swing.JButton();
         btn_Cancel = new javax.swing.JButton();
         btn_Payment = new javax.swing.JButton();
+        dateChooserCombo1 = new datechooser.beans.DateChooserCombo();
 
         jButton1.setText("jButton1");
 
@@ -246,9 +308,16 @@ public class Generate extends javax.swing.JFrame {
         });
 
         btn_Payment.setText("Payment");
+        btn_Payment.setEnabled(false);
         btn_Payment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_PaymentActionPerformed(evt);
+            }
+        });
+
+        dateChooserCombo1.addSelectionChangedListener(new datechooser.events.SelectionChangedListener() {
+            public void onSelectionChange(datechooser.events.SelectionChangedEvent evt) {
+                dateChooserCombo1OnSelectionChange(evt);
             }
         });
 
@@ -279,9 +348,11 @@ public class Generate extends javax.swing.JFrame {
                                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jtf_billNo, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                                    .addComponent(jtf_date)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(dateChooserCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jtf_billNo, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                                        .addComponent(jtf_date))))
                             .addComponent(jtf_name)
                             .addComponent(jtf_address)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -310,7 +381,8 @@ public class Generate extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jtf_ic))
+                    .addComponent(jtf_ic)
+                    .addComponent(dateChooserCombo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -356,9 +428,7 @@ public class Generate extends javax.swing.JFrame {
      */
     private void btn_PrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintActionPerformed
         // TODO add your handling code here:
-
         pdf();
-
         try {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "Receipt.pdf");
         } catch (Exception e) {
@@ -454,6 +524,7 @@ public class Generate extends javax.swing.JFrame {
     private void btn_ConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ConfirmActionPerformed
         // TODO add your handling code here:
         
+        btn_Payment.setEnabled(true);
         btn_Print.setEnabled(true);
         btn_Confirm.setEnabled(false);
         btn_Modify.setEnabled(true);
@@ -610,6 +681,10 @@ public class Generate extends javax.swing.JFrame {
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
+    private void dateChooserCombo1OnSelectionChange(datechooser.events.SelectionChangedEvent evt) {//GEN-FIRST:event_dateChooserCombo1OnSelectionChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateChooserCombo1OnSelectionChange
+
     /**
      * @param args the command line arguments
      */
@@ -650,33 +725,45 @@ public class Generate extends javax.swing.JFrame {
      */
     public void billDetails() {
         try {
-            DateFormat dateFormat;
-            dateFormat = new SimpleDateFormat("MMyyyy");
+            DateFormat dateFormat1;
+            DateFormat dateFormat2;
+            dateFormat1 = new SimpleDateFormat("MMyyyy");
+            dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
-            String getDate = dateFormat.format(date);
+            String date1 = dateFormat1.format(date);
+            String date2 = dateFormat2.format(date);
             
             DecimalFormat df = new DecimalFormat("0.00"); 
             
-            //Check count of bills
-            String sqlSeqNo = "SELECT MAX(last_seq_no) AS no FROM last_seq_no";
-            ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sqlSeqNo);
-
-            //Generate bill no
-            String checkSeq = dataSeq.get(0).get(0);
-            int seq = Integer.parseInt(checkSeq);
-            int currSeq = seq + 1;
-            String currentSeq = Integer.toString(currSeq);
-
-            int length = (int) Math.log10(currSeq) + 1;
-            String zero = "0";
-            String num = currentSeq;
+            String sqlSearch = "SELECT bill_no FROM customer_ledger WHERE customer_id = '"+getCustId()+"' ";
+            ArrayList<ArrayList<String>> dataSearch = rc.getQuerySQL(host, port, sqlSearch);
             
-            int count;
-            for (count = length; count < 10; count++) {
-                num = zero + num;
-            }
-            setBillNo(num + getDate);
+            //if customer ledger no selected patient record create new bill
+            //else get bill no in customer ledger
+            if (dataSearch.isEmpty()){
+                //Check count of bills
+                String sqlSeqNo = "SELECT MAX(last_seq_no) AS no FROM last_seq_no";
+                ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sqlSeqNo);
 
+                //Generate bill no
+                String checkSeq = dataSeq.get(0).get(0);
+                int seq = Integer.parseInt(checkSeq);
+                int currSeq = seq + 1;
+                String currentSeq = Integer.toString(currSeq);
+
+                int length = (int) Math.log10(currSeq) + 1;
+                String zero = "0";
+                String num = currentSeq;
+
+                int count;
+                for (count = length; count < 10; count++) {
+                    num = zero + num;
+                }
+                setBillNo(num + date1);
+            } else {
+                setBillNo(dataSearch.get(0).get(0));
+            }
+            
             String sql = "SELECT DISTINCT "
                     + "pb.PATIENT_NAME,  pb.HOME_ADDRESS, pb.NEW_IC_NO, pb.ID_NO, pb.MOBILE_PHONE, NOW(), "
                     + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
@@ -690,11 +777,12 @@ public class Generate extends javax.swing.JFrame {
                     + "INNER JOIN pis_dispense_master pdm "
                     + "ON pom.ORDER_NO = pdm.ORDER_NO "
                     + "INNER JOIN pis_dispense_detail pdd "
-                    + "ON pdm.ORDER_NO = pdd.ORDER_NO "
+                    + "ON pdm.ORDER_NO = pdd.ORDER_NO "  
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
-                    + "AND ec.PMI_NO = '" + getTableClick1() + "' ";
+                    + "AND ec.PMI_NO = '" + getSelectedPatientPMINo() + "' "
+                    + "AND pdm.dispensed_date like '2016-03-25%' ";
             
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             
@@ -772,9 +860,9 @@ public class Generate extends javax.swing.JFrame {
             }
             
             //Get temporary item add to table
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String getDate1 = dateFormat.format(new Date());
-            String sql2 = "SELECT * FROM temp_item WHERE customer_id ='" + getTableClick1() + "' AND date = '" + getDate1 + "' ";
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+            String getDate1 = dateFormat1.format(new Date());
+            String sql2 = "SELECT * FROM temp_item WHERE customer_id ='" + getSelectedPatientPMINo() + "' AND date = '" + getDate1 + "' ";
 
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
             
@@ -1073,6 +1161,7 @@ public class Generate extends javax.swing.JFrame {
     private javax.swing.JButton btn_Modify;
     private javax.swing.JButton btn_Payment;
     private javax.swing.JButton btn_Print;
+    private datechooser.beans.DateChooserCombo dateChooserCombo1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -12,7 +12,7 @@ import main.RMIConnector;
 
 /**
  *
- * @author user
+ * @author Ho Zhen Hong
  */
 public class Payment extends javax.swing.JFrame {
     

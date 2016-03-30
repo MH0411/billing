@@ -32,6 +32,7 @@ public class Billing extends javax.swing.JFrame {
     private String host = sd.getHost();
     private int port = sd.getPort();
     private static String selectedPatient;
+    private DecimalFormat df = new DecimalFormat("#.00");
 
     /**
      * Creates new form billing
@@ -138,14 +139,14 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item ", "Description", "Quantity", "Unit Price", "Total Price"
+                "Item ", "Description", "Quantity", "Unit Price", "Total Price", "Expensed Date"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -198,14 +199,14 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "PMI No.", "IC No.", "Other ID", "Name", "Address", "Phone No."
+                "PMI No.", "IC No.", "Other ID", "Name", "Address", "Phone No.", "Episode Date"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -700,10 +701,10 @@ public class Billing extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     /**
      * Back to Main Menu
-     * @param evt 
+     * @param evt
      */
     private void btn_BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BackActionPerformed
         // TODO add your handling code here:
@@ -711,7 +712,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Generate bill details
-     * @param evt 
+     * @param evt
      */
     private void btn_GenerateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GenerateBillActionPerformed
         // TODO add your handling code here:
@@ -722,7 +723,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Search patient information to bill description
-     * @param evt 
+     * @param evt
      */
     private void jt_PatientInformationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_PatientInformationMouseClicked
         // TODO add your handling code here:
@@ -730,20 +731,20 @@ public class Billing extends javax.swing.JFrame {
             int rowIndex = 0;
 
             //Get no of row
-            rowIndex = jt_PatientInformation.getSelectedRow(); 
+            rowIndex = jt_PatientInformation.getSelectedRow();
             rowIndex = jt_PatientInformation.convertRowIndexToModel(rowIndex);
             //Assign row value to select
-            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString(); 
+            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
 
             DateFormat dateFormat;
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06 
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06
             Date date = new Date();
-            
+
             String sql = "SELECT DISTINCT "
                     + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
                     + "mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, "
-                    + "ec.PMI_NO, pb.PMI_NO "
-                    + "FROM ehr_central ec " 
+                    + "ec.PMI_NO, pb.PMI_NO, pdm.dispensed_date "
+                    + "FROM ehr_central ec "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON ec.PMI_NO = pb.PMI_NO "
                     + "INNER JOIN pis_order_master pom "
@@ -755,8 +756,9 @@ public class Billing extends javax.swing.JFrame {
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
                     + "WHERE ec.PMI_NO = '" + selectedPatient + "' "
-                    + "AND (ec.status = 1 OR ec.status = 3) ";
-            
+                    + "AND (ec.status = 1 OR ec.status = 3) " 
+                    + "AND pdm.`DISPENSED_DATE` like '2016-03-25%'";
+
             //Execute query
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
@@ -769,15 +771,14 @@ public class Billing extends javax.swing.JFrame {
 
             //add row and show value
             for (int i = 0; i < data.size(); i++) {
-
-                DecimalFormat df = new DecimalFormat("#.00"); 
                 model.addRow(new Object[]{"", "", "", "", ""});
-                
+
                 jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
                 jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
                 jt_BillDescription.setValueAt((int) Double.parseDouble(data.get(i).get(2)), i, 2);
                 jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
                 jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
+                jt_BillDescription.setValueAt(data.get(i).get(7), i, 5);
             }
 
             if (data.size() > 0) {
@@ -795,7 +796,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Add new miscellaneous item
-     * @param evt 
+     * @param evt
      */
     private void btn_mm_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_addActionPerformed
         // TODO add your handling code here:
@@ -849,7 +850,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Cancel modify process
-     * @param evt 
+     * @param evt
      */
     private void btn_mm_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_cancelActionPerformed
         // TODO add your handling code here:
@@ -867,7 +868,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Update the item details
-     * @param evt 
+     * @param evt
      */
     private void btn_mm_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_updateActionPerformed
         // TODO add your handling code here:
@@ -880,7 +881,7 @@ public class Billing extends javax.swing.JFrame {
         String mm_BuyPrice = (String) jtf_mm_buyPrice.getText();
         String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
         String mm_Disc = (String) jtf_mm_disc.getText();
-        
+
         if (mm_ItemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
@@ -918,7 +919,7 @@ public class Billing extends javax.swing.JFrame {
                 jtf_mm_buyPrice.setText("");
                 jtf_mm_sellPrice.setText("");
                 jtf_mm_disc.setText("");
-                
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -927,7 +928,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Send the select item details to text fields
-     * @param evt 
+     * @param evt
      */
     private void jt_MMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_MMMouseClicked
         // TODO add your handling code here:
@@ -936,7 +937,7 @@ public class Billing extends javax.swing.JFrame {
             btn_mm_update.setEnabled(true);
             btn_mm_delete.setEnabled(true);
             jtf_mm_itemCd.setEditable(false);
-            
+
             int row = jt_MM.getSelectedRow();
             String Table_click = (jt_MM.getModel().getValueAt(row, 0).toString());
             String sqlClick = "select * from miscellaneous_item where item_code='" + Table_click + "'";
@@ -955,7 +956,7 @@ public class Billing extends javax.swing.JFrame {
 
     /**
      * Delete the selected item
-     * @param evt 
+     * @param evt
      */
     private void btn_mm_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_deleteActionPerformed
         // TODO add your handling code here:
@@ -963,13 +964,13 @@ public class Billing extends javax.swing.JFrame {
         btn_mm_update.setEnabled(false);
         btn_mm_delete.setEnabled(false);
         jtf_mm_itemCd.setEditable(true);
-        
+
         String mm_ItemCode = (String) jtf_mm_itemCd.getText();
         String mm_ItemDesc = (String) jtf_mm_itemDesc.getText();
         String mm_BuyPrice = (String) jtf_mm_buyPrice.getText();
         String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
         String mm_Disc = (String) jtf_mm_disc.getText();
-        
+
         if (mm_ItemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
@@ -1005,7 +1006,7 @@ public class Billing extends javax.swing.JFrame {
                 jtf_mm_buyPrice.setText("");
                 jtf_mm_sellPrice.setText("");
                 jtf_mm_disc.setText("");
-                
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -1031,7 +1032,7 @@ public class Billing extends javax.swing.JFrame {
 
     private void btn_mb_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mb_addActionPerformed
         // TODO add your handling code here:
-        
+
         String name = jtf_mb_name.getText();
         String address = jtf_mb_address.getText();
         String ic = jtf_mb_ic.getText();
@@ -1043,14 +1044,14 @@ public class Billing extends javax.swing.JFrame {
         String itemDesc = jtf_mb_itemDesc.getText();
         String quantity = jtf_mb_quantity.getText();
         String unitPrice = jtf_mb_unitPrice.getText();
-        String totalPrice = jtf_mb_total.getText();        
-        
+        String totalPrice = jtf_mb_total.getText();
+
 //        if (name.equals("")){
 //        } else if (address.equals("")){
 //        } else if (ic.equals("")){
 //        } else if (id.equals("")){
 //        } else if (tel.equals("")){
-//        } else if 
+//        } else if
     }//GEN-LAST:event_btn_mb_addActionPerformed
 
     /**
@@ -1060,7 +1061,7 @@ public class Billing extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1095,17 +1096,26 @@ public class Billing extends javax.swing.JFrame {
      */
     private void tablePatientInformation() {
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        String strDate = dateFormat.format(date);
+        
+        System.out.println(strDate);
+        
         try {
-            String sql = "SELECT DISTINCT "
-                    + "pe.PMI_NO, pb.NEW_IC_NO, pb.ID_NO, pb.PATIENT_NAME,  pb.HOME_ADDRESS, pb.MOBILE_PHONE "
+            String sql = "SELECT "
+                    + "pe.PMI_NO, pb.NEW_IC_NO, pb.ID_NO, pb.PATIENT_NAME, "
+                    + "pb.HOME_ADDRESS, pb.MOBILE_PHONE, pe.episode_date "
                     + "FROM pms_episode pe "
                     + "INNER JOIN ehr_central ec "
                     + "ON pe.PMI_NO = ec.PMI_NO "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON ec.PMI_NO = pb.PMI_NO "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
-                    + "AND pe.STATUS ='Discharge' ";
-            
+                    + "AND pe.STATUS ='Discharge' "
+//                    + "AND pe.episode_date = '"+strDate+"' ";
+                    + "AND pe.episode_date = '25/03/2016' ";
+
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
             DefaultTableModel model = (DefaultTableModel) jt_PatientInformation.getModel();
 
@@ -1125,9 +1135,10 @@ public class Billing extends javax.swing.JFrame {
                 jt_PatientInformation.setValueAt(data.get(i).get(3), i, 3);
                 jt_PatientInformation.setValueAt(data.get(i).get(4), i, 4);
                 jt_PatientInformation.setValueAt(data.get(i).get(5), i, 5);
+                jt_PatientInformation.setValueAt(data.get(i).get(6), i, 6);
             }
 
-            test();
+            tableSorter();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -1166,8 +1177,8 @@ public class Billing extends javax.swing.JFrame {
     /**
      * Detect and sort table content based on the input
      */
-    public void test() {
-        TableRowSorter<TableModel> rowSorter 
+    public void tableSorter() {
+        TableRowSorter<TableModel> rowSorter
                 = new TableRowSorter<TableModel>(jt_PatientInformation.getModel());
         jt_PatientInformation.setRowSorter(rowSorter);
 
@@ -1179,7 +1190,7 @@ public class Billing extends javax.swing.JFrame {
 
                 if (text.trim().length() == 0) {
                     rowSorter.setRowFilter(null);
-            
+
                 } else {
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
