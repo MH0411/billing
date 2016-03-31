@@ -216,7 +216,6 @@ public class Generate extends javax.swing.JFrame {
         btn_Modify = new javax.swing.JButton();
         btn_Cancel = new javax.swing.JButton();
         btn_Payment = new javax.swing.JButton();
-        dateChooserCombo1 = new datechooser.beans.DateChooserCombo();
 
         jButton1.setText("jButton1");
 
@@ -317,12 +316,6 @@ public class Generate extends javax.swing.JFrame {
             }
         });
 
-        dateChooserCombo1.addSelectionChangedListener(new datechooser.events.SelectionChangedListener() {
-            public void onSelectionChange(datechooser.events.SelectionChangedEvent evt) {
-                dateChooserCombo1OnSelectionChange(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -350,11 +343,9 @@ public class Generate extends javax.swing.JFrame {
                                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dateChooserCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jtf_billNo, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                                        .addComponent(jtf_date))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jtf_billNo, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                                    .addComponent(jtf_date)))
                             .addComponent(jtf_name)
                             .addComponent(jtf_address)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -383,8 +374,7 @@ public class Generate extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jtf_ic)
-                    .addComponent(dateChooserCombo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jtf_ic))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -683,10 +673,6 @@ public class Generate extends javax.swing.JFrame {
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
-    private void dateChooserCombo1OnSelectionChange(datechooser.events.SelectionChangedEvent evt) {//GEN-FIRST:event_dateChooserCombo1OnSelectionChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateChooserCombo1OnSelectionChange
-
     /**
      * @param args the command line arguments
      */
@@ -767,10 +753,19 @@ public class Generate extends javax.swing.JFrame {
             }
             
             String sql = "SELECT DISTINCT "
-                    + "pb.PATIENT_NAME,  pb.HOME_ADDRESS, pb.NEW_IC_NO, pb.ID_NO, pb.MOBILE_PHONE, NOW(), "
-                    + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
-                    + "mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, "
-                    + "pb.PMI_NO "
+                    + "pb.PATIENT_NAME, "
+                    + "pb.HOME_ADDRESS, "
+                    + "pb.NEW_IC_NO, "
+                    + "pb.ID_NO, "
+                    + "pb.MOBILE_PHONE, "
+                    + "NOW(), "
+                    + "pdd.DRUG_ITEM_CODE, "
+                    + "mdc.D_TRADE_NAME, "
+                    + "pdd.DISPENSED_QTY, "
+                    + "mdc.D_PRICE_PPACK, "
+                    + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL, "
+                    + "pb.PMI_NO, "
+                    + "pb.PATIENT_TYPE "
                     + "FROM pms_episode pe "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON pe.PMI_NO = pb.PMI_NO "
@@ -783,7 +778,7 @@ public class Generate extends javax.swing.JFrame {
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
                     + "WHERE pe.PMI_NO = '" + selectedPatient + "' "
-                    + "AND pom.order_no = '"+ selectedOrderNo +"' ";
+                    + "AND pom.order_no = '"+ selectedOrderNo + "' ";
             
             System.out.println(selectedPatient);
             System.out.println(selectedDate);
@@ -803,9 +798,8 @@ public class Generate extends javax.swing.JFrame {
             jtf_date.setText(data.get(0).get(5));
 
             setCustId(data.get(0).get(11));
-            System.out.println(getCustId());
             
-            
+//            System.out.println(getCustId());
 //            System.out.println("cust id no : " + custId);
 //            System.out.println("bill no : " + billNo);
 //            System.out.println("cust pmi no : " + billNo);
@@ -827,24 +821,11 @@ public class Generate extends javax.swing.JFrame {
                 jt_BillDetails.setValueAt((int) Double.parseDouble(data.get(i).get(8)), i, 2);
                 jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(9))), i, 3);
                 jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(10))), i, 4);
-
             }
 
-            String id = data.get(0).get(3);
-            int lengthId = id.length();
-            
+            String type = data.get(0).get(12);
             //Search and add miscellaneous item to table.
-            if (lengthId == 10) {
-                String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Student'";
-                ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
-                String code = dataItem.get(0).get(1);
-                String desc = dataItem.get(0).get(2);
-                String price = dataItem.get(0).get(4);
-                String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
-                model.addRow(row);
-                
-            } else if (lengthId == 5) {
+            if (type.equals("1")) {
                 String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Staff'";
                 ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
                 String code = dataItem.get(0).get(1);
@@ -854,7 +835,17 @@ public class Generate extends javax.swing.JFrame {
                 Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
                 model.addRow(row);
                 
-            } else {
+            } else if (type.equals("2")) {
+                String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Student'";
+                ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
+                String code = dataItem.get(0).get(1);
+                String desc = dataItem.get(0).get(2);
+                String price = dataItem.get(0).get(4);
+                String total = dataItem.get(0).get(4);
+                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
+                model.addRow(row);
+                
+            } else if (type.equals("3")) {
                 String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Other'";
                 ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
                 String code = dataItem.get(0).get(1);
@@ -1167,7 +1158,6 @@ public class Generate extends javax.swing.JFrame {
     private javax.swing.JButton btn_Modify;
     private javax.swing.JButton btn_Payment;
     private javax.swing.JButton btn_Print;
-    private datechooser.beans.DateChooserCombo dateChooserCombo1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

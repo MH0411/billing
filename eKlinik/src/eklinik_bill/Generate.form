@@ -85,12 +85,9 @@
                                       <Component id="jLabel7" alignment="1" min="-2" pref="53" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="dateChooserCombo1" min="-2" pref="220" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jtf_billNo" pref="220" max="32767" attributes="0"/>
-                                          <Component id="jtf_date" max="32767" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jtf_billNo" pref="220" max="32767" attributes="0"/>
+                                      <Component id="jtf_date" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Component id="jtf_name" max="32767" attributes="0"/>
@@ -130,7 +127,6 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jLabel3" pref="32" max="32767" attributes="0"/>
                       <Component id="jtf_ic" max="32767" attributes="0"/>
-                      <Component id="dateChooserCombo1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -332,11 +328,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_PaymentActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="datechooser.beans.DateChooserCombo" name="dateChooserCombo1">
-          <Events>
-            <EventHandler event="onSelectionChange" listener="datechooser.events.SelectionChangedListener" parameters="datechooser.events.SelectionChangedEvent" handler="dateChooserCombo1OnSelectionChange"/>
           </Events>
         </Component>
       </SubComponents>

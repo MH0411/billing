@@ -32,7 +32,7 @@ public class Billing extends javax.swing.JFrame {
     private String host = sd.getHost();
     private int port = sd.getPort();
     
-    private DecimalFormat df = new DecimalFormat("#.00");
+    private DecimalFormat df = new DecimalFormat("0.00");
     private static String selectedPatient;
     private static String selectedDate;
     private static String selectedOrderNo;
