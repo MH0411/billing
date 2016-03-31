@@ -161,6 +161,7 @@ public class ViewBilling extends javax.swing.JFrame {
 
     private void btn_ViewBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ViewBillActionPerformed
         // TODO add your handling code here:
+           
     }//GEN-LAST:event_btn_ViewBillActionPerformed
 
     /**

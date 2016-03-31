@@ -144,12 +144,12 @@
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="6" rowCount="0">
+                            <Column editable="false" title="Transaction Date" type="java.lang.String"/>
                             <Column editable="false" title="Item " type="java.lang.String"/>
                             <Column editable="false" title="Description" type="java.lang.String"/>
                             <Column editable="false" title="Quantity" type="java.lang.String"/>
                             <Column editable="false" title="Unit Price" type="java.lang.String"/>
                             <Column editable="false" title="Total Price" type="java.lang.String"/>
-                            <Column editable="false" title="Expensed Date" type="java.lang.String"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -260,18 +260,24 @@
                     <Component class="javax.swing.JTable" name="jt_PatientInformation">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="7" rowCount="0">
+                          <Table columnCount="8" rowCount="0">
+                            <Column editable="false" title="Episode Date" type="java.lang.String"/>
+                            <Column editable="true" title="Order No" type="java.lang.Object"/>
                             <Column editable="false" title="PMI No." type="java.lang.String"/>
                             <Column editable="false" title="IC No." type="java.lang.String"/>
                             <Column editable="false" title="Other ID" type="java.lang.Object"/>
                             <Column editable="false" title="Name" type="java.lang.String"/>
                             <Column editable="false" title="Address" type="java.lang.String"/>
                             <Column editable="false" title="Phone No." type="java.lang.String"/>
-                            <Column editable="false" title="Episode Date" type="java.lang.String"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>

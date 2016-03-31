@@ -31,8 +31,12 @@ public class Billing extends javax.swing.JFrame {
     private ServerDetail sd = new ServerDetail();
     private String host = sd.getHost();
     private int port = sd.getPort();
-    private static String selectedPatient;
+    
     private DecimalFormat df = new DecimalFormat("#.00");
+    private static String selectedPatient;
+    private static String selectedDate;
+    private static String selectedOrderNo;
+    private String strDate;
 
     /**
      * Creates new form billing
@@ -48,6 +52,14 @@ public class Billing extends javax.swing.JFrame {
 
     public static String getSelectedPatient() {
         return selectedPatient;
+    }
+    
+    public static String getSelectedDate(){
+        return selectedDate;
+    }
+    
+    public static String getSelectedOrderNo(){
+        return selectedOrderNo;
     }
 
     /**
@@ -139,7 +151,7 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item ", "Description", "Quantity", "Unit Price", "Total Price", "Expensed Date"
+                "Transaction Date", "Item ", "Description", "Quantity", "Unit Price", "Total Price"
             }
         ) {
             Class[] types = new Class [] {
@@ -199,14 +211,14 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "PMI No.", "IC No.", "Other ID", "Name", "Address", "Phone No.", "Episode Date"
+                "Episode Date", "Order No", "PMI No.", "IC No.", "Other ID", "Name", "Address", "Phone No."
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, true, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -734,31 +746,41 @@ public class Billing extends javax.swing.JFrame {
             rowIndex = jt_PatientInformation.getSelectedRow();
             rowIndex = jt_PatientInformation.convertRowIndexToModel(rowIndex);
             //Assign row value to select
-            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
+            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 2).toString();
+            selectedDate = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
+            selectedOrderNo = jt_PatientInformation.getModel().getValueAt(rowIndex, 1).toString();
 
             DateFormat dateFormat;
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy"); //2015-01-06
             Date date = new Date();
+            String todayDate = dateFormat.format(date);
+            
+            String sql = "Select "
+                    + "pdm.dispensed_date, "  
+                    + "pdd.DRUG_ITEM_CODE, "
+                    + "mdc.D_TRADE_NAME, "
+                    + "pdd.DISPENSED_QTY, "
+                    + "mdc.D_PRICE_PPACK, "
+                    + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL " 
+                    + "FROM "
+                    + "pms_episode pe, "
+                    + "pis_order_master pom, "
+                    + "pis_dispense_detail pdd, "
+                    + "pis_mdc2 mdc, "
+                    + "pms_patient_biodata pb, "
+                    + "pis_dispense_master pdm "
+                    + "WHERE pe.PMI_NO = pom.PMI_NO "
+                    + "AND pom.ORDER_NO = pdd.ORDER_NO "
+                    + "AND pom.ORDER_NO = '"+selectedOrderNo+"' "
+                    + "AND pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
+                    + "AND pe.PMI_NO = pb.PMI_NO "
+                    + "AND DATE(date_format(str_to_date(pe.episode_date, '%d/%m/%Y'), '%Y-%m-%d')) = DATE(pdm.order_date) "
+                    + "AND pe.episode_date = '"+selectedDate+"' "
+                    + "GROUP BY pom.ORDER_NO, mdc.UD_MDC_CODE ";
 
-            String sql = "SELECT DISTINCT "
-                    + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
-                    + "mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, "
-                    + "ec.PMI_NO, pb.PMI_NO, pdm.dispensed_date "
-                    + "FROM ehr_central ec "
-                    + "INNER JOIN pms_patient_biodata pb "
-                    + "ON ec.PMI_NO = pb.PMI_NO "
-                    + "INNER JOIN pis_order_master pom "
-                    + "ON ec.PMI_NO = pom.PMI_NO "
-                    + "INNER JOIN pis_dispense_master pdm "
-                    + "ON pom.ORDER_NO = pdm.ORDER_NO "
-                    + "INNER JOIN pis_dispense_detail pdd "
-                    + "ON pdm.ORDER_NO = pdd.ORDER_NO "
-                    + "INNER JOIN pis_mdc2 mdc "
-                    + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "WHERE ec.PMI_NO = '" + selectedPatient + "' "
-                    + "AND (ec.status = 1 OR ec.status = 3) " 
-                    + "AND pdm.`DISPENSED_DATE` like '2016-03-25%'";
-
+            System.out.println(todayDate);
+            System.out.println(sql);
+            
             //Execute query
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
@@ -775,10 +797,10 @@ public class Billing extends javax.swing.JFrame {
 
                 jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
                 jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
-                jt_BillDescription.setValueAt((int) Double.parseDouble(data.get(i).get(2)), i, 2);
-                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
+                jt_BillDescription.setValueAt(data.get(i).get(2), i, 2);
+                jt_BillDescription.setValueAt((int) Double.parseDouble((data.get(i).get(3))), i, 3);
                 jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
-                jt_BillDescription.setValueAt(data.get(i).get(7), i, 5);
+                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(5))), i, 5);
             }
 
             if (data.size() > 0) {
@@ -791,7 +813,6 @@ public class Billing extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }//GEN-LAST:event_jt_PatientInformationMouseClicked
 
     /**
@@ -1096,25 +1117,33 @@ public class Billing extends javax.swing.JFrame {
      */
     private void tablePatientInformation() {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
-        String strDate = dateFormat.format(date);
-        
-        System.out.println(strDate);
+        strDate = df1.format(date);
+        String strDate1 = df2.format(date);
         
         try {
-            String sql = "SELECT "
-                    + "pe.PMI_NO, pb.NEW_IC_NO, pb.ID_NO, pb.PATIENT_NAME, "
-                    + "pb.HOME_ADDRESS, pb.MOBILE_PHONE, pe.episode_date "
+            String sql = "SELECT distinct "
+                    + "pe.episode_date, pom.order_no, pe.PMI_NO, pb.NEW_IC_NO, pb.ID_NO, "
+                    + "pb.PATIENT_NAME, pb.HOME_ADDRESS, "
+                    + "pb.MOBILE_PHONE "
                     + "FROM pms_episode pe "
+                    + "INNER JOIN pis_order_master pom "
+                    + "ON pe.PMI_NO = pom.PMI_NO "
                     + "INNER JOIN ehr_central ec "
                     + "ON pe.PMI_NO = ec.PMI_NO "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON ec.PMI_NO = pb.PMI_NO "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
                     + "AND pe.STATUS ='Discharge' "
-//                    + "AND pe.episode_date = '"+strDate+"' ";
-                    + "AND pe.episode_date = '25/03/2016' ";
+                    + "AND pom.episode_code like '"+strDate1+" %' "
+                    + "AND pe.episode_date = '"+strDate+"' "
+                    + "Group by pom.order_no";
+            
+            System.out.println(strDate);
+            System.out.println(strDate1);
+            System.out.println(sql);
 
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
             DefaultTableModel model = (DefaultTableModel) jt_PatientInformation.getModel();
@@ -1136,6 +1165,7 @@ public class Billing extends javax.swing.JFrame {
                 jt_PatientInformation.setValueAt(data.get(i).get(4), i, 4);
                 jt_PatientInformation.setValueAt(data.get(i).get(5), i, 5);
                 jt_PatientInformation.setValueAt(data.get(i).get(6), i, 6);
+                jt_PatientInformation.setValueAt(data.get(i).get(7), i, 7);
             }
 
             tableSorter();

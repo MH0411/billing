@@ -102,6 +102,8 @@ public class Generate extends javax.swing.JFrame {
     };
 
     public final String selectedPatient = Billing.getSelectedPatient();
+    public final String selectedDate = Billing.getSelectedDate();
+    public final String selectedOrderNo = Billing.getSelectedOrderNo();
     public static String billNo;
     public static String custId;
     public static String tableClick2;
@@ -769,20 +771,24 @@ public class Generate extends javax.swing.JFrame {
                     + "pdd.DRUG_ITEM_CODE, mdc.D_TRADE_NAME, pdd.DISPENSED_QTY, "
                     + "mdc.D_PRICE_PPACK, pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK AS TOTAL, "
                     + "pb.PMI_NO "
-                    + "FROM ehr_central ec "
+                    + "FROM pms_episode pe "
                     + "INNER JOIN pms_patient_biodata pb "
-                    + "ON ec.PMI_NO = pb.PMI_NO "
+                    + "ON pe.PMI_NO = pb.PMI_NO "
                     + "INNER JOIN pis_order_master pom "
-                    + "ON ec.PMI_NO = pom.PMI_NO "
+                    + "ON pe.PMI_NO = pom.PMI_NO "
                     + "INNER JOIN pis_dispense_master pdm "
                     + "ON pom.ORDER_NO = pdm.ORDER_NO "
                     + "INNER JOIN pis_dispense_detail pdd "
                     + "ON pdm.ORDER_NO = pdd.ORDER_NO "  
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "WHERE (ec.status = 1 OR ec.status = 3) "
-                    + "AND ec.PMI_NO = '" + getSelectedPatientPMINo() + "' "
-                    + "AND pdm.dispensed_date like '2016-03-25%' ";
+                    + "WHERE pe.PMI_NO = '" + selectedPatient + "' "
+                    + "AND pom.order_no = '"+ selectedOrderNo +"' ";
+            
+            System.out.println(selectedPatient);
+            System.out.println(selectedDate);
+            System.out.println(selectedOrderNo);
+            System.out.println(sql);
             
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             
