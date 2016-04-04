@@ -14,7 +14,7 @@ import main.RMIConnector;
 
 /**
  *
- * @author user
+ * @author Ho Zhen Hong
  */
 public class AddItem extends javax.swing.JFrame {
 // call library
@@ -24,9 +24,12 @@ public class AddItem extends javax.swing.JFrame {
     // declaration host and port
     private String host = sd.getHost();
     private int port = sd.getPort();
+    
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+    private Date date = new Date();        
 
-    private String id_no = Generate.getCustId();
-    private String bill_no = Generate.getBillNo();
+    private String custId = Generate.getCustId();
+    private String billNo = Generate.getBillNo();
 
     /**
      * Creates new form addItem
@@ -47,10 +50,10 @@ public class AddItem extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jtf_desc = new javax.swing.JTextField();
-        btn_save = new javax.swing.JButton();
+        btn_add = new javax.swing.JButton();
         jcb_itemCd = new javax.swing.JComboBox<>();
         jtf_unitPrice = new javax.swing.JTextField();
-        jtf_qty = new javax.swing.JTextField();
+        jtf_quantity = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -68,10 +71,10 @@ public class AddItem extends javax.swing.JFrame {
         jtf_desc.setEditable(false);
         jtf_desc.setEnabled(false);
 
-        btn_save.setText("Save");
-        btn_save.addActionListener(new java.awt.event.ActionListener() {
+        btn_add.setText("Add");
+        btn_add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_saveActionPerformed(evt);
+                btn_addActionPerformed(evt);
             }
         });
 
@@ -83,11 +86,6 @@ public class AddItem extends javax.swing.JFrame {
                 jcb_itemCdPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
-            }
-        });
-        jcb_itemCd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcb_itemCdActionPerformed(evt);
             }
         });
 
@@ -133,12 +131,12 @@ public class AddItem extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(66, 66, 66))
                             .addComponent(jtf_desc, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jcb_itemCd, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jtf_unitPrice, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jtf_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jtf_quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
@@ -164,12 +162,12 @@ public class AddItem extends javax.swing.JFrame {
                     .addComponent(jtf_unitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jtf_qty)
+                    .addComponent(jtf_quantity)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -187,82 +185,99 @@ public class AddItem extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * cancel current action
+     * @param evt 
+     */
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
         // TODO add your handling code here:
-        Generate m = new Generate(); //set new window
-        m.setVisible(true);//set new window visible
         dispose(); // for hide current window
     }//GEN-LAST:event_btn_cancelActionPerformed
 
-    private void jcb_itemCdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcb_itemCdActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jcb_itemCdActionPerformed
-
     private void jcb_itemCdPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jcb_itemCdPopupMenuWillBecomeInvisible
         // TODO add your handling code here:
-        String Jcombo1 = (String) jcb_itemCd.getSelectedItem();
-        RMIConnector rc = new RMIConnector();
-        String sql = "Select * from miscellaneous_item where item_code='" + Jcombo1 + "'";
+        String selectedItem = (String) jcb_itemCd.getSelectedItem();
+        String sql = "Select * from miscellaneous_item where item_code='" + selectedItem + "'";
+        ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
-        if (Jcombo1 != "-Please Select-") {
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
+        if (selectedItem != "-Please Select-") {
             jtf_desc.setText(data.get(0).get(2));
             jtf_unitPrice.setText(data.get(0).get(4));
         } else {
             jtf_desc.setText("");
             jtf_unitPrice.setText("");
-            jtf_qty.setText("");
+            jtf_quantity.setText("");
         }
     }//GEN-LAST:event_jcb_itemCdPopupMenuWillBecomeInvisible
 
-    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
+    /**
+     * Add selected item to customer dtl
+     * @param evt 
+     */
+    private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
-        DateFormat dateFormat;
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //2015-01-06 
-        Date date = new Date();
-        String getdate = dateFormat.format(date);
+        String strDate = dateFormat.format(date);
+        
         String Jcombo1 = (String) jcb_itemCd.getSelectedItem();
-        String Jtext1 = (String) jtf_desc.getText();
-        String Jtext2 = (String) jtf_unitPrice.getText();
-        String Jtext3 = (String) jtf_qty.getText();
+        String desc = (String) jtf_desc.getText();
+        String unitPrice = (String) jtf_unitPrice.getText();
+        String quantity = (String) jtf_quantity.getText();
 
-        if (Jtext3 == null) {
+        if (quantity == null) {
             String infoMessage = "Please insert data in Quantity text field.";
-            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning",
+                    JOptionPane.WARNING_MESSAGE);
 
         } else if (Jcombo1 == null) {
             String infoMessage = "Please select the Item Code.";
-            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning",
+                    JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jtext3 != null) {
+        } else if (quantity != null) {
             try {
-
-//                String code[] = { Jcombo1, Jtext1, Jtext2, Jtext3 };
-//                
-//                
-                System.out.println(getdate);
-                String cust_id = id_no;
-                String bill = bill_no;
-//            System.out.println(code[1]);
-//            System.out.println(code[2]);
-//            System.out.println(code[3]);
-                String sqlinsert2 = "insert into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "values('" + bill + "', '" + getdate + "', '" + Jcombo1 + "','" + Jtext1 + "','" + Jtext2 + "','" + Jtext3 + "','" + cust_id + "' )";
-
-                boolean insert = rc.setQuerySQL(host, port, sqlinsert2);
+                System.out.println(strDate);
+                String month = new Month().getCreditMonth();
+                double totalPrice = Integer.parseInt(quantity) * Double.parseDouble(unitPrice);
+                
+                String sql1 = "SELECT "+ month +" "
+                        + "FROM customer_ledger "
+                        + "WHERE customer_id = '"+ custId +"' "
+                        + "AND bill_no = '"+ billNo +"' ";
+                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
+                String currentCredit = data.get(0).get(0);
+                
+                currentCredit = String.valueOf(Double.parseDouble(currentCredit) + totalPrice);
+                
+                String sql2 = "UPDATE customer_ledger "
+                        + "SET "+ month +" = '"+ currentCredit +"' "
+                        + "WHERE customer_id = '"+ custId +"' "
+                        + "AND bill_no = '"+ billNo +"' ";
+                rc.setQuerySQL(host, port, sql2);
+                
+                String sql3 = "INSERT into customer_dtl(bill_no, txn_date, "
+                        + "item_cd, item_desc, item_amt, quantity, customer_id )"
+                        + "VALUES('" + billNo + "', '" + strDate + "', '" + Jcombo1 
+                        + "','" + desc + "','" + unitPrice + "','" + quantity 
+                        + "','" + custId + "' )";
+                rc.setQuerySQL(host, port, sql3);
+                
                 String infoMessage = "Success add data";
-                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
-
+                JOptionPane.showMessageDialog(null, infoMessage, "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
+            
             AfterModify m = new AfterModify(); //set new window
             m.setVisible(true);//set new window visible
             dispose(); // for hide current window
         }
-    }//GEN-LAST:event_btn_saveActionPerformed
+    }//GEN-LAST:event_btn_addActionPerformed
 
+    /**
+     * get item from miscellaneous item table
+     */
     private void fillcombo() {
         jcb_itemCd.removeAllItems();
         jcb_itemCd.addItem("-Please Select-");
@@ -313,8 +328,8 @@ public class AddItem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_cancel;
-    private javax.swing.JButton btn_save;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -323,7 +338,7 @@ public class AddItem extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox<String> jcb_itemCd;
     private javax.swing.JTextField jtf_desc;
-    private javax.swing.JTextField jtf_qty;
+    private javax.swing.JTextField jtf_quantity;
     private javax.swing.JTextField jtf_unitPrice;
     // End of variables declaration//GEN-END:variables
 }

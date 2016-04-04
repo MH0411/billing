@@ -72,13 +72,13 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="btn_cancel" min="-2" pref="88" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btn_save" min="-2" pref="87" max="-2" attributes="0"/>
+                                  <Component id="btn_add" min="-2" pref="87" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jtf_desc" alignment="1" max="32767" attributes="0"/>
                               <Component id="jcb_itemCd" alignment="1" max="32767" attributes="0"/>
                               <Component id="jtf_unitPrice" alignment="1" max="32767" attributes="0"/>
-                              <Component id="jtf_qty" min="-2" pref="247" max="-2" attributes="0"/>
+                              <Component id="jtf_quantity" min="-2" pref="247" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -113,13 +113,13 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jtf_qty" max="32767" attributes="0"/>
+                      <Component id="jtf_quantity" max="32767" attributes="0"/>
                       <Component id="jLabel5" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btn_cancel" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
-                      <Component id="btn_save" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                      <Component id="btn_add" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="37" max="32767" attributes="0"/>
               </Group>
@@ -133,12 +133,12 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_save">
+        <Component class="javax.swing.JButton" name="btn_add">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Save"/>
+            <Property name="text" type="java.lang.String" value="Add"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_saveActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="jcb_itemCd">
@@ -154,7 +154,6 @@
           </Properties>
           <Events>
             <EventHandler event="popupMenuWillBecomeInvisible" listener="javax.swing.event.PopupMenuListener" parameters="javax.swing.event.PopupMenuEvent" handler="jcb_itemCdPopupMenuWillBecomeInvisible"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcb_itemCdActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -166,7 +165,7 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtf_qty">
+        <Component class="javax.swing.JTextField" name="jtf_quantity">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>

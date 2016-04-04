@@ -35,7 +35,7 @@ import static jdk.nashorn.internal.objects.NativeString.substring;
  * @author Amalina
  * @author Ho Zhen Hong
  */
-public class Generate extends javax.swing.JFrame {
+public final class Generate extends javax.swing.JFrame {
 
     //Connect to RMI
     RMIConnector rc = new RMIConnector();
@@ -44,66 +44,19 @@ public class Generate extends javax.swing.JFrame {
     private String host = sd.getHost();
     private int port = sd.getPort();
     
-    JDatePicker datePicker = new JDatePicker() {
-        @Override
-        public void setTextEditable(boolean bln) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+    
+    private DateFormat dateFormat1 = new SimpleDateFormat("MMyyyy");
+    private DateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
+    private Date date = new Date();
+    private String date1 = dateFormat1.format(date);
+    private String date2 = dateFormat2.format(date);
 
-        @Override
-        public boolean isTextEditable() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void setButtonFocusable(boolean bln) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean getButtonFocusable() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void setShowYearButtons(boolean bln) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isShowYearButtons() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void setDoubleClickAction(boolean bln) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isDoubleClickAction() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public DateModel<?> getModel() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void addActionListener(ActionListener al) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void removeActionListener(ActionListener al) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    };
+    DecimalFormat df = new DecimalFormat("0.00");
 
     public final String selectedPatient = Billing.getSelectedPatient();
     public final String selectedDate = Billing.getSelectedDate();
     public final String selectedOrderNo = Billing.getSelectedOrderNo();
+    
     public static String billNo;
     public static String custId;
     public static String tableClick2;
@@ -213,7 +166,7 @@ public class Generate extends javax.swing.JFrame {
         jt_BillDetails = new javax.swing.JTable();
         btn_Print = new javax.swing.JButton();
         btn_Confirm = new javax.swing.JButton();
-        btn_Modify = new javax.swing.JButton();
+        btnAddItem = new javax.swing.JButton();
         btn_Cancel = new javax.swing.JButton();
         btn_Payment = new javax.swing.JButton();
 
@@ -271,11 +224,6 @@ public class Generate extends javax.swing.JFrame {
             }
         });
         jt_BillDetails.getTableHeader().setReorderingAllowed(false);
-        jt_BillDetails.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jt_BillDetailsMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(jt_BillDetails);
 
         btn_Print.setText("Print Receipt");
@@ -293,11 +241,12 @@ public class Generate extends javax.swing.JFrame {
             }
         });
 
-        btn_Modify.setText("Modify");
-        btn_Modify.setEnabled(false);
-        btn_Modify.addActionListener(new java.awt.event.ActionListener() {
+        btnAddItem.setText("Add Item");
+        btnAddItem.setToolTipText("");
+        btnAddItem.setEnabled(false);
+        btnAddItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ModifyActionPerformed(evt);
+                btnAddItemActionPerformed(evt);
             }
         });
 
@@ -353,7 +302,7 @@ public class Generate extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Modify, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -395,7 +344,7 @@ public class Generate extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Modify, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(16, 16, 16))
         );
@@ -425,8 +374,7 @@ public class Generate extends javax.swing.JFrame {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "Receipt.pdf");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
-        }     
-
+        } 
     }//GEN-LAST:event_btn_PrintActionPerformed
 
     /**
@@ -444,70 +392,11 @@ public class Generate extends javax.swing.JFrame {
      * Allow modification of bill
      * @param evt 
      */
-    private void btn_ModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModifyActionPerformed
-//        jButton1.setEnabled(false);
-//        jButton2.setEnabled(true);
-//        jButton3.setEnabled(false);
-//        jButton4.setEnabled(true);
-//        jButton5.setEnabled(true);   
-//        try {
-//                String sql = "SELECT DISTINCT "
-//                + "pb.PATIENT_NAME, "
-//                + "pb.HOME_ADDRESS, "
-//                + "pb.NEW_IC_NO, "
-//                + "pb.ID_NO, "
-//                + "pb.MOBILE_PHONE, "
-//                + "ch.bill_no, "
-//                + "ch.txn_date, "
-//                + "cd.item_cd, "
-//                + "cd.item_desc, "
-//                + "cd.quantity, "
-//                + "cd.item_amt, "
-//                + "cd.quantity * cd.item_amt AS total "
-//                + "FROM customer_hdr ch "
-//                + "INNER JOIN customer_dtl cd "
-//                + "ON ch.bill_no = cd.bill_no "
-//                + "INNER JOIN pms_patient_biodata pb "
-//                + "ON ch.customer_id = pb.ID_NO "
-//                + "WHERE ch.customer_id = '"+cust_id+"'";
-//                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
-//
-//                jTextField1.setText(data.get(0).get(0));
-//                jTextField2.setText(data.get(0).get(1));
-//                jTextField3.setText(data.get(0).get(2));
-//                jTextField4.setText(data.get(0).get(3));
-//                jTextField5.setText(data.get(0).get(4));
-//                jTextField6.setText(data.get(0).get(5));
-//                jTextField7.setText(data.get(0).get(6));
-//                DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel();
-//
-//                //remove all row
-//                int rowCount1 = model1.getRowCount();
-//                for (int i = rowCount1 - 1; i >= 0; i--) {
-//                    model1.removeRow(i);
-////                System.out.println("i " + i);
-//                }
-//
-//                //add row and show value
-//                for (int i = 0; i < data.size(); i++) {
-//                    model1.addRow(new Object[]{"", "", "", "", ""});
-//
-//                    //jTable1.setValueAt((Object)i, 1, 1);
-//                    jTable1.setValueAt(data.get(i).get(7), i, 0);
-//                    jTable1.setValueAt(data.get(i).get(8), i, 1);
-//                    jTable1.setValueAt(data.get(i).get(9), i, 2);
-//                    jTable1.setValueAt(data.get(i).get(10), i, 3);
-//                    jTable1.setValueAt(data.get(i).get(11), i, 4);
-//
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-            AfterModify afterModify = new AfterModify(); //set new window
-            afterModify.setVisible(true);//set new window visible
-            dispose(); // for hide current window
-    }//GEN-LAST:event_btn_ModifyActionPerformed
+    private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
+        // TODO add your handling code here:
+        AddItem addItem = new AddItem();
+        addItem.setVisible(true);
+    }//GEN-LAST:event_btnAddItemActionPerformed
 
     /**
      * Confirm to add bill to customer hdr and dtl
@@ -519,7 +408,7 @@ public class Generate extends javax.swing.JFrame {
         btn_Payment.setEnabled(true);
         btn_Print.setEnabled(true);
         btn_Confirm.setEnabled(false);
-        btn_Modify.setEnabled(true);
+        btnAddItem.setEnabled(true);
         btn_Cancel.setEnabled(false);
         
         try {
@@ -544,74 +433,20 @@ public class Generate extends javax.swing.JFrame {
                 String quantity = (jt_BillDetails.getModel().getValueAt(i, 2).toString());
                 String unitPrice = (jt_BillDetails.getModel().getValueAt(i, 3).toString());
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
-
+   
                 String sql1 = "insert into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
                         + "values('" + billNo + "','" + stringDate + "','" + itemCode + "','" + itemDesc + "','" + unitPrice + "','" + quantity + "','" + getCustId() + "' )";
                 rc.setQuerySQL(host, port, sql1);
-
-                String sql2 = "insert into last_seq_no(last_seq_no )" + "values('" + last_seq + "' )";
-                rc.setQuerySQL(host, port, sql2);
                 
                 //Calculate total items and total price of items
                 double subtol = Double.parseDouble(String.valueOf(subTotal));
-                datasize = datasize + 1;
-                totalPrice = totalPrice + subtol;
+                datasize++;
+                totalPrice += subtol;
             }
-            
-            DateFormat dateFormat;
-            dateFormat = new SimpleDateFormat("MM");
-            Date date = new Date();
 
-            String creditMonth = null;
-            String month = dateFormat.format(date);
-            
-            //Check current month
-            if (null != month) {
-                switch (month) {
-                    case "01":
-                        creditMonth = "cr_amt_1";
-                        break;
-                    case "02":
-                        creditMonth = "cr_amt_2";
-                        break;
-                    case "03":
-                        creditMonth = "cr_amt_3";
-                        break;
-                    case "04":
-                        creditMonth = "cr_amt_4";
-                        break;
-                    case "05":
-                        creditMonth = "cr_amt_5";
-                        break;
-                    case "06":
-                        creditMonth = "cr_amt_6";
-                        break;
-                    case "07":
-                        creditMonth = "cr_amt_7";
-                        break;
-                    case "08":
-                        creditMonth = "cr_amt_8";
-                        break;
-                    case "09":
-                        creditMonth = "cr_amt_9";
-                        break;
-                    case "10":
-                        creditMonth = "cr_amt_10";
-                        break;
-                    case "11":
-                        creditMonth = "cr_amt_11";
-                        break;
-                    case "12":
-                        creditMonth = "cr_amt_12";
-                        break;
-                    default:
-                        break;
-                }
-            }
+            String creditMonth = new Month().getCreditMonth();
             
             /**
-             * haven complete
-             * get last month credit and debit to calculate this month credit
              * get this month credit add to current bill
              */
             String sql3 = "insert into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity)"
@@ -629,43 +464,6 @@ public class Generate extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_btn_ConfirmActionPerformed
-
-    /**
-     * ??
-     * @param evt 
-     */
-    private void jt_BillDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_BillDetailsMouseClicked
-        // TODO add your handling code here:
-//        int row = jTable1.getSelectedRow();
-//        Table_click2 = (jTable1.getModel().getValueAt(row, 0).toString());
-//        edit m = new edit(); //set new window
-//        m.setVisible(true);//set new window visible
-//        dispose(); // for hide current window
-//
-//        String sql = "SELECT DISTINCT pdm.ORDER_NO "
-//                + "FROM ehr_central ec "
-//                + "INNER JOIN pms_patient_biodata pb "
-//                + "ON ec.PMI_NO = pb.PMI_NO "
-//                + "INNER JOIN pis_order_master pom "
-//                + "ON ec.PMI_NO = pom.PMI_NO "
-//                + "INNER JOIN pis_dispense_master pdm "
-//                + "ON pom.ORDER_NO = pdm.ORDER_NO "
-//                + "INNER JOIN pis_dispense_detail pdd "
-//                + "ON pdm.ORDER_NO = pdd.ORDER_NO "
-//                + "INNER JOIN pis_mdc2 mdc "
-//                + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-//                + "WHERE (ec.status = 1 OR ec.status = 3) "
-//                + "AND ec.PMI_NO = '" + Table_click1 + "' "
-//                + "AND  pdd.DRUG_ITEM_CODE = '" + Table_click2 + "' ";
-//        //+ "AND substring(pom.EPISODE_CODE,1,10)='2015-12-21' "
-//        //+ "AND substring(pdm.ORDER_DATE,1,10)='2015-12-21'";
-////                    + "AND substring(pom.EPISODE_CODE,1,10)='" + dateFormat.format(date) + "' "
-////                    + "AND substring(pdm.ORDER_DATE,1,10)='" + dateFormat.format(date) + "'";
-//        ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
-//        orderno = data.get(0).get(0);
-//        System.out.println("test order no: " + orderno);
-
-    }//GEN-LAST:event_jt_BillDetailsMouseClicked
 
     private void btn_PaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PaymentActionPerformed
         // TODO add your handling code here:
@@ -713,46 +511,32 @@ public class Generate extends javax.swing.JFrame {
      */
     public void billDetails() {
         try {
-            DateFormat dateFormat1;
-            DateFormat dateFormat2;
-            dateFormat1 = new SimpleDateFormat("MMyyyy");
-            dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = new Date();
-            String date1 = dateFormat1.format(date);
-            String date2 = dateFormat2.format(date);
             
-            DecimalFormat df = new DecimalFormat("0.00"); 
+            String sql1 = "SELECT last_seq_no FROM last_seq_no FOR UPDATE";
+            ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sql1);
             
-            String sqlSearch = "SELECT bill_no FROM customer_ledger WHERE customer_id = '"+getCustId()+"' ";
-            ArrayList<ArrayList<String>> dataSearch = rc.getQuerySQL(host, port, sqlSearch);
+            //Get last sequance number
+            String seqNo = dataSeq.get(0).get(0);
+            int seq = Integer.parseInt(seqNo);
+            int currSeq = seq + 1;
+            String currentSeq = Integer.toString(currSeq);
             
-            //if customer ledger no selected patient record create new bill
-            //else get bill no in customer ledger
-            if (dataSearch.isEmpty()){
-                //Check count of bills
-                String sqlSeqNo = "SELECT MAX(last_seq_no) AS no FROM last_seq_no";
-                ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sqlSeqNo);
-
-                //Generate bill no
-                String checkSeq = dataSeq.get(0).get(0);
-                int seq = Integer.parseInt(checkSeq);
-                int currSeq = seq + 1;
-                String currentSeq = Integer.toString(currSeq);
-
-                int length = (int) Math.log10(currSeq) + 1;
-                String zero = "0";
-                String num = currentSeq;
-
-                int count;
-                for (count = length; count < 10; count++) {
-                    num = zero + num;
-                }
-                setBillNo(num + date1);
-            } else {
-                setBillNo(dataSearch.get(0).get(0));
+            //Update last sequance number
+            String sql2 = "UPDATE last_seq_no SET last_seq_no = '"+ currentSeq +"' ";
+            rc.setQuerySQL(host, port, sql2);
+            
+            //Generate bill no
+            int length = (int) Math.log10(currSeq) + 1;
+            String zero = "0";
+            String num = currentSeq;
+            int count;
+            for (count = length; count < 10; count++) {
+                num = zero + num;
             }
+            setBillNo(num + date1);
             
-            String sql = "SELECT DISTINCT "
+            //Display selected patient bill info
+            String sql3 = "SELECT DISTINCT "
                     + "pb.PATIENT_NAME, "
                     + "pb.HOME_ADDRESS, "
                     + "pb.NEW_IC_NO, "
@@ -779,15 +563,9 @@ public class Generate extends javax.swing.JFrame {
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
                     + "WHERE pe.PMI_NO = '" + selectedPatient + "' "
                     + "AND pom.order_no = '"+ selectedOrderNo + "' ";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql3);
             
-            System.out.println(selectedPatient);
-            System.out.println(selectedDate);
-            System.out.println(selectedOrderNo);
-            System.out.println(sql);
-            
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-            
-            System.out.println(data.get(0).get(0));
+//            System.out.println(data.get(0).get(0));
 
             jtf_name.setText(data.get(0).get(0));
             jtf_address.setText(data.get(0).get(1));
@@ -798,14 +576,7 @@ public class Generate extends javax.swing.JFrame {
             jtf_date.setText(data.get(0).get(5));
 
             setCustId(data.get(0).get(11));
-            
-//            System.out.println(getCustId());
-//            System.out.println("cust id no : " + custId);
-//            System.out.println("bill no : " + billNo);
-//            System.out.println("cust pmi no : " + billNo);
-            
             DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
-
             //Remove all previous row
             int rowCount = model.getRowCount();
             for (int i = rowCount - 1; i >= 0; i--) {
@@ -815,7 +586,6 @@ public class Generate extends javax.swing.JFrame {
             //Add row and show value
             for (int i = 0; i < data.size(); i++) {
                 model.addRow(new Object[]{"", "", "", "", ""});
-
                 jt_BillDetails.setValueAt(data.get(i).get(6), i, 0);
                 jt_BillDetails.setValueAt(data.get(i).get(7), i, 1);
                 jt_BillDetails.setValueAt((int) Double.parseDouble(data.get(i).get(8)), i, 2);
@@ -823,58 +593,43 @@ public class Generate extends javax.swing.JFrame {
                 jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(10))), i, 4);
             }
 
-            String type = data.get(0).get(12);
             //Search and add miscellaneous item to table.
+            String type = data.get(0).get(12);
             if (type.equals("1")) {
-                String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Staff'";
-                ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
-                String code = dataItem.get(0).get(1);
-                String desc = dataItem.get(0).get(2);
-                String price = dataItem.get(0).get(4);
-                String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
-                model.addRow(row);
-                
+                type = "staff";
             } else if (type.equals("2")) {
-                String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Student'";
-                ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
-                String code = dataItem.get(0).get(1);
-                String desc = dataItem.get(0).get(2);
-                String price = dataItem.get(0).get(4);
-                String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
-                model.addRow(row);
-                
+                type = "student";
             } else if (type.equals("3")) {
-                String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = 'Other'";
-                ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
-                String code = dataItem.get(0).get(1);
-                String desc = dataItem.get(0).get(2);
-                String price = dataItem.get(0).get(4);
-                String total = dataItem.get(0).get(4);
-                Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
-                model.addRow(row);
+                type = "other";
             }
+            String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = '" + type + "'";
+            ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
+            String code = dataItem.get(0).get(1);
+            String desc = dataItem.get(0).get(2);
+            String price = dataItem.get(0).get(4);
+            String total = dataItem.get(0).get(4);
+            Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
+            model.addRow(row);
             
             //Get temporary item add to table
             dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
             String getDate1 = dateFormat1.format(new Date());
-            String sql2 = "SELECT * FROM temp_item WHERE customer_id ='" + getSelectedPatientPMINo() + "' AND date = '" + getDate1 + "' ";
-
-            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
+            String sql4 = "SELECT * FROM temp_item WHERE customer_id ='" + getSelectedPatientPMINo() + "' AND date = '" + getDate1 + "' ";
+            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
             
+            String qt = "";
             for (int i = 0; i < data2.size(); i++) {
-                String code = data2.get(i).get(3);
-                String desc = data2.get(i).get(4);
-                String qt = data2.get(i).get(5);
-                String price = data2.get(i).get(6);
+                code = data2.get(i).get(3);
+                desc = data2.get(i).get(4);
+                qt = data2.get(i).get(5);
+                price = data2.get(i).get(6);
                 double subTotal = Double.parseDouble(qt) * Double.parseDouble(price);
 
                 int subTot = (int) subTotal;
                 String tot = Integer.toString(subTot);
 
-                Object[] row = {code, desc, qt, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(tot))};
-                model.addRow(row);
+                Object[] row1 = {code, desc, qt, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(tot))};
+                model.addRow(row1);
             }
             
         } catch (Exception e) {
@@ -1153,9 +908,9 @@ public class Generate extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddItem;
     private javax.swing.JButton btn_Cancel;
     private javax.swing.JButton btn_Confirm;
-    private javax.swing.JButton btn_Modify;
     private javax.swing.JButton btn_Payment;
     private javax.swing.JButton btn_Print;
     private javax.swing.JButton jButton1;

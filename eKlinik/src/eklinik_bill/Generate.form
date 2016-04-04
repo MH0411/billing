@@ -99,7 +99,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btn_Payment" min="-2" pref="105" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btn_Modify" min="-2" pref="106" max="-2" attributes="0"/>
+                          <Component id="btnAddItem" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btn_Confirm" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -150,7 +150,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btn_Print" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                           <Component id="btn_Confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                          <Component id="btn_Modify" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="btnAddItem" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                           <Component id="btn_Cancel" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -281,9 +281,6 @@
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jt_BillDetailsMouseClicked"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -304,13 +301,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ConfirmActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_Modify">
+        <Component class="javax.swing.JButton" name="btnAddItem">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modify"/>
+            <Property name="text" type="java.lang.String" value="Add Item"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ModifyActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddItemActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn_Cancel">
