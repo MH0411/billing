@@ -26,9 +26,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import main.RMIConnector;
 import static jdk.nashorn.internal.objects.NativeString.substring;
-import org.jdatepicker.DateModel;
-import org.jdatepicker.JDatePicker;
-import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
  *
@@ -69,6 +66,10 @@ public final class Generate extends javax.swing.JFrame {
     public Generate() {
         initComponents();
         billDetails();
+        
+        custId = selectedPatient;
+        orderNo = selectedOrderNo;
+        
         super.pack();
         super.setLocationRelativeTo(null);
         super.setVisible(true);
@@ -103,13 +104,6 @@ public final class Generate extends javax.swing.JFrame {
     }
 
     /**
-     * @param aCustId the custId to set
-     */
-    public static void setCustId(String aCustId) {
-        custId = aCustId;
-    }
-
-    /**
      * @return the tableClick2
      */
     public static String getTableClick2() {
@@ -117,24 +111,10 @@ public final class Generate extends javax.swing.JFrame {
     }
 
     /**
-     * @param aTableClick2 the tableClick2 to set
-     */
-    public static void setTableClick2(String aTableClick2) {
-        tableClick2 = aTableClick2;
-    }
-
-    /**
      * @return the orderNo
      */
     public static String getOrderNo() {
         return orderNo;
-    }
-
-    /**
-     * @param aOrderNo the orderNo to set
-     */
-    public static void setOrderNo(String aOrderNo) {
-        orderNo = aOrderNo;
     }
 
     /**
@@ -434,28 +414,41 @@ public final class Generate extends javax.swing.JFrame {
                 String unitPrice = (jt_BillDetails.getModel().getValueAt(i, 3).toString());
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
    
-                String sql1 = "insert into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "values('" + billNo + "','" + stringDate + "','" + itemCode + "','" + itemDesc + "','" + unitPrice + "','" + quantity + "','" + getCustId() + "' )";
+                String sql1 = "INSERT into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
+                        + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ getCustId() +"' )";
                 rc.setQuerySQL(host, port, sql1);
                 
                 //Calculate total items and total price of items
                 double subtol = Double.parseDouble(String.valueOf(subTotal));
                 datasize++;
                 totalPrice += subtol;
-            }
-
-            String creditMonth = new Month().getCreditMonth();
-            
-            /**
-             * get this month credit add to current bill
-             */
-            String sql3 = "insert into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity)"
-                    + "values('" + getCustId() + "','" + billNo + "','" + stringDate + "','" + name + "','" + totalPrice + "','" + datasize + "' )";
+            } 
+           
+            String sql3 = "INSERT into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no)"
+                    + "VALUES('"+ getCustId() +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ getOrderNo() +"')";
             rc.setQuerySQL(host, port, sql3);
                 
-            String sql4 = "insert into customer_ledger(customer_id, txn_date, bill_no, bill_desc, bill_amt, " + creditMonth + " )"
-                    + "values('" + getCustId() + "', '" + stringDate + "', '" + billNo + "', '" + name + "', '" + totalPrice + "', '" + totalPrice + "' )";
-            rc.setQuerySQL(host, port, sql4);
+            //Get current month credit add to current bill total
+            String creditMonth = new Month().getCreditMonth();
+            String sql4 = "SELECT "+ creditMonth +" "
+                    + "FROM customer_ledger "
+                    + "WHERE customer_id  = '"+ getCustId() +"'";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql4);
+            
+            if (data.isEmpty()) {
+                //When no current month credit exist insert
+                String sql5 = "INSERT into customer_ledger(customer_id, txn_date, bill_desc, bill_amt, "+ creditMonth +" )"
+                        + "VALUES('"+ getCustId() +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
+                rc.setQuerySQL(host, port, sql5);
+            
+            } else {
+                //When current month credit exist update
+                totalPrice = Double.parseDouble(data.get(0).get(0)) + totalPrice;
+                String sql6 = "UPDATE customer_ledger "
+                        + "SET "+ creditMonth +" = '"+ totalPrice +"', bill_amt = '"+ totalPrice +"', txn_date = '"+ stringDate +"' "
+                        + "WHERE customer_id = '"+ getCustId() +"' ";
+                rc.setQuerySQL(host, port, sql6);
+            }
 
             String infoMessage = "Success add data";
             JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -512,7 +505,8 @@ public final class Generate extends javax.swing.JFrame {
     public void billDetails() {
         try {
             
-            String sql1 = "SELECT last_seq_no FROM last_seq_no FOR UPDATE";
+            String sql1 = "SELECT last_seq_no "
+                    + "FROM last_seq_no FOR UPDATE";
             ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sql1);
             
             //Get last sequance number
@@ -522,7 +516,8 @@ public final class Generate extends javax.swing.JFrame {
             String currentSeq = Integer.toString(currSeq);
             
             //Update last sequance number
-            String sql2 = "UPDATE last_seq_no SET last_seq_no = '"+ currentSeq +"' ";
+            String sql2 = "UPDATE last_seq_no "
+                    + "SET last_seq_no = '"+ currentSeq +"' ";
             rc.setQuerySQL(host, port, sql2);
             
             //Generate bill no
@@ -548,7 +543,6 @@ public final class Generate extends javax.swing.JFrame {
                     + "pdd.DISPENSED_QTY, "
                     + "mdc.D_PRICE_PPACK, "
                     + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL, "
-                    + "pb.PMI_NO, "
                     + "pb.PATIENT_TYPE "
                     + "FROM pms_episode pe "
                     + "INNER JOIN pms_patient_biodata pb "
@@ -561,8 +555,8 @@ public final class Generate extends javax.swing.JFrame {
                     + "ON pdm.ORDER_NO = pdd.ORDER_NO "  
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "WHERE pe.PMI_NO = '" + selectedPatient + "' "
-                    + "AND pom.order_no = '"+ selectedOrderNo + "' ";
+                    + "WHERE pe.PMI_NO = '"+ selectedPatient +"' "
+                    + "AND pom.order_no = '"+ selectedOrderNo +"' ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql3);
             
 //            System.out.println(data.get(0).get(0));
@@ -575,7 +569,6 @@ public final class Generate extends javax.swing.JFrame {
             jtf_billNo.setText(getBillNo());
             jtf_date.setText(data.get(0).get(5));
 
-            setCustId(data.get(0).get(11));
             DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
             //Remove all previous row
             int rowCount = model.getRowCount();
@@ -594,7 +587,7 @@ public final class Generate extends javax.swing.JFrame {
             }
 
             //Search and add miscellaneous item to table.
-            String type = data.get(0).get(12);
+            String type = data.get(0).get(11);
             if (type.equals("1")) {
                 type = "staff";
             } else if (type.equals("2")) {
@@ -602,7 +595,9 @@ public final class Generate extends javax.swing.JFrame {
             } else if (type.equals("3")) {
                 type = "other";
             }
-            String sqlItem = "SELECT * FROM miscellaneous_item where item_desc = '" + type + "'";
+            String sqlItem = "SELECT * "
+                    + "FROM miscellaneous_item "
+                    + "where item_desc = '"+ type +"'";
             ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
             String code = dataItem.get(0).get(1);
             String desc = dataItem.get(0).get(2);
@@ -614,7 +609,9 @@ public final class Generate extends javax.swing.JFrame {
             //Get temporary item add to table
             dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
             String getDate1 = dateFormat1.format(new Date());
-            String sql4 = "SELECT * FROM temp_item WHERE customer_id ='" + getSelectedPatientPMINo() + "' AND date = '" + getDate1 + "' ";
+            String sql4 = "SELECT * "
+                    + "FROM temp_item "
+                    + "WHERE customer_id ='" + getSelectedPatientPMINo() + "' AND date = '"+ getDate1 +"' ";
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
             
             String qt = "";

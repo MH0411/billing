@@ -779,7 +779,7 @@ public class Billing extends javax.swing.JFrame {
                     + "GROUP BY pom.ORDER_NO, mdc.UD_MDC_CODE ";
 
             System.out.println(todayDate);
-            System.out.println(sql);
+//            System.out.println(sql);
             
             //Execute query
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
@@ -1137,13 +1137,14 @@ public class Billing extends javax.swing.JFrame {
                     + "ON ec.PMI_NO = pb.PMI_NO "
                     + "WHERE (ec.status = 1 OR ec.status = 3) "
                     + "AND pe.STATUS ='Discharge' "
-                    + "AND pom.episode_code like '"+strDate1+" %' "
-                    + "AND pe.episode_date = '"+strDate+"' "
+                    + "AND pom.episode_code like '"+ strDate1 +" %' " 
+                    + "AND pe.episode_date = '"+ strDate +"' "
+                    + "AND NOT EXISTS (SELECT ch.order_no FROM customer_hdr ch WHERE ch.order_no =  pom.order_no )"
                     + "Group by pom.order_no";
             
             System.out.println(strDate);
             System.out.println(strDate1);
-            System.out.println(sql);
+//            System.out.println(sql);
 
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
             DefaultTableModel model = (DefaultTableModel) jt_PatientInformation.getModel();
