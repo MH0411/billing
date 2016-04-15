@@ -32,6 +32,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import main.RMIConnector;
 import static jdk.nashorn.internal.objects.NativeString.substring;
+import static jdk.nashorn.internal.objects.NativeString.substring;
+import static jdk.nashorn.internal.objects.NativeString.substring;
+import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
  *
