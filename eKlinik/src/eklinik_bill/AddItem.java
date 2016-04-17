@@ -1,9 +1,11 @@
+package eklinik_bill;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eklinik_bill;
+
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -268,9 +270,7 @@ public class AddItem extends javax.swing.JFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
-            
-            AfterModify m = new AfterModify(); //set new window
-            m.setVisible(true);//set new window visible
+           
             dispose(); // for hide current window
         }
     }//GEN-LAST:event_btn_addActionPerformed

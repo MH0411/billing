@@ -37,6 +37,9 @@ public class Billing extends javax.swing.JFrame {
     private static String selectedDate;
     private static String selectedOrderNo;
     private String strDate;
+    
+    private static String billNo;
+    private static String itemCode;
 
     /**
      * Creates new form billing
@@ -46,8 +49,10 @@ public class Billing extends javax.swing.JFrame {
         super.pack();
         super.setLocationRelativeTo(null);
         super.setVisible(true);
+        
         tablePatientInformation();
         tableManageMiscellaneous();
+        tableListPatientBill();
     }
 
     public static String getSelectedPatient() {
@@ -83,20 +88,24 @@ public class Billing extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jtf_SearchPatient = new javax.swing.JTextField();
         jPanel_ManageMiscellaneous = new javax.swing.JPanel();
-        jtf_mm_itemCd = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jt_MM = new javax.swing.JTable();
+        jtf_SearchItem = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jtf_mm_itemDesc = new javax.swing.JTextField();
+        jtf_mm_itemCd = new javax.swing.JTextField();
         jtf_mm_buyPrice = new javax.swing.JTextField();
         jtf_mm_sellPrice = new javax.swing.JTextField();
         jtf_mm_disc = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        btn_mm_add = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         btn_mm_cancel = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jt_MM = new javax.swing.JTable();
+        btn_mm_add = new javax.swing.JButton();
         btn_mm_update = new javax.swing.JButton();
         btn_mm_delete = new javax.swing.JButton();
         jPanel_ManageBill = new javax.swing.JPanel();
@@ -175,11 +184,11 @@ public class Billing extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btn_GenerateBill, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_GenerateBill)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -257,46 +266,23 @@ public class Billing extends javax.swing.JFrame {
         jPanel_BillingLayout.setVerticalGroup(
             jPanel_BillingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_BillingLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(7, 7, 7)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Billing", jPanel_Billing);
 
         jPanel_ManageMiscellaneous.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setText("Item Code");
-
-        jLabel3.setText("Item Description");
-
-        jLabel4.setText("Buying Price");
-
-        jLabel5.setText("Selling Price");
-
-        jLabel6.setText("Discount");
-
-        btn_mm_add.setText("Add");
-        btn_mm_add.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_mm_addActionPerformed(evt);
-            }
-        });
-
-        btn_mm_cancel.setText("Cancel");
-        btn_mm_cancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_mm_cancelActionPerformed(evt);
-            }
-        });
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Miscellaneous Items"));
 
         jt_MM.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Item Code", "Item Description", "Buying Price", "Selling Price", "Discount"
@@ -318,6 +304,64 @@ public class Billing extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jt_MM);
 
+        jtf_SearchItem.setToolTipText("Example : Patient Name, IC No. Other ID");
+
+        jLabel9.setText("Enter Item Information:");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtf_SearchItem, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtf_SearchItem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(108, 108, 108))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Information"));
+
+        jLabel6.setText("Discount");
+
+        jLabel5.setText("Selling Price");
+
+        jLabel4.setText("Buying Price");
+
+        jLabel3.setText("Item Description");
+
+        jLabel2.setText("Item Code");
+
+        btn_mm_cancel.setText("Cancel");
+        btn_mm_cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_mm_cancelActionPerformed(evt);
+            }
+        });
+
+        btn_mm_add.setText("Add");
+        btn_mm_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_mm_addActionPerformed(evt);
+            }
+        });
+
         btn_mm_update.setText("Update");
         btn_mm_update.setEnabled(false);
         btn_mm_update.addActionListener(new java.awt.event.ActionListener() {
@@ -334,76 +378,81 @@ public class Billing extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel_ManageMiscellaneousLayout = new javax.swing.GroupLayout(jPanel_ManageMiscellaneous);
-        jPanel_ManageMiscellaneous.setLayout(jPanel_ManageMiscellaneousLayout);
-        jPanel_ManageMiscellaneousLayout.setHorizontalGroup(
-            jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_ManageMiscellaneousLayout.createSequentialGroup()
-                .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_ManageMiscellaneousLayout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jtf_mm_itemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtf_mm_itemCd, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jtf_mm_disc)
-                                .addComponent(jtf_mm_buyPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                                .addComponent(jtf_mm_sellPrice, javax.swing.GroupLayout.Alignment.LEADING))))
-                    .addGroup(jPanel_ManageMiscellaneousLayout.createSequentialGroup()
-                        .addGap(85, 85, 85)
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btn_mm_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_mm_add, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_mm_update, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_mm_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btn_mm_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jtf_mm_itemDesc)
+                        .addComponent(jtf_mm_disc, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jtf_mm_itemCd)
+                        .addComponent(jtf_mm_buyPrice)
+                        .addComponent(jtf_mm_sellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(682, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(36, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtf_mm_itemCd, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtf_mm_itemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtf_mm_buyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtf_mm_sellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtf_mm_disc, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_mm_update, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_mm_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_mm_add, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_mm_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        javax.swing.GroupLayout jPanel_ManageMiscellaneousLayout = new javax.swing.GroupLayout(jPanel_ManageMiscellaneous);
+        jPanel_ManageMiscellaneous.setLayout(jPanel_ManageMiscellaneousLayout);
+        jPanel_ManageMiscellaneousLayout.setHorizontalGroup(
+            jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel_ManageMiscellaneousLayout.setVerticalGroup(
             jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_ManageMiscellaneousLayout.createSequentialGroup()
-                .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_ManageMiscellaneousLayout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtf_mm_itemCd, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtf_mm_itemDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtf_mm_buyPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtf_mm_sellPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jtf_mm_disc, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(39, 39, 39)
-                        .addGroup(jPanel_ManageMiscellaneousLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_mm_update, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_mm_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_mm_add, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_mm_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel_ManageMiscellaneousLayout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(97, 97, 97))
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Manage Miscellaneous", jPanel_ManageMiscellaneous);
@@ -429,16 +478,16 @@ public class Billing extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jt_ListPatientBill.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_ListPatientBillMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jt_ListPatientBill);
 
         jtf_SearchBill.setToolTipText("Example : Patient Name, IC No. Other ID");
-        jtf_SearchBill.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtf_SearchBillActionPerformed(evt);
-            }
-        });
 
-        jLabel8.setText("Enter Patient Information:");
+        jLabel8.setText("Enter Bill Information:");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -486,9 +535,15 @@ public class Billing extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jt_ListItemPerPatient.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jt_ListItemPerPatientMousePressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(jt_ListItemPerPatient);
 
         btn_AddItem.setText("Add Item");
+        btn_AddItem.setEnabled(false);
         btn_AddItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_AddItemActionPerformed(evt);
@@ -496,6 +551,7 @@ public class Billing extends javax.swing.JFrame {
         });
 
         btn_DeleteItem.setText("Delete Item");
+        btn_DeleteItem.setEnabled(false);
         btn_DeleteItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_DeleteItemActionPerformed(evt);
@@ -503,6 +559,7 @@ public class Billing extends javax.swing.JFrame {
         });
 
         btn_Payment.setText("Payment");
+        btn_Payment.setEnabled(false);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -525,7 +582,7 @@ public class Billing extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Payment)
@@ -582,8 +639,9 @@ public class Billing extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_Back, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 715, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -596,99 +654,6 @@ public class Billing extends javax.swing.JFrame {
     private void btn_BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BackActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_BackActionPerformed
-
-    /**
-     * Generate bill details
-     * @param evt
-     */
-    private void btn_GenerateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GenerateBillActionPerformed
-        // TODO add your handling code here:
-        Generate generate = new Generate(); //set new window
-        generate.setVisible(true);//set new window visible
-        dispose(); // for hide current window
-    }//GEN-LAST:event_btn_GenerateBillActionPerformed
-
-    /**
-     * Search patient information to bill description
-     * @param evt
-     */
-    private void jt_PatientInformationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_PatientInformationMouseClicked
-        // TODO add your handling code here:
-        try {
-            int rowIndex = 0;
-
-            //Get no of row
-            rowIndex = jt_PatientInformation.getSelectedRow();
-            rowIndex = jt_PatientInformation.convertRowIndexToModel(rowIndex);
-            //Assign row value to select
-            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 2).toString();
-            selectedDate = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
-            selectedOrderNo = jt_PatientInformation.getModel().getValueAt(rowIndex, 1).toString();
-
-            DateFormat dateFormat;
-            dateFormat = new SimpleDateFormat("dd/MM/yyyy"); //2015-01-06
-            Date date = new Date();
-            String todayDate = dateFormat.format(date);
-            
-            String sql = "Select "
-                    + "pdm.dispensed_date, "  
-                    + "pdd.DRUG_ITEM_CODE, "
-                    + "mdc.D_TRADE_NAME, "
-                    + "pdd.DISPENSED_QTY, "
-                    + "mdc.D_PRICE_PPACK, "
-                    + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL " 
-                    + "FROM "
-                    + "pms_episode pe, "
-                    + "pis_order_master pom, "
-                    + "pis_dispense_detail pdd, "
-                    + "pis_mdc2 mdc, "
-                    + "pms_patient_biodata pb, "
-                    + "pis_dispense_master pdm "
-                    + "WHERE pe.PMI_NO = pom.PMI_NO "
-                    + "AND pom.ORDER_NO = pdd.ORDER_NO "
-                    + "AND pom.ORDER_NO = '"+selectedOrderNo+"' "
-                    + "AND pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "AND pe.PMI_NO = pb.PMI_NO "
-                    + "AND DATE(date_format(str_to_date(pe.episode_date, '%d/%m/%Y'), '%Y-%m-%d')) = DATE(pdm.order_date) "
-                    + "AND pe.episode_date = '"+selectedDate+"' "
-                    + "GROUP BY pom.ORDER_NO, mdc.UD_MDC_CODE ";
-
-            System.out.println(todayDate);
-//            System.out.println(sql);
-            
-            //Execute query
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-            DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
-
-            //remove all row
-            int rowCount = model.getRowCount();
-            for (int i = rowCount - 1; i >= 0; i--) {
-                model.removeRow(i);
-            }
-
-            //add row and show value
-            for (int i = 0; i < data.size(); i++) {
-                model.addRow(new Object[]{"", "", "", "", ""});
-
-                jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
-                jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
-                jt_BillDescription.setValueAt(data.get(i).get(2), i, 2);
-                jt_BillDescription.setValueAt((int) Double.parseDouble((data.get(i).get(3))), i, 3);
-                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
-                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(5))), i, 5);
-            }
-
-            if (data.size() > 0) {
-                btn_GenerateBill.setEnabled(true);
-            }
-            if (data.size() < 1) {
-                btn_GenerateBill.setEnabled(false);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_jt_PatientInformationMouseClicked
 
     /**
      * Add new miscellaneous item
@@ -725,19 +690,22 @@ public class Billing extends javax.swing.JFrame {
         } else {
             try {
 
-                String sqlInsert2 = "insert into miscellaneous_item(item_code, item_desc, buying_price, selling_price, discount)"
-                        + "values('" + itemCode + "','" + itemDesc + "','" + buyPrice + "','" + sellPrice + "'," + disc + " )";
+                String sql = "INSERT into miscellaneous_item (item_code, item_desc, buying_price, selling_price, discount)"
+                        + "VALUES ('"+ itemCode +"','"+ itemDesc +"','"+ buyPrice +"','"+ sellPrice +"',"+ disc +" )";
 
-                boolean insert2 = rc.setQuerySQL(host, port, sqlInsert2);
+                rc.setQuerySQL(host, port, sql);
                 String infoMessage = "Success add data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
-                //fillcombo();
+                
+                //Refresh manage miscellaneous table
                 tableManageMiscellaneous();
+                
                 jtf_mm_itemCd.setText("");
                 jtf_mm_itemDesc.setText("");
                 jtf_mm_buyPrice.setText("");
                 jtf_mm_sellPrice.setText("");
                 jtf_mm_disc.setText("");
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -759,7 +727,6 @@ public class Billing extends javax.swing.JFrame {
         jtf_mm_buyPrice.setText("");
         jtf_mm_sellPrice.setText("");
         jtf_mm_disc.setText("");
-
     }//GEN-LAST:event_btn_mm_cancelActionPerformed
 
     /**
@@ -798,18 +765,19 @@ public class Billing extends javax.swing.JFrame {
             String infoMessage = "Please insert data in Discount text field.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (mm_ItemCode != null) {
+        } else {
             try {
-
-                String sqlInsert2 = "UPDATE miscellaneous_item\n"
-                        + "SET item_desc='" + mm_ItemDesc + "', buying_price='" + mm_BuyPrice + "', selling_price='" + mm_SellPrice + "', discount='" + mm_Disc + "' \n"
-                        + "WHERE item_code='" + mm_ItemCode + "'";
-
-                boolean insert2 = rc.setQuerySQL(host, port, sqlInsert2);
+                String sql = "UPDATE miscellaneous_item "
+                        + "SET item_desc = '"+ mm_ItemDesc +"', buying_price = '"+ mm_BuyPrice +"', selling_price = '"+ mm_SellPrice +"', discount = '"+ mm_Disc +"' "
+                        + "WHERE item_code = '" + mm_ItemCode + "'";
+                rc.setQuerySQL(host, port, sql);
+                
                 String infoMessage = "Success update data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
-                //fillcombo();
+                
+                //Refresh manage miscellaneous table
                 tableManageMiscellaneous();
+                
                 jtf_mm_itemCd.setText("");
                 jtf_mm_itemDesc.setText("");
                 jtf_mm_buyPrice.setText("");
@@ -835,9 +803,12 @@ public class Billing extends javax.swing.JFrame {
             jtf_mm_itemCd.setEditable(false);
 
             int row = jt_MM.getSelectedRow();
-            String Table_click = (jt_MM.getModel().getValueAt(row, 0).toString());
-            String sqlClick = "select * from miscellaneous_item where item_code='" + Table_click + "'";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sqlClick);// execute query
+            row = jt_MM.convertRowIndexToModel(row);
+            String mItemCode = (jt_MM.getModel().getValueAt(row, 0).toString());
+            String sql = "SELECT * "
+                    + "FROM miscellaneous_item "
+                    + "WHERE item_code='" + mItemCode + "'";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
             jtf_mm_itemCd.setText(data.get(0).get(1));
             jtf_mm_itemDesc.setText(data.get(0).get(2));
@@ -890,13 +861,16 @@ public class Billing extends javax.swing.JFrame {
         } else {
             try {
 
-                String sqlInsert2 = "DELETE FROM miscellaneous_item WHERE item_code='" + mm_ItemCode + "'";
-
-                rc.setQuerySQL(host, port, sqlInsert2);
+                String sql = "DELETE FROM miscellaneous_item "
+                        + "WHERE item_code='" + mm_ItemCode + "'";
+                rc.setQuerySQL(host, port, sql);
+                
                 String infoMessage = "Success delete data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
-                //fillcombo();
+                
+                //Refresh miscellaneous item table
                 tableManageMiscellaneous();
+                
                 jtf_mm_itemCd.setText("");
                 jtf_mm_itemDesc.setText("");
                 jtf_mm_buyPrice.setText("");
@@ -909,17 +883,221 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_mm_deleteActionPerformed
 
+    /**
+     * Display add bill item window
+     * @param evt 
+     */
     private void btn_AddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItemActionPerformed
         // TODO add your handling code here:
+        AddBillItem addBillItem = new AddBillItem();
+        addBillItem.setVisible(true);
     }//GEN-LAST:event_btn_AddItemActionPerformed
 
+    /**
+     * Delete selected bill item
+     * @param evt 
+     */
     private void btn_DeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DeleteItemActionPerformed
         // TODO add your handling code here:
+        int rowIndex1 = -1;
+        int rowIndex2 = -1;
+        try {
+            rowIndex1 = jt_ListPatientBill.getSelectedRow();
+            rowIndex1 = jt_ListPatientBill.convertRowIndexToModel(rowIndex1);
+            rowIndex2 = jt_ListItemPerPatient.getSelectedRow();
+            rowIndex2 = jt_ListItemPerPatient.convertRowIndexToModel(rowIndex2);
+            
+            billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex1, 0).toString();
+            itemCode = jt_ListItemPerPatient.getModel().getValueAt(rowIndex2, 0).toString();
+            
+            if ((rowIndex1 != -1 ) && (rowIndex2 != -1)){
+                
+                String sql = "DELETE FROM  customer_dtl "
+                        + "WHERE bill_no = '"+ billNo +"'"
+                        + "AND item_cd = '"+ itemCode +"' ";
+                rc.setQuerySQL(host, port, sql);
+                
+                String infoMessage = "Success delete data";
+                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                //remove all row
+                DefaultTableModel model = (DefaultTableModel) jt_ListItemPerPatient.getModel();
+                int rowCount = model.getRowCount();
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    model.removeRow(i);
+                }
+                
+                String sql1 = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
+                     + "FROM customer_dtl "
+                     + "WHERE bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
+                
+                //add row and show value
+                for (int i = 0; i < data.size(); i++) {
+                    model.addRow(new Object[]{"", "", "", "", ""});
+
+                    jt_ListItemPerPatient.setValueAt(data.get(i).get(0), i, 0);
+                    jt_ListItemPerPatient.setValueAt(data.get(i).get(1), i, 1);
+                    jt_ListItemPerPatient.setValueAt(data.get(i).get(2), i, 2);
+                    jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
+                    jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
+                }
+                
+            } else {
+                String infoMessage = "No item selected";
+                JOptionPane.showMessageDialog(null, infoMessage, "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_btn_DeleteItemActionPerformed
 
-    private void jtf_SearchBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf_SearchBillActionPerformed
+    /**
+     * Search patient information to bill description
+     * @param evt
+     */
+    private void jt_PatientInformationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_PatientInformationMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jtf_SearchBillActionPerformed
+        try {
+            int rowIndex = -1;
+
+            //Get no of row
+            rowIndex = jt_PatientInformation.getSelectedRow();
+            rowIndex = jt_PatientInformation.convertRowIndexToModel(rowIndex);
+            //Assign row value to select
+            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 2).toString();
+            selectedDate = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
+            selectedOrderNo = jt_PatientInformation.getModel().getValueAt(rowIndex, 1).toString();
+
+            DateFormat dateFormat;
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy"); //2015-01-06
+            Date date = new Date();
+            String todayDate = dateFormat.format(date);
+
+            String sql = "Select "
+            + "pdm.dispensed_date, "
+            + "pdd.DRUG_ITEM_CODE, "
+            + "mdc.D_TRADE_NAME, "
+            + "pdd.DISPENSED_QTY, "
+            + "mdc.D_PRICE_PPACK, "
+            + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL "
+            + "FROM "
+            + "pms_episode pe, "
+            + "pis_order_master pom, "
+            + "pis_dispense_detail pdd, "
+            + "pis_mdc2 mdc, "
+            + "pms_patient_biodata pb, "
+            + "pis_dispense_master pdm "
+            + "WHERE pe.PMI_NO = pom.PMI_NO "
+            + "AND pom.ORDER_NO = pdd.ORDER_NO "
+            + "AND pom.ORDER_NO = '"+ selectedOrderNo +"' "
+            + "AND pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
+            + "AND pe.PMI_NO = pb.PMI_NO "
+            + "AND DATE(date_format(str_to_date(pe.episode_date, '%d/%m/%Y'), '%Y-%m-%d')) = DATE(pdm.order_date) "
+            + "AND pe.episode_date = '"+ selectedDate +"' "
+            + "GROUP BY pom.ORDER_NO, mdc.UD_MDC_CODE ";
+
+            System.out.println(todayDate);
+
+            //Execute query
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+            DefaultTableModel model = (DefaultTableModel) jt_BillDescription.getModel();
+
+            //remove all row
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+
+            //add row and show value
+            for (int i = 0; i < data.size(); i++) {
+                model.addRow(new Object[]{"", "", "", "", ""});
+
+                jt_BillDescription.setValueAt(data.get(i).get(0), i, 0);
+                jt_BillDescription.setValueAt(data.get(i).get(1), i, 1);
+                jt_BillDescription.setValueAt(data.get(i).get(2), i, 2);
+                jt_BillDescription.setValueAt((int) Double.parseDouble((data.get(i).get(3))), i, 3);
+                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
+                jt_BillDescription.setValueAt(df.format(Double.parseDouble(data.get(i).get(5))), i, 5);
+            }
+
+            if (data.size() > 0) {
+                btn_GenerateBill.setEnabled(true);
+            }
+            if (data.size() < 1) {
+                btn_GenerateBill.setEnabled(false);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_jt_PatientInformationMouseClicked
+
+    /**
+     * Generate bill details
+     * @param evt
+     */
+    private void btn_GenerateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GenerateBillActionPerformed
+        // TODO add your handling code here:
+        Generate generate = new Generate(); //set new window
+        generate.setVisible(true);//set new window visible
+        dispose(); // for hide current window
+    }//GEN-LAST:event_btn_GenerateBillActionPerformed
+
+    /**
+     * Enable delete bill item button
+     * @param evt 
+     */
+    private void jt_ListItemPerPatientMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_ListItemPerPatientMousePressed
+        // TODO add your handling code here:
+        btn_DeleteItem.setEnabled(true);
+    }//GEN-LAST:event_jt_ListItemPerPatientMousePressed
+
+    /**
+     * Display bill items in table list item per patient
+     * @param evt 
+     */
+    private void jt_ListPatientBillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_ListPatientBillMouseClicked
+        // TODO add your handling code here:
+        btn_AddItem.setEnabled(true);
+        btn_Payment.setEnabled(true);
+        
+        try {
+            int rowIndex = -1;
+
+            //Get no of row
+            rowIndex = jt_ListPatientBill.getSelectedRow();
+            rowIndex = jt_ListPatientBill.convertRowIndexToModel(rowIndex);
+            
+            billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
+            
+            String sql = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
+                    + "FROM customer_dtl "
+                    + "WHERE bill_no = '"+ billNo +"'";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+            DefaultTableModel model = (DefaultTableModel) jt_ListItemPerPatient.getModel();
+            
+            //remove all row
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            
+            //add row and show value
+            for (int i = 0; i < data.size(); i++) {
+                model.addRow(new Object[]{"", "", "", "", ""});
+
+                jt_ListItemPerPatient.setValueAt(data.get(i).get(0), i, 0);
+                jt_ListItemPerPatient.setValueAt(data.get(i).get(1), i, 1);
+                jt_ListItemPerPatient.setValueAt(data.get(i).get(2), i, 2);
+                jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
+                jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
+            }
+            
+        } catch (Exception e) {
+             JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_jt_ListPatientBillMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1052,6 +1230,37 @@ public class Billing extends javax.swing.JFrame {
     }
 
     /**
+     * Display list of patient's bill
+     */
+    private void tableListPatientBill(){
+        try{
+            String sql = "SELECT bill_no, customer_id, item_amt, quantity "
+                    + "FROM customer_hdr ";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+            DefaultTableModel model = (DefaultTableModel) jt_ListPatientBill.getModel();
+            
+            //remove all row
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            
+            //add row and show value
+            for (int i = 0; i < data.size(); i++) {
+                model.addRow(new Object[]{"", "", "", "", ""});
+
+                jt_ListPatientBill.setValueAt(data.get(i).get(1), i, 0);
+                jt_ListPatientBill.setValueAt(data.get(i).get(2), i, 1);
+                jt_ListPatientBill.setValueAt(data.get(i).get(3), i, 2);
+                jt_ListPatientBill.setValueAt(data.get(i).get(4), i, 3);
+            }
+            
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
+    /**
      * Detect and sort table patient information content based on the input
      */
     public void tablePatientInformationSorter() {
@@ -1075,6 +1284,46 @@ public class Billing extends javax.swing.JFrame {
             @Override
             public void removeUpdate(DocumentEvent e) {
                 String text = jtf_SearchPatient.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+    }
+    
+     /**
+     * Detect and sort table miscellaneous item  content based on the input
+     */
+    public void tableMiscellaneousItemSorter() {
+        TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(jt_MM.getModel());
+        jt_MM.setRowSorter(rowSorter);
+
+        jtf_SearchItem.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jtf_SearchItem.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jtf_SearchItem.getText();
 
                 if (text.trim().length() == 0) {
                     rowSorter.setRowFilter(null);
@@ -1150,6 +1399,9 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
@@ -1169,6 +1421,7 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JTable jt_MM;
     private javax.swing.JTable jt_PatientInformation;
     private javax.swing.JTextField jtf_SearchBill;
+    private javax.swing.JTextField jtf_SearchItem;
     private javax.swing.JTextField jtf_SearchPatient;
     private javax.swing.JTextField jtf_mm_buyPrice;
     private javax.swing.JTextField jtf_mm_disc;
