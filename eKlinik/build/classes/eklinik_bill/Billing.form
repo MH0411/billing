@@ -435,8 +435,8 @@
                             <Column editable="false" title="Item Code" type="java.lang.Object"/>
                             <Column editable="false" title="Item Description" type="java.lang.Object"/>
                             <Column editable="false" title="Buying Price" type="java.lang.Object"/>
-                            <Column editable="true" title="Selling Price" type="java.lang.Object"/>
-                            <Column editable="true" title="Discount" type="java.lang.Object"/>
+                            <Column editable="false" title="Selling Price" type="java.lang.Object"/>
+                            <Column editable="false" title="Discount" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -482,6 +482,9 @@
                   <Properties>
                     <Property name="toolTipText" type="java.lang.String" value="Example : Patient Name, IC No. Other ID"/>
                   </Properties>
+                  <AccessibilityProperties>
+                    <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value="Example : Item Code, Description, Price "/>
+                  </AccessibilityProperties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
@@ -742,7 +745,7 @@
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="4" rowCount="0">
                             <Column editable="false" title="Bill No" type="java.lang.Object"/>
-                            <Column editable="false" title="Patient Id" type="java.lang.Object"/>
+                            <Column editable="false" title="Customer ID" type="java.lang.Object"/>
                             <Column editable="false" title="Amount" type="java.lang.Object"/>
                             <Column editable="false" title="Quantity" type="java.lang.Object"/>
                           </Table>
@@ -785,6 +788,9 @@
                   <Properties>
                     <Property name="toolTipText" type="java.lang.String" value="Example : Patient Name, IC No. Other ID"/>
                   </Properties>
+                  <AccessibilityProperties>
+                    <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value="Example : Bill no, Customer ID"/>
+                  </AccessibilityProperties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
@@ -855,7 +861,7 @@
                             <Column editable="false" title="Item Code" type="java.lang.Object"/>
                             <Column editable="false" title="Item Description" type="java.lang.Object"/>
                             <Column editable="false" title="Item Quantity" type="java.lang.Object"/>
-                            <Column editable="true" title="Item Amount" type="java.lang.Object"/>
+                            <Column editable="false" title="Item Amount" type="java.lang.Object"/>
                             <Column editable="false" title="Total Amount" type="java.lang.Object"/>
                           </Table>
                         </Property>

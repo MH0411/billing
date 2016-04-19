@@ -289,7 +289,7 @@ public class Billing extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -334,6 +334,8 @@ public class Billing extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(108, 108, 108))
         );
+
+        jtf_SearchItem.getAccessibleContext().setAccessibleDescription("Example : Item Code, Description, Price ");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Information"));
@@ -467,7 +469,7 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Bill No", "Patient Id", "Amount", "Quantity"
+                "Bill No", "Customer ID", "Amount", "Quantity"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -516,6 +518,8 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jtf_SearchBill.getAccessibleContext().setAccessibleDescription("Example : Bill no, Customer ID");
+
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("List Item Per Patient"));
 
@@ -528,7 +532,7 @@ public class Billing extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1224,6 +1228,8 @@ public class Billing extends javax.swing.JFrame {
                 jt_MM.setValueAt(data.get(i).get(4), i, 3);
                 jt_MM.setValueAt(data.get(i).get(5), i, 4);
             }
+            
+            tableMiscellaneousItemSorter();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -1249,12 +1255,14 @@ public class Billing extends javax.swing.JFrame {
             for (int i = 0; i < data.size(); i++) {
                 model.addRow(new Object[]{"", "", "", "", ""});
 
-                jt_ListPatientBill.setValueAt(data.get(i).get(1), i, 0);
-                jt_ListPatientBill.setValueAt(data.get(i).get(2), i, 1);
-                jt_ListPatientBill.setValueAt(data.get(i).get(3), i, 2);
-                jt_ListPatientBill.setValueAt(data.get(i).get(4), i, 3);
+                jt_ListPatientBill.setValueAt(data.get(i).get(0), i, 0);
+                jt_ListPatientBill.setValueAt(data.get(i).get(1), i, 1);
+                jt_ListPatientBill.setValueAt(data.get(i).get(2), i, 2);
+                jt_ListPatientBill.setValueAt(data.get(i).get(3), i, 3);
             }
             
+            tablePatientBillSorter();
+                    
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, e);
         }
