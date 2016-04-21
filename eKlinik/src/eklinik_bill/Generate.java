@@ -63,6 +63,7 @@ public final class Generate extends javax.swing.JFrame {
     public final String selectedDate = Billing.getSelectedDate();
     public final String selectedOrderNo = Billing.getSelectedOrderNo();
     
+    public String receiptNo;
     public static String billNo;
     public static String custId;
     public static String tableClick2;
@@ -397,6 +398,8 @@ public final class Generate extends javax.swing.JFrame {
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
         // TODO add your handling code here:
         AddItem addItem = new AddItem();
+        addItem.setBillNo(billNo);
+        addItem.setCustId(custId);
         addItem.setVisible(true);
     }//GEN-LAST:event_btnAddItemActionPerformed
 
@@ -437,7 +440,7 @@ public final class Generate extends javax.swing.JFrame {
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
    
                 String sql1 = "INSERT into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ getCustId() +"' )";
+                        + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ custId +"' )";
                 rc.setQuerySQL(host, port, sql1);
                 
                 //Calculate total items and total price of items
@@ -447,20 +450,20 @@ public final class Generate extends javax.swing.JFrame {
             } 
            
             String sql3 = "INSERT into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no)"
-                    + "VALUES('"+ getCustId() +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ getOrderNo() +"')";
+                    + "VALUES('"+ custId +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ orderNo +"')";
             rc.setQuerySQL(host, port, sql3);
                 
             //Get customer_ledger current month credit add to current bill total
             String creditMonth = new Month().getCreditMonth();
             String sql4 = "SELECT "+ creditMonth +" "
                     + "FROM customer_ledger "
-                    + "WHERE customer_id  = '"+ getCustId() +"'";
+                    + "WHERE customer_id  = '"+ custId +"'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql4);
             
             if (data.isEmpty()) {
                 //When no current month credit exist insert
                 String sql5 = "INSERT into customer_ledger(customer_id, bill_no, txn_date, bill_desc, bill_amt, "+ creditMonth +" )"
-                        + "VALUES('"+ getCustId() +"', '"+ getBillNo() +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
+                        + "VALUES('"+ custId +"', '"+ billNo +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
                 rc.setQuerySQL(host, port, sql5);
             
             } else {
@@ -468,7 +471,7 @@ public final class Generate extends javax.swing.JFrame {
                 totalPrice = Double.parseDouble(data.get(0).get(0)) + totalPrice;
                 String sql6 = "UPDATE customer_ledger "
                         + "SET "+ creditMonth +" = '"+ totalPrice +"', bill_amt = '"+ totalPrice +"', txn_date = '"+ stringDate +"' "
-                        + "WHERE customer_id = '"+ getCustId() +"' ";
+                        + "WHERE customer_id = '"+ custId +"' ";
                 rc.setQuerySQL(host, port, sql6);
             }
 
@@ -476,7 +479,7 @@ public final class Generate extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btn_ConfirmActionPerformed
 
@@ -525,10 +528,14 @@ public final class Generate extends javax.swing.JFrame {
      * Display selected patient bill details
      */
     public void billDetails() {
+        //module name - > 
+        //B = Billing
+        //R = Receipt
+        //I = Invoice
         try {
-            
             String sql1 = "SELECT last_seq_no "
                     + "FROM last_seq_no "
+                    + "WHERE module_name = 'B' "
                     + "FOR UPDATE";
             ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sql1);
             
@@ -540,7 +547,8 @@ public final class Generate extends javax.swing.JFrame {
             
             //Update last sequance number
             String sql2 = "UPDATE last_seq_no "
-                    + "SET last_seq_no = '"+ currentSeq +"' ";
+                    + "SET last_seq_no = '"+ currentSeq +"' "
+                    + "WHERE module_name = 'B'";
             rc.setQuerySQL(host, port, sql2);
             
             //Generate bill no
@@ -653,7 +661,7 @@ public final class Generate extends javax.swing.JFrame {
             }
             
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e);
         }
     }
     
@@ -668,10 +676,9 @@ public final class Generate extends javax.swing.JFrame {
         try {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Receipt.pdf"));
             document.open(); //open document
-//            document.add(new Paragraph("A Hello World PDF document."));
             
             //Get patient data from database
-            String sql = "SELECT "
+            String sql1 = "SELECT "
                     + "pb.patient_name, "
                     + "pb.home_address, "
                     + "pb.new_ic_no, "
@@ -691,11 +698,41 @@ public final class Generate extends javax.swing.JFrame {
                     + "ON ch.bill_no = cd.bill_no "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON cd.customer_id = pb.pmi_no "
-                    + "WHERE ch.customer_id = '"+ getCustId() +"'  "
-                    + "AND ch.bill_no = '"+ getBillNo() +"' ";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-            System.out.println(sql);
+                    + "WHERE ch.customer_id = '"+ custId +"'  "
+                    + "AND ch.bill_no = '"+ billNo +"' ";
+            ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+//            System.out.println(sql);
+
+            String sql2 = "SELECT last_seq_no "
+                    + "FROM last_seq_no "
+                    + "WHERE module_name = 'R' "
+                    + "FOR UPDATE";
+            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
             
+            //Get last sequance number
+            String seqNo = data2.get(0).get(0);
+            int seq = Integer.parseInt(seqNo);
+            int currSeq = seq + 1;
+            String currentSeq = Integer.toString(currSeq);
+            
+            //Update last sequance number
+            String sql3 = "UPDATE last_seq_no "
+                    + "SET last_seq_no = '"+ currentSeq +"' "
+                    + "WHERE module_name = 'R'";
+            rc.setQuerySQL(host, port, sql3);
+            
+            //Generate bill no
+            int length = (int) Math.log10(currSeq) + 1;
+            String zero = "0";
+            String tmpNum = currentSeq;
+            
+            int count;
+            for (count = length; count < 10; count++) {
+                tmpNum = zero + tmpNum;
+            }
+            
+            receiptNo = tmpNum + date1;
+
             //initialize pdf
             Font recno = new Font(Font.TIMES_ROMAN, 10);
             Font recti = new Font(Font.HELVETICA, 16, Font.BOLD);
@@ -748,13 +785,13 @@ public final class Generate extends javax.swing.JFrame {
             cell001.setColspan(4);
             header_table.addCell(cell001);
 
-            String nama = data.get(0).get(0);
-            String address = data.get(0).get(1);
-            String ic = data.get(0).get(2);
-            String id = data.get(0).get(3);
-            String phone = data.get(0).get(4);
-            String bill_no = data.get(0).get(5);
-            String date = data.get(0).get(6);
+            String nama = data1.get(0).get(0);
+            String address = data1.get(0).get(1);
+            String ic = data1.get(0).get(2);
+            String id = data1.get(0).get(3);
+            String phone = data1.get(0).get(4);
+            String bill_no = data1.get(0).get(5);
+            String date = data1.get(0).get(6);
 
             // String grandtotal = data.get(i).get(10);
             //System.out.println(name);
@@ -870,19 +907,19 @@ public final class Generate extends javax.swing.JFrame {
             table.addCell(cell66);
 
             double tmpGrandTotal = 0;
-            for (int i = 0; i < data.size() ; i++) {
+            for (int i = 0; i < data1.size() ; i++) {
 
-                String NO = Integer.toString(num);
+                String no = Integer.toString(num);
 
-                String item = data.get(i).get(7);
-                String description = data.get(i).get(8);
-                String quantity = data.get(i).get(9);
-                String price = data.get(i).get(10);
-                String total = data.get(i).get(11);
+                String item = data1.get(i).get(7);
+                String description = data1.get(i).get(8);
+                String quantity = data1.get(i).get(9);
+                String price = data1.get(i).get(10);
+                String total = data1.get(i).get(11);
                 
                 tmpGrandTotal += Double.parseDouble(total);
 
-                PdfPCell cell71 = new PdfPCell(new Phrase(NO, rectemja));
+                PdfPCell cell71 = new PdfPCell(new Phrase(no, rectemja));
                 cell71.setHorizontalAlignment(Element.ALIGN_CENTER);
                 PdfPCell cell72 = new PdfPCell(new Phrase(item, rectemja));
                 cell72.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -911,7 +948,7 @@ public final class Generate extends javax.swing.JFrame {
             total.setTotalWidth(document.right() - document.left());
             //--------------------------table bill------------------------------------------>
 
-            String gt2 = data.get(0).get(12);
+            String gt2 = data1.get(0).get(12);
             PdfPCell cell81 = new PdfPCell(new Phrase("Grand Total : RM  ", rectem));
             cell81.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell81.setColspan(5);

@@ -30,8 +30,8 @@ public class AddItem extends javax.swing.JFrame {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
     private Date date = new Date();        
 
-    private String custId = Generate.getCustId();
-    private String billNo = Generate.getBillNo();
+    private String custId;
+    private String billNo;
 
     /**
      * Creates new form addItem
@@ -39,6 +39,34 @@ public class AddItem extends javax.swing.JFrame {
     public AddItem() {
         initComponents();
         fillcombo();
+    }
+
+    /**
+     * @return the custId
+     */
+    public String getCustId() {
+        return custId;
+    }
+
+    /**
+     * @param custId the custId to set
+     */
+    public void setCustId(String custId) {
+        this.custId = custId;
+    }
+
+    /**
+     * @return the billNo
+     */
+    public String getBillNo() {
+        return billNo;
+    }
+
+    /**
+     * @param billNo the billNo to set
+     */
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
     }
 
     /**
@@ -66,6 +94,11 @@ public class AddItem extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
@@ -220,7 +253,7 @@ public class AddItem extends javax.swing.JFrame {
         // TODO add your handling code here:
         String strDate = dateFormat.format(date);
         
-        String Jcombo1 = (String) jcb_itemCd.getSelectedItem();
+        String itemCode = (String) jcb_itemCd.getSelectedItem();
         String desc = (String) jtf_desc.getText();
         String unitPrice = (String) jtf_unitPrice.getText();
         String quantity = (String) jtf_quantity.getText();
@@ -230,38 +263,54 @@ public class AddItem extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, infoMessage, "Warning",
                     JOptionPane.WARNING_MESSAGE);
 
-        } else if (Jcombo1 == null) {
+        } else if (itemCode == null) {
             String infoMessage = "Please select the Item Code.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning",
                     JOptionPane.WARNING_MESSAGE);
 
-        } else if (quantity != null) {
+        } else {
             try {
                 System.out.println(strDate);
                 String month = new Month().getCreditMonth();
                 double totalPrice = Integer.parseInt(quantity) * Double.parseDouble(unitPrice);
                 
+                //Get current month credit and add the item price
                 String sql1 = "SELECT "+ month +" "
                         + "FROM customer_ledger "
-                        + "WHERE customer_id = '"+ custId +"' "
-                        + "AND bill_no = '"+ billNo +"' ";
-                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
-                String currentCredit = data.get(0).get(0);
+                        + "WHERE customer_id = '"+ custId +"' ";
+                ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+                String currentCredit = data1.get(0).get(0);
                 
                 currentCredit = String.valueOf(Double.parseDouble(currentCredit) + totalPrice);
                 
+                //Update customer ledger
                 String sql2 = "UPDATE customer_ledger "
                         + "SET "+ month +" = '"+ currentCredit +"' "
-                        + "WHERE customer_id = '"+ custId +"' "
-                        + "AND bill_no = '"+ billNo +"' ";
+                        + "WHERE customer_id = '"+ custId +"' ";
                 rc.setQuerySQL(host, port, sql2);
                 
-                String sql3 = "INSERT into customer_dtl(bill_no, txn_date, "
-                        + "item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "VALUES('" + billNo + "', '" + strDate + "', '" + Jcombo1 
-                        + "','" + desc + "','" + unitPrice + "','" + quantity 
-                        + "','" + custId + "' )";
+                //Update customer dtl
+                String sql3 = "INSERT into customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
+                        + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ desc +"','"+ unitPrice +"','"+ quantity +"','"+ billNo +"')";
                 rc.setQuerySQL(host, port, sql3);
+                
+                //Get current bill_amt and add item price;
+                String sql4 = "SELECT item_amt, quantity "
+                        + "FROM customer_hdr "
+                        + "WHERE customer_id = '"+ custId +"' "
+                        + "AND bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
+                String itemAmt = data2.get(0).get(0);
+                String qty = data2.get(0).get(1);
+                
+                itemAmt = String.valueOf(Double.parseDouble(itemAmt) + totalPrice);
+                qty = String.valueOf(Integer.parseInt(qty) + quantity);
+                
+                //Update customer hdr
+                String sql5 = "UPDATE customer_hdr "
+                        + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ qty +"' "
+                        + "WHERE bill_no = '"+ billNo +"' "
+                        + "AND customer_id = '"+ custId +"'";
                 
                 String infoMessage = "Success add data";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success",
@@ -271,9 +320,14 @@ public class AddItem extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
            
-            dispose(); // for hide current window
+            dispose(); 
         }
     }//GEN-LAST:event_btn_addActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * get item from miscellaneous item table
