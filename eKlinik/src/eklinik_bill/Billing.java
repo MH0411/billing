@@ -121,7 +121,7 @@ public class Billing extends javax.swing.JFrame {
         btn_AddItem = new javax.swing.JButton();
         btn_DeleteItem = new javax.swing.JButton();
         btn_Payment = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btn_PrintReceipt = new javax.swing.JButton();
         btn_Back = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
 
@@ -567,11 +567,10 @@ public class Billing extends javax.swing.JFrame {
         btn_Payment.setText("Payment");
         btn_Payment.setEnabled(false);
 
-        jButton1.setText("Print Receipt");
-        jButton1.setEnabled(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_PrintReceipt.setText("Print Receipt");
+        btn_PrintReceipt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_PrintReceiptActionPerformed(evt);
             }
         });
 
@@ -587,7 +586,7 @@ public class Billing extends javax.swing.JFrame {
                 .addGap(97, 97, 97)
                 .addComponent(btn_Payment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(92, 92, 92)
-                .addComponent(jButton1)
+                .addComponent(btn_PrintReceipt)
                 .addGap(293, 293, 293))
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
@@ -604,7 +603,7 @@ public class Billing extends javax.swing.JFrame {
                     .addComponent(btn_Payment)
                     .addComponent(btn_DeleteItem)
                     .addComponent(btn_AddItem)
-                    .addComponent(jButton1))
+                    .addComponent(btn_PrintReceipt))
                 .addGap(12, 12, 12))
         );
 
@@ -1145,9 +1144,12 @@ public class Billing extends javax.swing.JFrame {
      * Print selected bill
      * @param evt 
      */
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btn_PrintReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintReceiptActionPerformed
+        // TODO add your handling code here: 
+//        PDF pdf = new PDF(custId, billNo);
+//        pdf.print();
+        repaint();
+    }//GEN-LAST:event_btn_PrintReceiptActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1213,14 +1215,15 @@ public class Billing extends javax.swing.JFrame {
                     + "AND pe.STATUS ='Discharge' "
                     + "AND pom.episode_code like '"+ strDate1 +" %' " 
                     + "AND pe.episode_date = '"+ strDate +"' "
-                    + "AND NOT EXISTS (SELECT ch.order_no FROM customer_hdr ch WHERE ch.order_no =  pom.order_no )"
+                    + "AND NOT EXISTS ("
+                    + "SELECT ch.order_no FROM customer_hdr ch "
+                    + "WHERE ch.order_no =  pom.order_no) "
                     + "Group by pom.order_no";
             
             System.out.println(strDate);
             System.out.println(strDate1);
-//            System.out.println(sql);
 
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_PatientInformation.getModel();
 
             //remove all row
@@ -1441,11 +1444,11 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JButton btn_DeleteItem;
     private javax.swing.JButton btn_GenerateBill;
     private javax.swing.JButton btn_Payment;
+    private javax.swing.JButton btn_PrintReceipt;
     private javax.swing.JButton btn_mm_add;
     private javax.swing.JButton btn_mm_cancel;
     private javax.swing.JButton btn_mm_delete;
     private javax.swing.JButton btn_mm_update;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

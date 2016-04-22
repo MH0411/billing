@@ -50,8 +50,15 @@ public class AddBillItem extends javax.swing.JFrame {
         jt_MiscellaneousItem = new javax.swing.JTable();
         jtf_mm_SearchItem1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        btn_AddItem = new javax.swing.JButton();
-        btn_Cancel = new javax.swing.JButton();
+        btn_AddItem2 = new javax.swing.JButton();
+        btn_Cancel2 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jtf_mm_SearchItem2 = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jt_DrugsItem = new javax.swing.JTable();
+        btn_AddItem1 = new javax.swing.JButton();
+        btn_Cancel1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,7 +71,7 @@ public class AddBillItem extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -77,6 +84,20 @@ public class AddBillItem extends javax.swing.JFrame {
 
         jLabel9.setText("Enter Item Information:");
 
+        btn_AddItem2.setText("Add Item");
+        btn_AddItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_AddItem2ActionPerformed(evt);
+            }
+        });
+
+        btn_Cancel2.setText("Cancel");
+        btn_Cancel2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_Cancel2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -84,67 +105,120 @@ public class AddBillItem extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtf_mm_SearchItem1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btn_Cancel2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_AddItem2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(21, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtf_mm_SearchItem1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_AddItem2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Cancel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jtf_mm_SearchItem1.getAccessibleContext().setAccessibleDescription("Example : Item Code, Description");
 
         jTabbedPane.addTab("Miscellaneous Item", jPanel1);
 
-        btn_AddItem.setText("Add Item");
-        btn_AddItem.addActionListener(new java.awt.event.ActionListener() {
+        jLabel10.setText("Enter Item Information:");
+
+        jtf_mm_SearchItem2.setToolTipText("Example : Patient Name, IC No. Other ID");
+
+        jt_DrugsItem.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Item Code", "Item Name", "Item Description", "Stock Quantity", "Unit Price"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jt_DrugsItem);
+
+        btn_AddItem1.setText("Add Item");
+        btn_AddItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_AddItemActionPerformed(evt);
+                btn_AddItem1ActionPerformed(evt);
             }
         });
 
-        btn_Cancel.setText("Cancel");
-        btn_Cancel.addActionListener(new java.awt.event.ActionListener() {
+        btn_Cancel1.setText("Cancel");
+        btn_Cancel1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_CancelActionPerformed(evt);
+                btn_Cancel1ActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btn_Cancel1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_AddItem1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtf_mm_SearchItem2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtf_mm_SearchItem2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_AddItem1, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(btn_Cancel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
+        );
+
+        jTabbedPane.addTab("Drugs Item", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(215, 215, 215)
-                .addComponent(btn_Cancel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_AddItem)
-                .addGap(301, 301, 301))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 903, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 903, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_AddItem)
-                    .addComponent(btn_Cancel))
-                .addGap(0, 14, Short.MAX_VALUE))
+            .addComponent(jTabbedPane)
         );
 
         jTabbedPane.getAccessibleContext().setAccessibleName("");
@@ -152,14 +226,21 @@ public class AddBillItem extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_AddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItemActionPerformed
+    private void btn_AddItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItem1ActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btn_AddItemActionPerformed
+    }//GEN-LAST:event_btn_AddItem1ActionPerformed
 
-    private void btn_CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelActionPerformed
+    private void btn_Cancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_CancelActionPerformed
+    }//GEN-LAST:event_btn_Cancel1ActionPerformed
+
+    private void btn_AddItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_AddItem2ActionPerformed
+
+    private void btn_Cancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_Cancel2ActionPerformed
 
     /**
      * Display miscellaneous items.
@@ -271,13 +352,20 @@ public class AddBillItem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_AddItem;
-    private javax.swing.JButton btn_Cancel;
+    private javax.swing.JButton btn_AddItem1;
+    private javax.swing.JButton btn_AddItem2;
+    private javax.swing.JButton btn_Cancel1;
+    private javax.swing.JButton btn_Cancel2;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane;
+    private javax.swing.JTable jt_DrugsItem;
     private javax.swing.JTable jt_MiscellaneousItem;
     private javax.swing.JTextField jtf_mm_SearchItem1;
+    private javax.swing.JTextField jtf_mm_SearchItem2;
     // End of variables declaration//GEN-END:variables
 }
