@@ -398,10 +398,10 @@ public final class Generate extends javax.swing.JFrame {
      */
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
         // TODO add your handling code here:
-        AddItem addItem = new AddItem();
-        addItem.setBillNo(billNo);
-        addItem.setCustId(custId);
-        addItem.setVisible(true);
+        AddBillItem addBillItem = new AddBillItem();
+        addBillItem.setCustId(custId);
+        addBillItem.setBillNo(billNo);
+        addBillItem.setVisible(true);
     }//GEN-LAST:event_btnAddItemActionPerformed
 
     /**

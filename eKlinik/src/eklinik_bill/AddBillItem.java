@@ -5,7 +5,11 @@
  */
 package eklinik_bill;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -26,6 +30,13 @@ public class AddBillItem extends javax.swing.JFrame {
     private ServerDetail sd = new ServerDetail();
     private String host = sd.getHost();
     private int port = sd.getPort();
+    
+    private Date date = new Date();
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+    private String strDate = dateFormat.format(date);
+    
+    private String custId;
+    private String billNo;
 
     /**
      * Creates new form AddBillItem
@@ -34,8 +45,38 @@ public class AddBillItem extends javax.swing.JFrame {
         initComponents();
         super.pack();
         super.setLocationRelativeTo(null);
+        super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        
         tableMiscellaneousItem();
         tableDrugsItem();
+    }
+
+    /**
+     * @return the custId
+     */
+    public String getCustId() {
+        return custId;
+    }
+
+    /**
+     * @param custId the custId to set
+     */
+    public void setCustId(String custId) {
+        this.custId = custId;
+    }
+
+    /**
+     * @return the billNo
+     */
+    public String getBillNo() {
+        return billNo;
+    }
+
+    /**
+     * @param billNo the billNo to set
+     */
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
     }
 
     /**
@@ -72,15 +113,20 @@ public class AddBillItem extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item Code", "Item Name", "Item Description", "Price", "Discount"
+                "Item Code", "Item Name", "Price", "Discount"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jt_MiscellaneousItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jt_MiscellaneousItemMousePressed(evt);
             }
         });
         jScrollPane1.setViewportView(jt_MiscellaneousItem);
@@ -90,6 +136,7 @@ public class AddBillItem extends javax.swing.JFrame {
         jLabel9.setText("Enter Item Information:");
 
         btn_AddMItem.setText("Add Item");
+        btn_AddMItem.setEnabled(false);
         btn_AddMItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_AddMItemActionPerformed(evt);
@@ -164,9 +211,15 @@ public class AddBillItem extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jt_DrugsItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jt_DrugsItemMousePressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(jt_DrugsItem);
 
         btn_AddDItem.setText("Add Item");
+        btn_AddDItem.setEnabled(false);
         btn_AddDItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_AddDItemActionPerformed(evt);
@@ -235,21 +288,179 @@ public class AddBillItem extends javax.swing.JFrame {
 
     private void btn_AddDItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddDItemActionPerformed
         // TODO add your handling code here:
+        Boolean check;
+        int quantity = 0;
+        try{
+            quantity = Integer.parseInt(JOptionPane.showInputDialog("Quantity To Add: ", JOptionPane.QUESTION_MESSAGE));
+        }catch(NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Please enter number only.");
+        } 
+        
+        if ((quantity != 0)){
+            //Get no of row
+            int rowIndex = -1;
+            rowIndex = jt_DrugsItem.getSelectedRow();
+            rowIndex = jt_DrugsItem.convertRowIndexToModel(rowIndex);
+
+            String itemCode = jt_DrugsItem.getModel().getValueAt(rowIndex, 0).toString();
+            String name = jt_DrugsItem.getModel().getValueAt(rowIndex, 1).toString();
+            String stockQuantity = jt_DrugsItem.getModel().getValueAt(rowIndex, 3).toString();
+            String unitPrice = jt_DrugsItem.getModel().getValueAt(rowIndex, 4).toString();
+            
+            int stockQty = Integer.parseInt(stockQuantity) - quantity;
+            
+            if (quantity < 0){
+                JOptionPane.showMessageDialog(null, "Please enter positive number.");
+                
+            }else if (quantity < Integer.parseInt(stockQuantity) && (stockQty >= 0)){
+                String month = new Month().getCreditMonth();
+
+                try {
+                    //Get current month credit and add the item price
+                    String sql1 = "SELECT "+ month +" "
+                            + "FROM customer_ledger "
+                            + "WHERE customer_id = '"+ custId +"' ";
+                    ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+                    String currentCredit = data1.get(0).get(0);
+
+                    double totalPrice = quantity * Double.parseDouble(unitPrice);
+                    currentCredit = String.valueOf(Double.parseDouble(currentCredit) + totalPrice);
+
+                    //Update customer ledger
+                    String sql2 = "UPDATE customer_ledger "
+                            + "SET "+ month +" = '"+ currentCredit +"' "
+                            + "WHERE customer_id = '"+ custId +"' ";
+                    rc.setQuerySQL(host, port, sql2);
+
+                    //Update customer dtl
+                    String sql3 = "INSERT into customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
+                            + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ totalPrice +"','"+ quantity +"','"+ billNo +"')";
+                    rc.setQuerySQL(host, port, sql3);
+
+                    //Get current bill_amt and add item price;
+                    String sql4 = "SELECT item_amt, quantity "
+                            + "FROM customer_hdr "
+                            + "WHERE customer_id = '"+ custId +"' "
+                            + "AND bill_no = '"+ billNo +"'";
+                    ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
+                    String itemAmt = data2.get(0).get(0);
+                    String qty = data2.get(0).get(1);
+
+                    itemAmt = String.valueOf(Double.parseDouble(itemAmt) + totalPrice);
+                    qty = String.valueOf(Integer.parseInt(qty) + quantity);
+
+                    //Update customer hdr
+                    String sql5 = "UPDATE customer_hdr "
+                            + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ qty +"' "
+                            + "WHERE bill_no = '"+ billNo +"' "
+                            + "AND customer_id = '"+ custId +"'";
+                    rc.setQuerySQL(host, port, sql5);
+                    
+                    //Update mdc2 stock quantity;
+                    String sql6 = "UPDATE pis_mdc2 "
+                            + "SET d_stock_qty = '"+ stockQty +"' "
+                            + "WHERE ud_mdc_code = '"+ itemCode +"'";
+                    rc.setQuerySQL(host, port, sql6);
+
+                    String infoMessage = "Success add data";
+                    JOptionPane.showMessageDialog(null, infoMessage, "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    dispose();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Insufficient stock.");
+            }
+        }
     }//GEN-LAST:event_btn_AddDItemActionPerformed
 
     private void btn_Cancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel2ActionPerformed
         // TODO add your handling code here:
-        disable();
+        dispose();
     }//GEN-LAST:event_btn_Cancel2ActionPerformed
 
     private void btn_AddMItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddMItemActionPerformed
         // TODO add your handling code here:
+        
+        //Get no of row
+        int rowIndex = -1;
+        rowIndex = jt_MiscellaneousItem.getSelectedRow();
+        rowIndex = jt_MiscellaneousItem.convertRowIndexToModel(rowIndex);
+        
+        String itemCode = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 0).toString();
+        String name = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 1).toString();
+        String unitPrice = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 2).toString();
+        String discount = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 3).toString();
+               
+        String month = new Month().getCreditMonth();
+        
+        try {
+            //Get current month credit and add the item price
+            String sql1 = "SELECT "+ month +" "
+                    + "FROM customer_ledger "
+                    + "WHERE customer_id = '"+ custId +"' ";
+            ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+            String currentCredit = data1.get(0).get(0);
+
+            currentCredit = String.valueOf(Double.parseDouble(currentCredit) + Double.parseDouble(unitPrice));
+
+            //Update customer ledger
+            String sql2 = "UPDATE customer_ledger "
+                    + "SET "+ month +" = '"+ currentCredit +"' "
+                    + "WHERE customer_id = '"+ custId +"' ";
+            rc.setQuerySQL(host, port, sql2);
+
+            //Update customer dtl
+            String sql3 = "INSERT into customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
+                    + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ Double.parseDouble(unitPrice) +"','"+ 1 +"','"+ billNo +"')";
+            rc.setQuerySQL(host, port, sql3);
+
+            //Get current bill_amt and add item price;
+            String sql4 = "SELECT item_amt, quantity "
+                    + "FROM customer_hdr "
+                    + "WHERE customer_id = '"+ custId +"' "
+                    + "AND bill_no = '"+ billNo +"'";
+            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
+            String itemAmt = data2.get(0).get(0);
+            String quantity = data2.get(0).get(1);
+
+            itemAmt = String.valueOf(Double.parseDouble(itemAmt) + Double.parseDouble(unitPrice));
+            quantity = String.valueOf(Integer.parseInt(quantity) + 1);
+
+            //Update customer hdr
+            String sql5 = "UPDATE customer_hdr "
+                    + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ quantity +"' "
+                    + "WHERE bill_no = '"+ billNo +"' "
+                    + "AND customer_id = '"+ custId +"'";
+            rc.setQuerySQL(host, port, sql5);
+
+            String infoMessage = "Success add data";
+            JOptionPane.showMessageDialog(null, infoMessage, "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+            dispose();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }//GEN-LAST:event_btn_AddMItemActionPerformed
 
     private void btn_Cancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel1ActionPerformed
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btn_Cancel1ActionPerformed
+
+    private void jt_DrugsItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_DrugsItemMousePressed
+        // TODO add your handling code here:
+        btn_AddDItem.setEnabled(true);
+    }//GEN-LAST:event_jt_DrugsItemMousePressed
+
+    private void jt_MiscellaneousItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_MiscellaneousItemMousePressed
+        // TODO add your handling code here:
+        btn_AddMItem.setEnabled(true);
+    }//GEN-LAST:event_jt_MiscellaneousItemMousePressed
 
     /**
      * Display drugs items
@@ -305,9 +516,8 @@ public class AddBillItem extends javax.swing.JFrame {
 
                 jt_MiscellaneousItem.setValueAt(data.get(i).get(1), i, 0);
                 jt_MiscellaneousItem.setValueAt(data.get(i).get(2), i, 1);
-                jt_MiscellaneousItem.setValueAt(data.get(i).get(3), i, 2);
-                jt_MiscellaneousItem.setValueAt(data.get(i).get(4), i, 3);
-                jt_MiscellaneousItem.setValueAt(data.get(i).get(5), i, 4);
+                jt_MiscellaneousItem.setValueAt(data.get(i).get(4), i, 2);
+                jt_MiscellaneousItem.setValueAt(data.get(i).get(5), i, 3);
             }
             
             tableMiscellaneousItemSorter();
@@ -392,7 +602,6 @@ public class AddBillItem extends javax.swing.JFrame {
             public void changedUpdate(DocumentEvent e) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-
         });
     }
     

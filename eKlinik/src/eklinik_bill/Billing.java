@@ -927,8 +927,10 @@ public class Billing extends javax.swing.JFrame {
      */
     private void btn_AddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItemActionPerformed
         // TODO add your handling code here:
-        AddBillItem addItem = new AddBillItem();
-        addItem.setVisible(true);
+        AddBillItem addBillItem = new AddBillItem();
+        addBillItem.setCustId(custId);
+        addBillItem.setBillNo(billNo);
+        addBillItem.setVisible(true);
     }//GEN-LAST:event_btn_AddItemActionPerformed
 
     /**
@@ -1168,7 +1170,6 @@ public class Billing extends javax.swing.JFrame {
 
             PDF pdf = new PDF(custId, billNo);
             pdf.print();
-            repaint();
             Desktop.getDesktop().open(new File("Receipt.pdf"));
         } catch (Exception ex) {
             Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
@@ -1311,7 +1312,7 @@ public class Billing extends javax.swing.JFrame {
     /**
      * Display list of patient's bill
      */
-    private void tableListPatientBill(){
+    public void tableListPatientBill(){
         try{
             String sql = "SELECT bill_no, customer_id, item_amt, quantity "
                     + "FROM customer_hdr ";
