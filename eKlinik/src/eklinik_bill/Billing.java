@@ -541,7 +541,7 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item Code", "Item Description", "Item Quantity", "Item Amount", "Total Amount"
+                "Item Code", "Item Description", "Item Quantity", "Unit Price", "Total Amount"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -956,14 +956,51 @@ public class Billing extends javax.swing.JFrame {
 
                 billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex1, 0).toString();
                 itemCode = jt_ListItemPerPatient.getModel().getValueAt(rowIndex2, 0).toString();
+                String itemAmt = jt_ListItemPerPatient.getModel().getValueAt(rowIndex2, 4).toString();
+                String qty = jt_ListItemPerPatient.getModel().getValueAt(rowIndex2, 2).toString();
 
                 if ((rowIndex1 != -1 ) && (rowIndex2 != -1)){
-
-                    String sql = "DELETE FROM  customer_dtl "
+                    //Delete from customer dtl
+                    String sql1 = "DELETE FROM  customer_dtl "
                             + "WHERE bill_no = '"+ billNo +"'"
                             + "AND item_cd = '"+ itemCode +"' ";
-                    rc.setQuerySQL(host, port, sql);
+                    rc.setQuerySQL(host, port, sql1);
+                    
+                    String month = new Month().getCreditMonth();
+                    //Get current credit of customer
+                    String sql2 = "SELECT "+ month +" "
+                            + "FROM customer_ledger "
+                            + "WHERE customer_id = '"+ custId +"' ";
+                    ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql2);
+                    String currentCredit = data1.get(0).get(0);
+                    
+                    currentCredit = String.valueOf(Double.parseDouble(currentCredit) - Double.parseDouble(itemAmt));
+                    
+                    //Update customer ledger
+                    String sql3 = "UPDATE customer_ledger "
+                            + "SET "+ month +" = '"+ currentCredit +"' "
+                            + "WHERE customer_id = '"+ custId +"' ";
+                    rc.setQuerySQL(host, port, sql3);
+                    
+                    //Get current bill_amt and minus item price;
+                    String sql4 = "SELECT item_amt, quantity "
+                            + "FROM customer_hdr "
+                            + "WHERE customer_id = '"+ custId +"' "
+                            + "AND bill_no = '"+ billNo +"'";
+                    ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
+                    String itemAmt1 = data2.get(0).get(0);
+                    String quantity = data2.get(0).get(1);
+                    
+                    itemAmt1 = String.valueOf(Double.parseDouble(itemAmt1) - Double.parseDouble(itemAmt));
+                    quantity = String.valueOf(Integer.parseInt(quantity) - Integer.parseInt(qty));
 
+                    //Update customer hdr
+                    String sql5 = "UPDATE customer_hdr "
+                            + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt1 +"', quantity = '"+ quantity +"' "
+                            + "WHERE bill_no = '"+ billNo +"' "
+                            + "AND customer_id = '"+ custId +"'";
+                    rc.setQuerySQL(host, port, sql5);
+                    
                     String infoMessage = "Success delete data";
                     JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
 
@@ -974,10 +1011,10 @@ public class Billing extends javax.swing.JFrame {
                         model.removeRow(i);
                     }
 
-                    String sql1 = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
+                    String sql6 = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
                          + "FROM customer_dtl "
                          + "WHERE bill_no = '"+ billNo +"'";
-                    ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
+                    ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql6);
 
                     //add row and show value
                     for (int i = 0; i < data.size(); i++) {
@@ -989,12 +1026,12 @@ public class Billing extends javax.swing.JFrame {
                         jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
                         jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
                     }
-
+                    tableListPatientBill();
+                    
                 } else {
                     String infoMessage = "No item selected";
                     JOptionPane.showMessageDialog(null, infoMessage, "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
-
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -1125,7 +1162,7 @@ public class Billing extends javax.swing.JFrame {
             billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
             custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 1).toString();
             
-            String sql = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
+            String sql = "SELECT item_cd, item_desc, quantity, item_amt/quantity, item_amt "
                     + "FROM customer_dtl "
                     + "WHERE bill_no = '"+ billNo +"'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
