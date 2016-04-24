@@ -10,11 +10,16 @@ package eklinik_bill;
  * @author Amalina
  * @author Ho Zhen Hong
  */
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -135,6 +140,7 @@ public class Billing extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Bill Description"));
+        jPanel4.setPreferredSize(new java.awt.Dimension(11, 422));
 
         jt_BillDescription.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -175,22 +181,23 @@ public class Billing extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4)
-                .addContainerGap())
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(515, 515, 515)
-                .addComponent(btn_GenerateBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(575, 575, 575))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(516, 516, 516)
+                        .addComponent(btn_GenerateBill, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(7, 7, 7)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_GenerateBill)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(btn_GenerateBill, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -262,16 +269,19 @@ public class Billing extends javax.swing.JFrame {
         jPanel_Billing.setLayout(jPanel_BillingLayout);
         jPanel_BillingLayout.setHorizontalGroup(
             jPanel_BillingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_BillingLayout.createSequentialGroup()
+                .addGroup(jPanel_BillingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1185, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel_BillingLayout.setVerticalGroup(
             jPanel_BillingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_BillingLayout.createSequentialGroup()
                 .addGap(7, 7, 7)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -415,7 +425,7 @@ public class Billing extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jtf_mm_itemCd, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -456,7 +466,8 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, Short.MAX_VALUE)
+                .addGap(25, 25, 25))
         );
 
         jTabbedPane3.addTab("Manage Miscellaneous", jPanel_ManageMiscellaneous);
@@ -568,6 +579,7 @@ public class Billing extends javax.swing.JFrame {
         btn_Payment.setEnabled(false);
 
         btn_PrintReceipt.setText("Print Receipt");
+        btn_PrintReceipt.setEnabled(false);
         btn_PrintReceipt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_PrintReceiptActionPerformed(evt);
@@ -590,14 +602,14 @@ public class Billing extends javax.swing.JFrame {
                 .addGap(293, 293, 293))
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Payment)
@@ -657,9 +669,9 @@ public class Billing extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_Back, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
-                .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 715, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -915,9 +927,7 @@ public class Billing extends javax.swing.JFrame {
      */
     private void btn_AddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItemActionPerformed
         // TODO add your handling code here:
-        AddItem addItem = new AddItem();
-        addItem.setCustId(custId);
-        addItem.setBillNo(billNo);
+        AddBillItem addItem = new AddBillItem();
         addItem.setVisible(true);
     }//GEN-LAST:event_btn_AddItemActionPerformed
 
@@ -1101,6 +1111,7 @@ public class Billing extends javax.swing.JFrame {
         // TODO add your handling code here:
         btn_AddItem.setEnabled(true);
         btn_Payment.setEnabled(true);
+        btn_PrintReceipt.setEnabled(true);
         
         try {
             int rowIndex = -1;
@@ -1110,7 +1121,7 @@ public class Billing extends javax.swing.JFrame {
             rowIndex = jt_ListPatientBill.convertRowIndexToModel(rowIndex);
             
             billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
-            custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
+            custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 1).toString();
             
             String sql = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
                     + "FROM customer_dtl "
@@ -1146,9 +1157,22 @@ public class Billing extends javax.swing.JFrame {
      */
     private void btn_PrintReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintReceiptActionPerformed
         // TODO add your handling code here: 
-//        PDF pdf = new PDF(custId, billNo);
-//        pdf.print();
-        repaint();
+        try {
+            //Get no of row
+            int rowIndex = -1;
+            rowIndex = jt_ListPatientBill.getSelectedRow();
+            rowIndex = jt_ListPatientBill.convertRowIndexToModel(rowIndex);
+
+            billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
+            custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 1).toString();
+
+            PDF pdf = new PDF(custId, billNo);
+            pdf.print();
+            repaint();
+            Desktop.getDesktop().open(new File("Receipt.pdf"));
+        } catch (Exception ex) {
+            Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_PrintReceiptActionPerformed
 
     /**

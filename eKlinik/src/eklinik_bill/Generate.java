@@ -369,15 +369,14 @@ public final class Generate extends javax.swing.JFrame {
      */
     private void btn_PrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintActionPerformed
         // TODO add your handling code here:
-        PDF pdf = new PDF(custId, billNo);
-        pdf.print();
         try {
-            // TODO add your handling code here:
+            PDF pdf = new PDF(custId, billNo);
+            pdf.print();
             //Open the generated receipt
             Desktop.getDesktop().open(new File("Receipt.pdf"));
             Billing billing = new Billing();
             billing.setVisible(true);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_PrintActionPerformed

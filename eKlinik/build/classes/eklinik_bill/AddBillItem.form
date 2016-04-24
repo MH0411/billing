@@ -41,6 +41,11 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
         <Container class="javax.swing.JPanel" name="jPanel1">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Miscellaneous Item">
@@ -64,9 +69,9 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="btn_Cancel2" min="-2" pref="122" max="-2" attributes="0"/>
+                              <Component id="btn_Cancel1" min="-2" pref="122" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="btn_AddItem2" min="-2" pref="133" max="-2" attributes="0"/>
+                              <Component id="btn_AddMItem" min="-2" pref="133" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -84,8 +89,8 @@
                       <Component id="jScrollPane1" min="-2" pref="374" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btn_AddItem2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btn_Cancel2" alignment="0" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="btn_AddMItem" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btn_Cancel1" alignment="0" min="-2" pref="41" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -160,25 +165,30 @@
                 <Property name="text" type="java.lang.String" value="Enter Item Information:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_AddItem2">
+            <Component class="javax.swing.JButton" name="btn_AddMItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Item"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AddItem2ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AddMItemActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_Cancel2">
+            <Component class="javax.swing.JButton" name="btn_Cancel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cancel"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_Cancel2ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_Cancel1ActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel2">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Drugs Item">
@@ -195,9 +205,9 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane2" alignment="1" pref="878" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="btn_Cancel1" min="-2" pref="122" max="-2" attributes="0"/>
+                              <Component id="btn_Cancel2" min="-2" pref="122" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="btn_AddItem1" min="-2" pref="133" max="-2" attributes="0"/>
+                              <Component id="btn_AddDItem" min="-2" pref="133" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -222,8 +232,8 @@
                       <Component id="jScrollPane2" min="-2" pref="376" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btn_AddItem1" pref="41" max="32767" attributes="0"/>
-                          <Component id="btn_Cancel1" max="32767" attributes="0"/>
+                          <Component id="btn_AddDItem" pref="41" max="32767" attributes="0"/>
+                          <Component id="btn_Cancel2" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="9" max="32767" attributes="0"/>
                   </Group>
@@ -295,20 +305,20 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btn_AddItem1">
+            <Component class="javax.swing.JButton" name="btn_AddDItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Item"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AddItem1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AddDItemActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_Cancel1">
+            <Component class="javax.swing.JButton" name="btn_Cancel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cancel"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_Cancel1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_Cancel2ActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

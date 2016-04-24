@@ -32,7 +32,10 @@ public class AddBillItem extends javax.swing.JFrame {
      */
     public AddBillItem() {
         initComponents();
+        super.pack();
+        super.setLocationRelativeTo(null);
         tableMiscellaneousItem();
+        tableDrugsItem();
     }
 
     /**
@@ -50,17 +53,19 @@ public class AddBillItem extends javax.swing.JFrame {
         jt_MiscellaneousItem = new javax.swing.JTable();
         jtf_mm_SearchItem1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        btn_AddItem2 = new javax.swing.JButton();
-        btn_Cancel2 = new javax.swing.JButton();
+        btn_AddMItem = new javax.swing.JButton();
+        btn_Cancel1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jtf_mm_SearchItem2 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jt_DrugsItem = new javax.swing.JTable();
-        btn_AddItem1 = new javax.swing.JButton();
-        btn_Cancel1 = new javax.swing.JButton();
+        btn_AddDItem = new javax.swing.JButton();
+        btn_Cancel2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jt_MiscellaneousItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -84,17 +89,17 @@ public class AddBillItem extends javax.swing.JFrame {
 
         jLabel9.setText("Enter Item Information:");
 
-        btn_AddItem2.setText("Add Item");
-        btn_AddItem2.addActionListener(new java.awt.event.ActionListener() {
+        btn_AddMItem.setText("Add Item");
+        btn_AddMItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_AddItem2ActionPerformed(evt);
+                btn_AddMItemActionPerformed(evt);
             }
         });
 
-        btn_Cancel2.setText("Cancel");
-        btn_Cancel2.addActionListener(new java.awt.event.ActionListener() {
+        btn_Cancel1.setText("Cancel");
+        btn_Cancel1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Cancel2ActionPerformed(evt);
+                btn_Cancel1ActionPerformed(evt);
             }
         });
 
@@ -112,9 +117,9 @@ public class AddBillItem extends javax.swing.JFrame {
                             .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_Cancel2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_Cancel1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_AddItem2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_AddMItem, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -128,14 +133,16 @@ public class AddBillItem extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_AddItem2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_Cancel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_AddMItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Cancel1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         jtf_mm_SearchItem1.getAccessibleContext().setAccessibleDescription("Example : Item Code, Description");
 
         jTabbedPane.addTab("Miscellaneous Item", jPanel1);
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel10.setText("Enter Item Information:");
 
@@ -159,17 +166,17 @@ public class AddBillItem extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jt_DrugsItem);
 
-        btn_AddItem1.setText("Add Item");
-        btn_AddItem1.addActionListener(new java.awt.event.ActionListener() {
+        btn_AddDItem.setText("Add Item");
+        btn_AddDItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_AddItem1ActionPerformed(evt);
+                btn_AddDItemActionPerformed(evt);
             }
         });
 
-        btn_Cancel1.setText("Cancel");
-        btn_Cancel1.addActionListener(new java.awt.event.ActionListener() {
+        btn_Cancel2.setText("Cancel");
+        btn_Cancel2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Cancel1ActionPerformed(evt);
+                btn_Cancel2ActionPerformed(evt);
             }
         });
 
@@ -182,9 +189,9 @@ public class AddBillItem extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btn_Cancel1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_Cancel2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_AddItem1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_AddDItem, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtf_mm_SearchItem2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -203,8 +210,8 @@ public class AddBillItem extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_AddItem1, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                    .addComponent(btn_Cancel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_AddDItem, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(btn_Cancel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 9, Short.MAX_VALUE))
         );
 
@@ -226,29 +233,64 @@ public class AddBillItem extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_AddItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItem1ActionPerformed
+    private void btn_AddDItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddDItemActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_AddItem1ActionPerformed
-
-    private void btn_Cancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_Cancel1ActionPerformed
-
-    private void btn_AddItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddItem2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_AddItem2ActionPerformed
+    }//GEN-LAST:event_btn_AddDItemActionPerformed
 
     private void btn_Cancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel2ActionPerformed
         // TODO add your handling code here:
+        disable();
     }//GEN-LAST:event_btn_Cancel2ActionPerformed
 
+    private void btn_AddMItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddMItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_AddMItemActionPerformed
+
+    private void btn_Cancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel1ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btn_Cancel1ActionPerformed
+
+    /**
+     * Display drugs items
+     */
+    public void tableDrugsItem(){
+        try {
+            String sql = "SELECT ud_mdc_code, d_trade_name, d_caution_code, d_stock_qty, d_sell_price "
+                    + "FROM pis_mdc2 ";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+            DefaultTableModel model = (DefaultTableModel) jt_DrugsItem.getModel();
+            
+            //remove all row
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+
+            //add row and show value
+            for (int i = 0; i < data.size(); i++) {
+                model.addRow(new Object[]{"", "", "", "", ""});
+
+                jt_DrugsItem.setValueAt(data.get(i).get(0), i, 0);
+                jt_DrugsItem.setValueAt(data.get(i).get(1), i, 1);
+                jt_DrugsItem.setValueAt(data.get(i).get(2), i, 2);
+                jt_DrugsItem.setValueAt(data.get(i).get(3), i, 3);
+                jt_DrugsItem.setValueAt(data.get(i).get(4), i, 4);
+            }
+            
+            tableDrugsItemSorter();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
     /**
      * Display miscellaneous items.
      */
-    private void tableMiscellaneousItem() {
+    public void tableMiscellaneousItem() {
         try {
             String sql = "SELECT * FROM miscellaneous_item";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_MiscellaneousItem.getModel();
 
             //remove all row
@@ -274,7 +316,45 @@ public class AddBillItem extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Detect and sort table drugs item  content based on the input
+     */
+    public void tableDrugsItemSorter() {
+        TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(jt_DrugsItem.getModel());
+        jt_DrugsItem.setRowSorter(rowSorter);
 
+        jtf_mm_SearchItem2.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jtf_mm_SearchItem2.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jtf_mm_SearchItem2.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+    }
     
     /**
      * Detect and sort table miscellaneous item  content based on the input
@@ -352,8 +432,8 @@ public class AddBillItem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_AddItem1;
-    private javax.swing.JButton btn_AddItem2;
+    private javax.swing.JButton btn_AddDItem;
+    private javax.swing.JButton btn_AddMItem;
     private javax.swing.JButton btn_Cancel1;
     private javax.swing.JButton btn_Cancel2;
     private javax.swing.JLabel jLabel10;

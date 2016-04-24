@@ -19,6 +19,7 @@ import static eklinik_bill.Generate.billNo;
 import static eklinik_bill.Generate.custId;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,7 @@ public class PDF {
     private String host = sd.getHost();
     private int port = sd.getPort();
     
+    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private DateFormat dateFormat = new SimpleDateFormat("MMyyyy");
     private Date date = new Date();
     private String date1 = dateFormat.format(date);
@@ -132,10 +134,10 @@ public class PDF {
             table.setTotalWidth(document.right() - document.left());
             
             //--------------------------receipt no------------------------------------------>
-            PdfPTable header_table = new PdfPTable(4);
-            header_table.setWidths(new float[]{2f, 7f, 1.5f, 4f});
-            header_table.setLockedWidth(true);
-            header_table.setTotalWidth(document.right() - document.left());
+            PdfPTable header = new PdfPTable(4);
+            header.setWidths(new float[]{2f, 7f, 1.5f, 4f});
+            header.setLockedWidth(true);
+            header.setTotalWidth(document.right() - document.left());
             
             //--------------------------table header------------------------------------------>
             Image logo = Image.getInstance("pic/logo.png");
@@ -146,29 +148,29 @@ public class PDF {
             cell1.setBorder(Rectangle.NO_BORDER);
             cell1.setColspan(4);
             cell1.setLeading(15f, 0.3f);
-            header_table.addCell(cell1);
+            header.addCell(cell1);
             
             PdfPCell cellAddress = new PdfPCell(new Phrase("Hang Tuah Jaya, 76100 Durian Tunggal, Melaka, Malaysia", rectemja));
-            header_table.addCell(cellAddress);
+            header.addCell(cellAddress);
             
             //-----------------------------Title--------------------------------------->
             PdfPCell cell200 = new PdfPCell(new Phrase(" ", recti));
             cell200.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell200.setBorder(Rectangle.NO_BORDER);
             cell200.setColspan(4);
-            header_table.addCell(cell200);
+            header.addCell(cell200);
             
-            PdfPCell cell2 = new PdfPCell(new Phrase(receiptNo, recti));
+            PdfPCell cell2 = new PdfPCell(new Phrase(receiptNo, rectemja));
             cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell2.setBorder(Rectangle.NO_BORDER);
             cell2.setColspan(4);
-            header_table.addCell(cell2);
+            header.addCell(cell2);
 
             PdfPCell cell001 = new PdfPCell(new Phrase(" ", recti));
             cell001.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell001.setBorder(Rectangle.NO_BORDER);
             cell001.setColspan(4);
-            header_table.addCell(cell001);
+            header.addCell(cell001);
 
             String nama = data1.get(0).get(0);
             String address = data1.get(0).get(1);
@@ -189,19 +191,19 @@ public class PDF {
             cell12.setBorder(Rectangle.NO_BORDER);
             cell12.setColspan(3);
 
-            header_table.addCell(cell11);
-            header_table.addCell(cell12);
+            header.addCell(cell11);
+            header.addCell(cell12);
 
-            PdfPCell cell21 = new PdfPCell(new Phrase("Address", rectem));
-            cell21.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell21.setBorder(Rectangle.NO_BORDER);
-            PdfPCell cell22 = new PdfPCell(new Phrase(": " + address, rectemja));
-            cell22.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell22.setBorder(Rectangle.NO_BORDER);
-            cell22.setColspan(3);
-
-            header_table.addCell(cell21);
-            header_table.addCell(cell22);
+//            PdfPCell cell21 = new PdfPCell(new Phrase("Address", rectem));
+//            cell21.setHorizontalAlignment(Element.ALIGN_LEFT);
+//            cell21.setBorder(Rectangle.NO_BORDER);
+//            PdfPCell cell22 = new PdfPCell(new Phrase(": " + address, rectemja));
+//            cell22.setHorizontalAlignment(Element.ALIGN_LEFT);
+//            cell22.setBorder(Rectangle.NO_BORDER);
+//            cell22.setColspan(3);
+//
+//            header.addCell(cell21);
+//            header.addCell(cell22);
 
             PdfPCell cell31 = new PdfPCell(new Phrase("IC Number", rectem));
             cell31.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -216,10 +218,10 @@ public class PDF {
             cell34.setHorizontalAlignment(Element.ALIGN_LEFT);
             cell34.setBorder(Rectangle.NO_BORDER);
 
-            header_table.addCell(cell31);
-            header_table.addCell(cell32);
-            header_table.addCell(cell33);
-            header_table.addCell(cell34);
+            header.addCell(cell31);
+            header.addCell(cell32);
+            header.addCell(cell33);
+            header.addCell(cell34);
 
             PdfPCell cell41 = new PdfPCell(new Phrase("Other ID", rectem));
             cell41.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -234,17 +236,17 @@ public class PDF {
             cell44.setHorizontalAlignment(Element.ALIGN_LEFT);
             cell44.setBorder(Rectangle.NO_BORDER);
 
-            header_table.addCell(cell41);
-            header_table.addCell(cell42);
-            header_table.addCell(cell43);
-            header_table.addCell(cell44);
+            header.addCell(cell41);
+            header.addCell(cell42);
+            header.addCell(cell43);
+            header.addCell(cell44);
 
-            PdfPCell cell51 = new PdfPCell(new Phrase("No. Tel", rectem));
-            cell51.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell51.setBorder(Rectangle.NO_BORDER);
-            PdfPCell cell52 = new PdfPCell(new Phrase(": " + phone, rectemja));
-            cell52.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell52.setBorder(Rectangle.NO_BORDER);
+//            PdfPCell cell51 = new PdfPCell(new Phrase("No. Tel", rectem));
+//            cell51.setHorizontalAlignment(Element.ALIGN_LEFT);
+//            cell51.setBorder(Rectangle.NO_BORDER);
+//            PdfPCell cell52 = new PdfPCell(new Phrase(": " + phone, rectemja));
+//            cell52.setHorizontalAlignment(Element.ALIGN_LEFT);
+//            cell52.setBorder(Rectangle.NO_BORDER);
 
             DateFormat dateFormat;
             dateFormat = new SimpleDateFormat("dd-MM-yyyy"); //2015-01-06 
@@ -259,16 +261,16 @@ public class PDF {
             cell54.setHorizontalAlignment(Element.ALIGN_LEFT);
             cell54.setBorder(Rectangle.NO_BORDER);
 
-            header_table.addCell(cell51);
-            header_table.addCell(cell52);
-            header_table.addCell(cell53);
-            header_table.addCell(cell54);
+//            header.addCell(cell51);
+//            header.addCell(cell52);
+            header.addCell(cell53);
+            header.addCell(cell54);
 
             PdfPCell cell002 = new PdfPCell(new Phrase(" ", recti));
             cell002.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell002.setBorder(Rectangle.NO_BORDER);
             cell002.setColspan(4);
-            header_table.addCell(cell002);
+            header.addCell(cell002);
 
             //-------------------------------------------------------------------->
             PdfPCell cell61 = new PdfPCell(new Phrase("No.", rectem));
@@ -342,9 +344,13 @@ public class PDF {
 
             total.addCell(cell81);
             total.addCell(cell86);
-            //-------------------------------------------------------------------->
+            //---------------------------------------------------------------------------->
 
-            document.add(header_table);
+            PdfPTable footer = new PdfPTable(1);
+//            footer.setWidths();
+            
+            //---------------------------------------------------------------------------->
+            document.add(header);
             document.add(table);
             document.add(total);
             
