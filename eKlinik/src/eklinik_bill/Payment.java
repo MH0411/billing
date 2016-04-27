@@ -24,6 +24,8 @@ public class Payment extends javax.swing.JFrame {
     private int port = sd.getPort();
     
     private Month currentMonth = new Month();
+    private String custId;
+    private String billNo;
    
     /**
      * Creates new form Payment
@@ -35,6 +37,34 @@ public class Payment extends javax.swing.JFrame {
         super.pack();
         super.setLocationRelativeTo(null);
         super.setVisible(true);
+    }
+
+    /**
+     * @return the custId
+     */
+    public String getCustId() {
+        return custId;
+    }
+
+    /**
+     * @param custId the custId to set
+     */
+    public void setCustId(String custId) {
+        this.custId = custId;
+    }
+
+    /**
+     * @return the billNo
+     */
+    public String getBillNo() {
+        return billNo;
+    }
+
+    /**
+     * @param billNo the billNo to set
+     */
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
     }
 
     /**
@@ -177,23 +207,28 @@ public class Payment extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
             
         } else {
-//            String sql1 = "SELECT "+  +" ";
-//            rc.getQuerySQL(host, port, sql1);
             
-            String sql2 = "update customer_ledger "
-                    + "set pay_method = '"+ method +"', "
-                    + ""+currentMonth.getDebitMonth()+" = '"+ debit +"' "
-                    + "where customer_id = '"+ Generate.getCustId() +"' ";
-            rc.setQuerySQL(host, port, sql2);
-            
-            System.out.println(Generate.getCustId());
-            
-            System.out.println(currentMonth.getDebitMonth());
-            System.out.println(method);
-//            System.out.println(Generate.getBillNo());
-            
-            String infoMessage = "Success add data.";
+            try{
+                String sql1 = "UPDATE customer_ledger "
+                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debit +"' "
+                        + "where customer_id = '"+ custId  +"' ";
+                rc.setQuerySQL(host, port, sql1);
+
+                System.out.println(Generate.getCustId());
+
+                System.out.println(currentMonth.getDebitMonth());
+                System.out.println(method);
+                
+                String sql2 = "UPDATE customer_hdr "
+                        + "SET payment = 'Paid' "
+                        + "WHERE bill_no = '"+ billNo +"'";
+                rc.setQuerySQL(host, port, sql2);
+
+                String infoMessage = "Success add data.";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e){
+                JOptionPane.showInputDialog(null, e);
+            }
 
             dispose();
         }
@@ -254,13 +289,17 @@ public class Payment extends javax.swing.JFrame {
      */
     public void displayCurrentCredit(){
         
-        String sql = "SELECT DISTINCT "+ currentMonth.getCreditMonth() +" "
-                + "FROM customer_ledger "
-                + "WHERE customer_id = '"+ Generate.getCustId() +"' ";
-        ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+        try{
+            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +" "
+                    + "FROM customer_ledger cl, pms_patient_biodata pb "
+                    + "WHERE cl.customer_id = '"+ custId +"' "
+                    + "AND pb.pmi_no = '"+ custId +"' ";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
-        jl_Credit.setText(data.get(0).get(0));
-        
+            jl_Credit.setText(data.get(0).get(0));
+        } catch (Exception e){
+            JOptionPane.showInputDialog(null, e);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

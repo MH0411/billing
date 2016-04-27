@@ -487,6 +487,8 @@ public final class Generate extends javax.swing.JFrame {
     private void btn_PaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PaymentActionPerformed
         // TODO add your handling code here:
         Payment payment = new Payment();
+        payment.setCustId(custId);
+        payment.setBillNo(billNo);
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
