@@ -245,7 +245,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane5" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane5" alignment="0" pref="1153" max="32767" attributes="0"/>
                                       <Group type="102" attributes="0">
                                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -255,11 +255,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jtf_SearchPatient" min="-2" pref="220" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jrb_Unpaid" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jrb_Paid" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                                  <EmptySpace min="29" pref="943" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -271,11 +267,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jtf_SearchPatient" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="jrb_Unpaid" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jrb_Paid" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jtf_SearchPatient" min="-2" pref="31" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jScrollPane5" pref="156" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -368,23 +360,6 @@
                   <Properties>
                     <Property name="toolTipText" type="java.lang.String" value="Example : Patient Name, IC No. Other ID"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JRadioButton" name="jrb_Unpaid">
-                  <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Unpaid"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrb_UnpaidActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JRadioButton" name="jrb_Paid">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Paid"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrb_PaidActionPerformed"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -757,16 +732,23 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane2" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jtf_mb_SearchBill" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane2" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="243" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jtf_mb_SearchBill" min="-2" pref="220" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jrb_Unpaid" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="jrb_Paid" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -776,7 +758,11 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jtf_mb_SearchBill" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jtf_mb_SearchBill" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="jrb_Paid" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jrb_Unpaid" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jScrollPane2" pref="156" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -848,6 +834,23 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Enter Bill Information:"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JRadioButton" name="jrb_Paid">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Paid"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrb_PaidActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JRadioButton" name="jrb_Unpaid">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" value="Unpaid"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrb_UnpaidActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

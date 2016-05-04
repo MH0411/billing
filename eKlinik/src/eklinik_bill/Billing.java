@@ -97,8 +97,6 @@ public class Billing extends javax.swing.JFrame {
         jt_PatientInformation = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jtf_SearchPatient = new javax.swing.JTextField();
-        jrb_Unpaid = new javax.swing.JRadioButton();
-        jrb_Paid = new javax.swing.JRadioButton();
         jPanel_ManageMiscellaneous = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -126,6 +124,8 @@ public class Billing extends javax.swing.JFrame {
         jt_ListPatientBill = new javax.swing.JTable();
         jtf_mb_SearchBill = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        jrb_Paid = new javax.swing.JRadioButton();
+        jrb_Unpaid = new javax.swing.JRadioButton();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jt_ListItemPerPatient = new javax.swing.JTable();
@@ -244,21 +244,6 @@ public class Billing extends javax.swing.JFrame {
 
         jtf_SearchPatient.setToolTipText("Example : Patient Name, IC No. Other ID");
 
-        jrb_Unpaid.setSelected(true);
-        jrb_Unpaid.setText("Unpaid");
-        jrb_Unpaid.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jrb_UnpaidActionPerformed(evt);
-            }
-        });
-
-        jrb_Paid.setText("Paid");
-        jrb_Paid.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jrb_PaidActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -268,18 +253,14 @@ public class Billing extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1153, Short.MAX_VALUE)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jtf_SearchPatient, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jrb_Unpaid)
-                        .addGap(18, 18, 18)
-                        .addComponent(jrb_Paid)
-                        .addGap(29, 29, 29))))
+                        .addGap(29, 943, Short.MAX_VALUE))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,10 +268,7 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtf_SearchPatient, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jrb_Unpaid)
-                    .addComponent(jrb_Paid))
+                .addComponent(jtf_SearchPatient, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                 .addContainerGap())
@@ -535,6 +513,21 @@ public class Billing extends javax.swing.JFrame {
 
         jLabel8.setText("Enter Bill Information:");
 
+        jrb_Paid.setText("Paid");
+        jrb_Paid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrb_PaidActionPerformed(evt);
+            }
+        });
+
+        jrb_Unpaid.setSelected(true);
+        jrb_Unpaid.setText("Unpaid");
+        jrb_Unpaid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrb_UnpaidActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -542,13 +535,19 @@ public class Billing extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jtf_mb_SearchBill, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jtf_mb_SearchBill, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jrb_Unpaid)
+                        .addGap(18, 18, 18)
+                        .addComponent(jrb_Paid)
+                        .addGap(33, 33, 33))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,7 +555,10 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtf_mb_SearchBill, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtf_mb_SearchBill, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jrb_Paid)
+                    .addComponent(jrb_Unpaid))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1090,7 +1092,7 @@ public class Billing extends javax.swing.JFrame {
             selectedOrderNo = jt_PatientInformation.getModel().getValueAt(rowIndex, 1).toString();
 
             DateFormat dateFormat;
-            dateFormat = new SimpleDateFormat("dd/MM/yyyy"); //2015-01-06
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 
             Date date = new Date();
             String todayDate = dateFormat.format(date);
 
@@ -1170,7 +1172,9 @@ public class Billing extends javax.swing.JFrame {
      */
     private void jt_ListItemPerPatientMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_ListItemPerPatientMousePressed
         // TODO add your handling code here:
-        btn_DeleteItem.setEnabled(true);
+        if (jrb_Unpaid.isSelected()){
+            btn_DeleteItem.setEnabled(true);
+        }
     }//GEN-LAST:event_jt_ListItemPerPatientMousePressed
 
     /**
@@ -1179,9 +1183,13 @@ public class Billing extends javax.swing.JFrame {
      */
     private void jt_ListPatientBillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_ListPatientBillMouseClicked
         // TODO add your handling code here:
-        btn_AddItem.setEnabled(true);
-        btn_Payment.setEnabled(true);
         btn_PrintReceipt.setEnabled(true);
+        btn_DeleteItem.setEnabled(false);
+        
+        if (jrb_Unpaid.isSelected()){
+            btn_AddItem.setEnabled(true);
+            btn_Payment.setEnabled(true);   
+        }
         
         try {
             int rowIndex = -1;
@@ -1244,13 +1252,21 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_PrintReceiptActionPerformed
 
+    /**
+     * Show paid bill
+     * @param evt 
+     */
     private void jrb_PaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrb_PaidActionPerformed
         // TODO add your handling code here:
-               try{
+        btn_Payment.setEnabled(false);
+        btn_AddItem.setEnabled(false);
+        btn_DeleteItem.setEnabled(false);
+        
+        try{
             String sql = "SELECT ch.bill_no, ch.customer_id, ch.item_amt, ch.quantity "
-                    + "FROM customer_hdr ch, pms_patient_biodata pb"
+                    + "FROM customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Paid' "
-                    + "AND pb.pmi_no = ch.customer_hdr ";
+                    + "AND pb.pmi_no = ch.customer_id ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_ListPatientBill.getModel();
             
@@ -1277,6 +1293,10 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jrb_PaidActionPerformed
 
+    /**
+     * Show unpaid bill
+     * @param evt 
+     */
     private void jrb_UnpaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrb_UnpaidActionPerformed
         // TODO add your handling code here:
         tableListPatientBill();
@@ -1314,7 +1334,6 @@ public class Billing extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Billing().setVisible(true);
-
             }
         });
     }
@@ -1421,9 +1440,9 @@ public class Billing extends javax.swing.JFrame {
     public void tableListPatientBill(){
         try{
             String sql = "SELECT ch.bill_no, ch.customer_id, ch.item_amt, ch.quantity "
-                    + "FROM customer_hdr ch, pms_patient_biodata pb"
+                    + "FROM customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Unpaid' "
-                    + "AND pb.pmi_no = ch.customer_hdr ";
+                    + "AND pb.pmi_no = ch.customer_id ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_ListPatientBill.getModel();
             

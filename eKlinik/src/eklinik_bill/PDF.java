@@ -48,10 +48,19 @@ public class PDF {
     public String receiptNo;
     private String custId;
     private String billNo;
+    private String cash = "";
+    private String change = "";
     
     public PDF(String custId, String billNo){
         this.custId = custId;
         this.billNo = billNo;
+    }
+    
+    public PDF(String custId, String billNo, String cash, String change){
+        this.custId = custId;
+        this.billNo = billNo;
+        this.cash = cash;
+        this.change = change;
     }
     
      /**
@@ -88,7 +97,7 @@ public class PDF {
                     + "ON ch.bill_no = cd.bill_no "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON cd.customer_id = pb.pmi_no "
-                    + "WHERE ch.customer_id = '"+ custId +"'  "
+                    + "WHERE ch.customer_id = '"+ custId +"' "
                     + "AND ch.bill_no = '"+ billNo +"' ";
             ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
 
@@ -152,10 +161,13 @@ public class PDF {
             cell1.setLeading(15f, 0.3f);
             header.addCell(cell1);
             
-            PdfPCell cellAddress = new PdfPCell(new Phrase(" Universiti Teknikal Malaysia Melaka, \n"
+            String addr = 
+                    " Universiti Teknikal Malaysia Melaka, \n"
                     + " Hang Tuah Jaya, \n"
                     + " 76100 Durian Tunggal, \n"
-                    + " Melaka, Malaysia.", rectemja));
+                    + " Melaka, Malaysia.";
+            
+            PdfPCell cellAddress = new PdfPCell(new Phrase(addr, rectemja));
             cellAddress.setHorizontalAlignment(Element.ALIGN_LEFT);
             cellAddress.setBorder(Rectangle.NO_BORDER);
             cellAddress.setColspan(2);
@@ -276,17 +288,23 @@ public class PDF {
             //-------------------------------------------------------------------->
             PdfPCell cell61 = new PdfPCell(new Phrase("No.", rectem));
             cell61.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell61.setBorder(Rectangle.BOTTOM);
             PdfPCell cell62 = new PdfPCell(new Phrase("Item", rectem));
             cell62.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell62.setBorder(Rectangle.BOTTOM);
             PdfPCell cell63 = new PdfPCell(new Phrase("Description", rectem));
             cell63.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell63.setBorder(Rectangle.BOTTOM);
             PdfPCell cell64 = new PdfPCell(new Phrase("Quantity", rectem));
             cell64.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell64.setBorder(Rectangle.BOTTOM);
             PdfPCell cell65 = new PdfPCell(new Phrase("Unit Price", rectem));
             cell65.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell65.setBorder(Rectangle.BOTTOM);
             PdfPCell cell66 = new PdfPCell(new Phrase("Total Price", rectem));
             cell66.setHorizontalAlignment(Element.ALIGN_CENTER);
-
+            cell66.setBorder(Rectangle.BOTTOM);
+            
             table.addCell(cell61);
             table.addCell(cell62);
             table.addCell(cell63);
@@ -309,16 +327,22 @@ public class PDF {
 
                 PdfPCell cell71 = new PdfPCell(new Phrase(no, rectemja));
                 cell71.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell71.setBorder(Rectangle.NO_BORDER);
                 PdfPCell cell72 = new PdfPCell(new Phrase(item, rectemja));
                 cell72.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cell72.setBorder(Rectangle.NO_BORDER);
                 PdfPCell cell73 = new PdfPCell(new Phrase(description, rectemja));
                 cell73.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cell73.setBorder(Rectangle.NO_BORDER);
                 PdfPCell cell74 = new PdfPCell(new Phrase(quantity, rectemja));
                 cell74.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell74.setBorder(Rectangle.NO_BORDER);
                 PdfPCell cell75 = new PdfPCell(new Phrase(price, rectemja));
                 cell75.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell75.setBorder(Rectangle.NO_BORDER);
                 PdfPCell cell76 = new PdfPCell(new Phrase(total, rectemja));
                 cell76.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell76.setBorder(Rectangle.NO_BORDER);
 
                 table.addCell(cell71);
                 table.addCell(cell72);
@@ -329,31 +353,53 @@ public class PDF {
 
                 num++;
             }
+            
             //--------------------------table bill------------------------------------------>
             PdfPTable total = new PdfPTable(6);
             total.setWidths(new float[]{0.5f, 1.5f, 4f, 1.5f, 1.5f, 1.5f});
             total.setLockedWidth(true);
             total.setTotalWidth(document.right() - document.left());
+            
             //--------------------------table bill------------------------------------------>
-
             String gt2 = data1.get(0).get(12);
             PdfPCell cell81 = new PdfPCell(new Phrase("Grand Total : RM  ", rectem));
             cell81.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell81.setColspan(5);
+            cell81.setBorder(Rectangle.TOP);
             PdfPCell cell86 = new PdfPCell(new Phrase(String.valueOf(decimalFormat.format(tmpGrandTotal)), rectemjabold));
             cell86.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell86.setBorder(Rectangle.TOP);
 
             total.addCell(cell81);
             total.addCell(cell86);
-            //---------------------------------------------------------------------------->
+            
+            if (!cash.isEmpty() && !change.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Empty", "Empty",JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            //----------------------------table footer--------------------------------------->
 
             PdfPTable footer = new PdfPTable(1);
-//            footer.setWidths();
+            footer.setWidths(new float[]{10.5f});
+            footer.setLockedWidth(true);
+            footer.setTotalWidth(document.right() - document.left());
             
+            String message1 = "****Thank You****";
+            String message2 = "Please Come Again";
+            PdfPCell cell100 = new PdfPCell(new Phrase(message1, rectemja));
+            cell100.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell100.setBorder(Rectangle.TOP);
+            PdfPCell cell101 = new PdfPCell(new Phrase(message2, rectemja));
+            cell101.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell101.setBorder(Rectangle.NO_BORDER);
+            
+            footer.addCell(cell100);
+            footer.addCell(cell101);
             //---------------------------------------------------------------------------->
             document.add(header);
             document.add(table);
             document.add(total);
+            document.add(footer);
             
             document.close();//close document
             writer.close();

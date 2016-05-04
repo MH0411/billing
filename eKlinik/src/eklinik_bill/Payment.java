@@ -209,27 +209,39 @@ public class Payment extends javax.swing.JFrame {
         } else {
             
             try{
-                String sql1 = "UPDATE customer_ledger "
-                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debit +"' "
+                //Get current debit from customer ledger
+                String sql1 = "SELECT cl."+ currentMonth.getDebitMonth() +" "
+                        + "FROM customer_ledger cl, pms_patient_biodata pb "
+                        + "WHERE cl.customer_id = '"+ custId +"' "
+                        + "AND pb.pmi_no = '"+ custId +"'";
+                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
+                
+                String debitMonth = data.get(0).get(0);
+                debitMonth = String.valueOf(Double.parseDouble(debitMonth) + Double.parseDouble(debit));
+                
+                //Update customer ledger debit
+                String sql2 = "UPDATE customer_ledger "
+                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"' "
                         + "where customer_id = '"+ custId  +"' ";
-                rc.setQuerySQL(host, port, sql1);
+                rc.setQuerySQL(host, port, sql2);
 
                 System.out.println(Generate.getCustId());
 
                 System.out.println(currentMonth.getDebitMonth());
                 System.out.println(method);
                 
-                String sql2 = "UPDATE customer_hdr "
+                //Update customer hdr bill
+                String sql3 = "UPDATE customer_hdr "
                         + "SET payment = 'Paid' "
                         + "WHERE bill_no = '"+ billNo +"'";
-                rc.setQuerySQL(host, port, sql2);
+                rc.setQuerySQL(host, port, sql3);
 
                 String infoMessage = "Success add data.";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception e){
-                JOptionPane.showInputDialog(null, e);
+                JOptionPane.showMessageDialog(null, e);
             }
-
+            
             dispose();
         }
     }//GEN-LAST:event_btn_MakePaymentActionPerformed
@@ -298,7 +310,7 @@ public class Payment extends javax.swing.JFrame {
 
             jl_Credit.setText(data.get(0).get(0));
         } catch (Exception e){
-            JOptionPane.showInputDialog(null, e);
+            JOptionPane.showMessageDialog(null, e);
         }
     }
 
