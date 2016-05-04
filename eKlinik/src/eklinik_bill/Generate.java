@@ -5,22 +5,8 @@
  */
 package eklinik_bill;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Desktop;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -31,9 +17,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import main.RMIConnector;
-import static jdk.nashorn.internal.objects.NativeString.substring;
-import static jdk.nashorn.internal.objects.NativeString.substring;
-import static jdk.nashorn.internal.objects.NativeString.substring;
 import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
@@ -440,7 +423,7 @@ public final class Generate extends javax.swing.JFrame {
                 String unitPrice = (jt_BillDetails.getModel().getValueAt(i, 3).toString());
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
    
-                String sql1 = "INSERT into customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
+                String sql1 = "INSERT into far_customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
                         + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ custId +"' )";
                 rc.setQuerySQL(host, port, sql1);
                 
@@ -450,30 +433,30 @@ public final class Generate extends javax.swing.JFrame {
                 totalPrice += subtol;
             } 
            
-            String sql3 = "INSERT into customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no, payment)"
+            String sql2 = "INSERT into far_customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no, payment)"
                     + "VALUES('"+ custId +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ orderNo +"', 'Unpaid')";
-            rc.setQuerySQL(host, port, sql3);
+            rc.setQuerySQL(host, port, sql2);
                 
             //Get customer_ledger current month credit add to current bill total
             String creditMonth = new Month().getCreditMonth();
-            String sql4 = "SELECT "+ creditMonth +" "
-                    + "FROM customer_ledger "
+            String sql3 = "SELECT "+ creditMonth +" "
+                    + "FROM far_customer_ledger "
                     + "WHERE customer_id  = '"+ custId +"'";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql4);
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql3);
             
             if (data.isEmpty()) {
                 //When no current month credit exist insert
-                String sql5 = "INSERT into customer_ledger(customer_id, bill_no, txn_date, bill_desc, bill_amt, "+ creditMonth +" )"
+                String sql4 = "INSERT into far_customer_ledger(customer_id, bill_no, txn_date, bill_desc, bill_amt, "+ creditMonth +" )"
                         + "VALUES('"+ custId +"', '"+ billNo +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
-                rc.setQuerySQL(host, port, sql5);
+                rc.setQuerySQL(host, port, sql4);
             
             } else {
                 //When current month credit exist update
                 totalPrice = Double.parseDouble(data.get(0).get(0)) + totalPrice;
-                String sql6 = "UPDATE customer_ledger "
+                String sql5 = "UPDATE far_customer_ledger "
                         + "SET "+ creditMonth +" = '"+ totalPrice +"', bill_amt = '"+ totalPrice +"', txn_date = '"+ stringDate +"' "
                         + "WHERE customer_id = '"+ custId +"' ";
-                rc.setQuerySQL(host, port, sql6);
+                rc.setQuerySQL(host, port, sql5);
             }
 
             String infoMessage = "Success add data";
@@ -537,7 +520,7 @@ public final class Generate extends javax.swing.JFrame {
         //I = Invoice
         try {
             String sql1 = "SELECT last_seq_no "
-                    + "FROM last_seq_no "
+                    + "FROM far_last_seq_no "
                     + "WHERE module_name = 'B' "
                     + "FOR UPDATE";
             ArrayList<ArrayList<String>> dataSeq = rc.getQuerySQL(host, port, sql1);
@@ -549,7 +532,7 @@ public final class Generate extends javax.swing.JFrame {
             String currentSeq = Integer.toString(currSeq);
             
             //Update last sequance number
-            String sql2 = "UPDATE last_seq_no "
+            String sql2 = "UPDATE far_last_seq_no "
                     + "SET last_seq_no = '"+ currentSeq +"' "
                     + "WHERE module_name = 'B'";
             rc.setQuerySQL(host, port, sql2);
@@ -628,7 +611,7 @@ public final class Generate extends javax.swing.JFrame {
                 type = "other";
             }
             String sqlItem = "SELECT * "
-                    + "FROM miscellaneous_item "
+                    + "FROM far_miscellaneous_item "
                     + "where item_desc = '"+ type +"'";
             ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
             String code = dataItem.get(0).get(1);
@@ -637,29 +620,6 @@ public final class Generate extends javax.swing.JFrame {
             String total = dataItem.get(0).get(4);
             Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
             model.addRow(row);
-            
-            //Get temporary item add to table
-            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-            String getDate1 = dateFormat1.format(new Date());
-            String sql4 = "SELECT * "
-                    + "FROM temp_item "
-                    + "WHERE customer_id ='" + getSelectedPatientPMINo() + "' AND date = '"+ getDate1 +"' ";
-            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
-            
-            String qt = "";
-            for (int i = 0; i < data2.size(); i++) {
-                code = data2.get(i).get(3);
-                desc = data2.get(i).get(4);
-                qt = data2.get(i).get(5);
-                price = data2.get(i).get(6);
-                double subTotal = Double.parseDouble(qt) * Double.parseDouble(price);
-
-                int subTot = (int) subTotal;
-                String tot = Integer.toString(subTot);
-
-                Object[] row1 = {code, desc, qt, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(tot))};
-                model.addRow(row1);
-            }
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);

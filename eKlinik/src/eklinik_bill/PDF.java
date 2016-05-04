@@ -15,8 +15,6 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import static eklinik_bill.Generate.billNo;
-import static eklinik_bill.Generate.custId;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -92,8 +90,8 @@ public class PDF {
                     + "(cd.quantity * cd.item_amt), "
                     + "ch.item_amt, "
                     + "ch.bill_no "
-                    + "FROM customer_hdr ch "
-                    + "INNER JOIN customer_dtl cd "
+                    + "FROM far_customer_hdr ch "
+                    + "INNER JOIN far_customer_dtl cd "
                     + "ON ch.bill_no = cd.bill_no "
                     + "INNER JOIN pms_patient_biodata pb "
                     + "ON cd.customer_id = pb.pmi_no "
@@ -103,7 +101,7 @@ public class PDF {
 
             //Get the last sequence no of receipt
             String sql2 = "SELECT last_seq_no "
-                    + "FROM last_seq_no "
+                    + "FROM far_last_seq_no "
                     + "WHERE module_name = 'R' "
                     + "FOR UPDATE";
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
@@ -114,7 +112,7 @@ public class PDF {
             String currentSeq = Integer.toString(currSeq);
             
             //Update last sequance number of receipt
-            String sql3 = "UPDATE last_seq_no "
+            String sql3 = "UPDATE far_last_seq_no "
                     + "SET last_seq_no = '"+ currentSeq +"' "
                     + "WHERE module_name = 'R'";
             rc.setQuerySQL(host, port, sql3);

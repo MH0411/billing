@@ -500,7 +500,7 @@ public class AddBillItem extends javax.swing.JFrame {
      */
     public void tableMiscellaneousItem() {
         try {
-            String sql = "SELECT * FROM miscellaneous_item";
+            String sql = "SELECT * FROM far_miscellaneous_item";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_MiscellaneousItem.getModel();
 

@@ -12,7 +12,6 @@ package eklinik_bill;
  */
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -724,11 +723,11 @@ public class Billing extends javax.swing.JFrame {
      */
     private void btn_mm_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mm_addActionPerformed
         // TODO add your handling code here:
-        String itemCode = (String) jtf_mm_itemCd.getText();
-        String itemDesc = (String) jtf_mm_itemDesc.getText();
-        String buyPrice = (String) jtf_mm_buyPrice.getText();
-        String sellPrice = (String) jtf_mm_sellPrice.getText();
-        String disc = (String) jtf_mm_disc.getText();
+        String itemCode = jtf_mm_itemCd.getText();
+        String itemDesc = jtf_mm_itemDesc.getText();
+        String buyPrice = jtf_mm_buyPrice.getText();
+        String sellPrice = jtf_mm_sellPrice.getText();
+        String disc = jtf_mm_disc.getText();
 
         if (itemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
@@ -752,8 +751,7 @@ public class Billing extends javax.swing.JFrame {
 
         } else {
             try {
-
-                String sql = "INSERT into miscellaneous_item (item_code, item_desc, buying_price, selling_price, discount)"
+                String sql = "INSERT into far_miscellaneous_item (item_code, item_desc, buying_price, selling_price, discount)"
                         + "VALUES ('"+ itemCode +"','"+ itemDesc +"','"+ buyPrice +"','"+ sellPrice +"',"+ disc +" )";
 
                 rc.setQuerySQL(host, port, sql);
@@ -802,11 +800,11 @@ public class Billing extends javax.swing.JFrame {
         btn_mm_update.setEnabled(false);
         btn_mm_delete.setEnabled(false);
         jtf_mm_itemCd.setEditable(true);
-        String mm_ItemCode = (String) jtf_mm_itemCd.getText();
-        String mm_ItemDesc = (String) jtf_mm_itemDesc.getText();
-        String mm_BuyPrice = (String) jtf_mm_buyPrice.getText();
-        String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
-        String mm_Disc = (String) jtf_mm_disc.getText();
+        String mm_ItemCode = jtf_mm_itemCd.getText();
+        String mm_ItemDesc = jtf_mm_itemDesc.getText();
+        String mm_BuyPrice = jtf_mm_buyPrice.getText();
+        String mm_SellPrice = jtf_mm_sellPrice.getText();
+        String mm_Disc = jtf_mm_disc.getText();
 
         if (mm_ItemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
@@ -830,7 +828,7 @@ public class Billing extends javax.swing.JFrame {
 
         } else {
             try {
-                String sql = "UPDATE miscellaneous_item "
+                String sql = "UPDATE far_miscellaneous_item "
                         + "SET item_desc = '"+ mm_ItemDesc +"', buying_price = '"+ mm_BuyPrice +"', selling_price = '"+ mm_SellPrice +"', discount = '"+ mm_Disc +"' "
                         + "WHERE item_code = '" + mm_ItemCode + "'";
                 rc.setQuerySQL(host, port, sql);
@@ -869,7 +867,7 @@ public class Billing extends javax.swing.JFrame {
             row = jt_MM.convertRowIndexToModel(row);
             String mItemCode = (jt_MM.getModel().getValueAt(row, 0).toString());
             String sql = "SELECT * "
-                    + "FROM miscellaneous_item "
+                    + "FROM far_miscellaneous_item "
                     + "WHERE item_code='" + mItemCode + "'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
 
@@ -895,11 +893,11 @@ public class Billing extends javax.swing.JFrame {
         btn_mm_delete.setEnabled(false);
         jtf_mm_itemCd.setEditable(true);
 
-        String mm_ItemCode = (String) jtf_mm_itemCd.getText();
-        String mm_ItemDesc = (String) jtf_mm_itemDesc.getText();
-        String mm_BuyPrice = (String) jtf_mm_buyPrice.getText();
-        String mm_SellPrice = (String) jtf_mm_sellPrice.getText();
-        String mm_Disc = (String) jtf_mm_disc.getText();
+        String mm_ItemCode = jtf_mm_itemCd.getText();
+        String mm_ItemDesc = jtf_mm_itemDesc.getText();
+        String mm_BuyPrice = jtf_mm_buyPrice.getText();
+        String mm_SellPrice = jtf_mm_sellPrice.getText();
+        String mm_Disc = jtf_mm_disc.getText();
 
         if (mm_ItemCode.equals("")) {
             String infoMessage = "Please insert data in Item Code text field.";
@@ -929,7 +927,7 @@ public class Billing extends javax.swing.JFrame {
             } else if (response == JOptionPane.YES_OPTION) {
 //                System.out.println("Yes button clicked");
                 try {
-                    String sql = "DELETE FROM miscellaneous_item "
+                    String sql = "DELETE FROM far_miscellaneous_item "
                             + "WHERE item_code='" + mm_ItemCode + "'";
                     rc.setQuerySQL(host, port, sql);
 
@@ -994,7 +992,7 @@ public class Billing extends javax.swing.JFrame {
 
                 if ((rowIndex1 != -1 ) && (rowIndex2 != -1)){
                     //Delete from customer dtl
-                    String sql1 = "DELETE FROM  customer_dtl "
+                    String sql1 = "DELETE FROM  far_customer_dtl "
                             + "WHERE bill_no = '"+ billNo +"'"
                             + "AND item_cd = '"+ itemCode +"' ";
                     rc.setQuerySQL(host, port, sql1);
@@ -1002,7 +1000,7 @@ public class Billing extends javax.swing.JFrame {
                     String month = new Month().getCreditMonth();
                     //Get current credit of customer
                     String sql2 = "SELECT "+ month +" "
-                            + "FROM customer_ledger "
+                            + "FROM far_customer_ledger "
                             + "WHERE customer_id = '"+ custId +"' ";
                     ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql2);
                     String currentCredit = data1.get(0).get(0);
@@ -1010,14 +1008,14 @@ public class Billing extends javax.swing.JFrame {
                     currentCredit = String.valueOf(Double.parseDouble(currentCredit) - Double.parseDouble(itemAmt));
                     
                     //Update customer ledger
-                    String sql3 = "UPDATE customer_ledger "
+                    String sql3 = "UPDATE far_customer_ledger "
                             + "SET "+ month +" = '"+ currentCredit +"' "
                             + "WHERE customer_id = '"+ custId +"' ";
                     rc.setQuerySQL(host, port, sql3);
                     
                     //Get current bill_amt and minus item price;
                     String sql4 = "SELECT item_amt, quantity "
-                            + "FROM customer_hdr "
+                            + "FROM far_customer_hdr "
                             + "WHERE customer_id = '"+ custId +"' "
                             + "AND bill_no = '"+ billNo +"'";
                     ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
@@ -1028,7 +1026,7 @@ public class Billing extends javax.swing.JFrame {
                     quantity = String.valueOf(Integer.parseInt(quantity) - Integer.parseInt(qty));
 
                     //Update customer hdr
-                    String sql5 = "UPDATE customer_hdr "
+                    String sql5 = "UPDATE far_customer_hdr "
                             + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt1 +"', quantity = '"+ quantity +"' "
                             + "WHERE bill_no = '"+ billNo +"' "
                             + "AND customer_id = '"+ custId +"'";
@@ -1045,7 +1043,7 @@ public class Billing extends javax.swing.JFrame {
                     }
 
                     String sql6 = "SELECT item_cd, item_desc, quantity, item_amt, quantity* item_amt "
-                         + "FROM customer_dtl "
+                         + "FROM far_customer_dtl "
                          + "WHERE bill_no = '"+ billNo +"'";
                     ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql6);
 
@@ -1118,8 +1116,6 @@ public class Billing extends javax.swing.JFrame {
             + "AND DATE(date_format(str_to_date(pe.episode_date, '%d/%m/%Y'), '%Y-%m-%d')) = DATE(pdm.order_date) "
             + "AND pe.episode_date = '"+ selectedDate +"' "
             + "GROUP BY pom.ORDER_NO, mdc.UD_MDC_CODE ";
-
-            System.out.println(todayDate);
 
             //Execute query
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
@@ -1202,7 +1198,7 @@ public class Billing extends javax.swing.JFrame {
             custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 1).toString();
             
             String sql = "SELECT item_cd, item_desc, quantity, item_amt/quantity, item_amt "
-                    + "FROM customer_dtl "
+                    + "FROM far_customer_dtl "
                     + "WHERE bill_no = '"+ billNo +"'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_ListItemPerPatient.getModel();
@@ -1264,7 +1260,7 @@ public class Billing extends javax.swing.JFrame {
         
         try{
             String sql = "SELECT ch.bill_no, ch.customer_id, ch.item_amt, ch.quantity "
-                    + "FROM customer_hdr ch, pms_patient_biodata pb "
+                    + "FROM far_customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Paid' "
                     + "AND pb.pmi_no = ch.customer_id ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
@@ -1366,7 +1362,7 @@ public class Billing extends javax.swing.JFrame {
                     + "AND pom.episode_code like '"+ strDate1 +" %' " 
                     + "AND pe.episode_date = '"+ strDate +"' "
                     + "AND NOT EXISTS ("
-                    + "SELECT ch.order_no FROM customer_hdr ch "
+                    + "SELECT ch.order_no FROM far_customer_hdr ch "
                     + "WHERE ch.order_no =  pom.order_no) "
                     + "GROUP BY pom.order_no";
             
@@ -1407,7 +1403,7 @@ public class Billing extends javax.swing.JFrame {
      */
     private void tableManageMiscellaneous() {
         try {
-            String sql = "SELECT * FROM miscellaneous_item";
+            String sql = "SELECT * FROM far_miscellaneous_item";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
             DefaultTableModel model = (DefaultTableModel) jt_MM.getModel();
 
@@ -1423,8 +1419,8 @@ public class Billing extends javax.swing.JFrame {
 
                 jt_MM.setValueAt(data.get(i).get(1), i, 0);
                 jt_MM.setValueAt(data.get(i).get(2), i, 1);
-                jt_MM.setValueAt(data.get(i).get(3), i, 2);
-                jt_MM.setValueAt(data.get(i).get(4), i, 3);
+                jt_MM.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 2);
+                jt_MM.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 3);
                 jt_MM.setValueAt(data.get(i).get(5), i, 4);
             }
             
@@ -1440,7 +1436,7 @@ public class Billing extends javax.swing.JFrame {
     public void tableListPatientBill(){
         try{
             String sql = "SELECT ch.bill_no, ch.customer_id, ch.item_amt, ch.quantity "
-                    + "FROM customer_hdr ch, pms_patient_biodata pb "
+                    + "FROM far_customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Unpaid' "
                     + "AND pb.pmi_no = ch.customer_id ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
