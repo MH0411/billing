@@ -94,7 +94,7 @@ public class PDF {
                     + "INNER JOIN far_customer_dtl cd "
                     + "ON ch.bill_no = cd.bill_no "
                     + "INNER JOIN pms_patient_biodata pb "
-                    + "ON cd.customer_id = pb.pmi_no "
+                    + "ON ch.customer_id = pb.pmi_no "
                     + "WHERE ch.customer_id = '"+ custId +"' "
                     + "AND ch.bill_no = '"+ billNo +"' ";
             ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
