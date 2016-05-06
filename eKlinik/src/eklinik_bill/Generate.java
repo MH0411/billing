@@ -41,26 +41,17 @@ public final class Generate extends javax.swing.JFrame {
     private String date2 = dateFormat2.format(date);
 
     DecimalFormat df = new DecimalFormat("0.00");
-
-    public final String selectedPatient = Billing.getSelectedPatient();
-    public final String selectedDate = Billing.getSelectedDate();
-    public final String selectedOrderNo = Billing.getSelectedOrderNo();
    
-    public static String billNo;
-    public static String custId;
-    public static String tableClick2;
-    public static String orderNo;
-    private double totalPrice;
+    public String pmiNo;
+    public String billNo;
+    public String orderNo;
+    public double totalPrice;
     
     /**
      * Creates new form generate
      */
     public Generate() {
         initComponents();
-        billDetails();
-        
-        custId = selectedPatient;
-        orderNo = selectedOrderNo;
         
         super.pack();
         super.setLocationRelativeTo(null);
@@ -68,45 +59,59 @@ public final class Generate extends javax.swing.JFrame {
     }
 
     /**
-     * @return the tableClick1
+     * @return the pmiNo
      */
-    public String getSelectedPatientPMINo() {
-        return selectedPatient;
+    public String getPmiNo() {
+        return pmiNo;
+    }
+
+    /**
+     * @param pmiNo the pmiNo to set
+     */
+    public void setPmiNo(String pmiNo) {
+        this.pmiNo = pmiNo;
     }
 
     /**
      * @return the billNo
      */
-    public static String getBillNo() {
+    public String getBillNo() {
         return billNo;
     }
 
     /**
-     * @param aBillNo the billNo to set
+     * @param billNo the billNo to set
      */
-    public static void setBillNo(String aBillNo) {
-        billNo = aBillNo;
-    }
-
-    /**
-     * @return the custId
-     */
-    public static String getCustId() {
-        return custId;
-    }
-
-    /**
-     * @return the tableClick2
-     */
-    public static String getTableClick2() {
-        return tableClick2;
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
     }
 
     /**
      * @return the orderNo
      */
-    public static String getOrderNo() {
+    public String getOrderNo() {
         return orderNo;
+    }
+
+    /**
+     * @param orderNo the orderNo to set
+     */
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * @return the totalPrice
+     */
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    /**
+     * @param totalPrice the totalPrice to set
+     */
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     /**
@@ -353,7 +358,7 @@ public final class Generate extends javax.swing.JFrame {
     private void btn_PrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintActionPerformed
         // TODO add your handling code here:
         try {
-            PDF pdf = new PDF(custId, billNo);
+            PDF pdf = new PDF(pmiNo, getBillNo());
             pdf.print();
             //Open the generated receipt
             Desktop.getDesktop().open(new File("Receipt.pdf"));
@@ -382,7 +387,7 @@ public final class Generate extends javax.swing.JFrame {
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
         // TODO add your handling code here:
         AddBillItem addBillItem = new AddBillItem();
-        addBillItem.setCustId(custId);
+        addBillItem.setCustId(pmiNo);
         addBillItem.setBillNo(billNo);
         addBillItem.setVisible(true);
     }//GEN-LAST:event_btnAddItemActionPerformed
@@ -414,7 +419,7 @@ public final class Generate extends javax.swing.JFrame {
             
             //Loop to insert to cus dtl
             int rowCount = model.getRowCount();
-            totalPrice = 0;
+            setTotalPrice(0);
             int datasize = 0;
             for (int i = 0; i < rowCount; i++) {
                 String itemCode = (jt_BillDetails.getModel().getValueAt(i, 0).toString());
@@ -424,38 +429,38 @@ public final class Generate extends javax.swing.JFrame {
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
    
                 String sql1 = "INSERT into far_customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
-                        + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ custId +"' )";
+                        + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ pmiNo +"' )";
                 rc.setQuerySQL(host, port, sql1);
                 
                 //Calculate total items and total price of items
                 double subtol = Double.parseDouble(String.valueOf(subTotal));
                 datasize++;
-                totalPrice += subtol;
+                setTotalPrice(getTotalPrice() + subtol);
             } 
            
             String sql2 = "INSERT into far_customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no, payment)"
-                    + "VALUES('"+ custId +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ orderNo +"', 'Unpaid')";
+                    + "VALUES('"+ pmiNo +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ orderNo +"', 'Unpaid')";
             rc.setQuerySQL(host, port, sql2);
                 
             //Get customer_ledger current month credit add to current bill total
             String creditMonth = new Month().getCreditMonth();
             String sql3 = "SELECT "+ creditMonth +" "
                     + "FROM far_customer_ledger "
-                    + "WHERE customer_id  = '"+ custId +"'";
+                    + "WHERE customer_id  = '"+ pmiNo +"'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql3);
             
             if (data.isEmpty()) {
                 //When no current month credit exist insert
                 String sql4 = "INSERT into far_customer_ledger(customer_id, bill_no, txn_date, bill_desc, bill_amt, "+ creditMonth +" )"
-                        + "VALUES('"+ custId +"', '"+ billNo +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
+                        + "VALUES('"+ pmiNo +"', '"+ billNo +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
                 rc.setQuerySQL(host, port, sql4);
             
             } else {
                 //When current month credit exist update
-                totalPrice = Double.parseDouble(data.get(0).get(0)) + totalPrice;
+                setTotalPrice(Double.parseDouble(data.get(0).get(0)) + totalPrice);
                 String sql5 = "UPDATE far_customer_ledger "
                         + "SET "+ creditMonth +" = '"+ totalPrice +"', bill_amt = '"+ totalPrice +"', txn_date = '"+ stringDate +"' "
-                        + "WHERE customer_id = '"+ custId +"' ";
+                        + "WHERE customer_id = '"+ pmiNo +"' ";
                 rc.setQuerySQL(host, port, sql5);
             }
 
@@ -470,8 +475,9 @@ public final class Generate extends javax.swing.JFrame {
     private void btn_PaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PaymentActionPerformed
         // TODO add your handling code here:
         Payment payment = new Payment();
-        payment.setCustId(custId);
+        payment.setCustId(pmiNo);
         payment.setBillNo(billNo);
+        payment.setTotalPrice(totalPrice);
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
@@ -572,8 +578,8 @@ public final class Generate extends javax.swing.JFrame {
                     + "ON pdm.ORDER_NO = pdd.ORDER_NO "  
                     + "INNER JOIN pis_mdc2 mdc "
                     + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "WHERE pe.PMI_NO = '"+ selectedPatient +"' "
-                    + "AND pom.order_no = '"+ selectedOrderNo +"' ";
+                    + "WHERE pe.PMI_NO = '"+ pmiNo +"' "
+                    + "AND pom.order_no = '"+ orderNo +"' ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql3);
             
             jtf_name.setText(data.get(0).get(0));

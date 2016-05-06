@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eklinik_bill;
+
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -17,7 +17,7 @@ import main.RMIConnector;
 
 /**
  *
- * @author user
+ * @author Ho Zhen Hong
  */
 public class ViewBilling extends javax.swing.JFrame {
 

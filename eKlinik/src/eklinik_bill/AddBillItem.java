@@ -21,7 +21,7 @@ import main.RMIConnector;
 
 /**
  *
- * @author user
+ * @author Ho Zhen Hong
  */
 public class AddBillItem extends javax.swing.JFrame {
     
@@ -399,27 +399,31 @@ public class AddBillItem extends javax.swing.JFrame {
         try {
             //Get current month credit and add the item price
             String sql1 = "SELECT "+ month +" "
-                    + "FROM customer_ledger "
+                    + "FROM far_customer_ledger "
                     + "WHERE customer_id = '"+ custId +"' ";
             ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
             String currentCredit = data1.get(0).get(0);
-
+            
+            if (currentCredit == null){
+                currentCredit = "0";
+            }
+            
             currentCredit = String.valueOf(Double.parseDouble(currentCredit) + Double.parseDouble(unitPrice));
 
             //Update customer ledger
-            String sql2 = "UPDATE customer_ledger "
+            String sql2 = "UPDATE far_customer_ledger "
                     + "SET "+ month +" = '"+ currentCredit +"' "
                     + "WHERE customer_id = '"+ custId +"' ";
             rc.setQuerySQL(host, port, sql2);
 
             //Update customer dtl
-            String sql3 = "INSERT into customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
+            String sql3 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
                     + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ Double.parseDouble(unitPrice) +"','"+ 1 +"','"+ billNo +"')";
             rc.setQuerySQL(host, port, sql3);
 
             //Get current bill_amt and add item price;
             String sql4 = "SELECT item_amt, quantity "
-                    + "FROM customer_hdr "
+                    + "FROM far_customer_hdr "
                     + "WHERE customer_id = '"+ custId +"' "
                     + "AND bill_no = '"+ billNo +"'";
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
@@ -430,7 +434,7 @@ public class AddBillItem extends javax.swing.JFrame {
             quantity = String.valueOf(Integer.parseInt(quantity) + 1);
 
             //Update customer hdr
-            String sql5 = "UPDATE customer_hdr "
+            String sql5 = "UPDATE far_customer_hdr "
                     + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ quantity +"' "
                     + "WHERE bill_no = '"+ billNo +"' "
                     + "AND customer_id = '"+ custId +"'";

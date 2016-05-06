@@ -6,8 +6,8 @@
 package eklinik_bill;
 
 /**
- * To monitor host and port easily
- * @author user
+ * This class monitor host and port
+ * @author Ho Zhen Hong
  */
 public class ServerDetail {
     

@@ -37,13 +37,14 @@ public class Billing extends javax.swing.JFrame {
     private int port = sd.getPort();
     
     private DecimalFormat df = new DecimalFormat("0.00");
-    private static String selectedPatient;
-    private static String selectedDate;
-    private static String selectedOrderNo;
+    private static String pmi_no;
+    private static String date;
+    private static String orderNo;
     private String strDate;
     
     private static String custId;
     private static String billNo;
+    private static double totalPrice = 0;
     private static String itemCode;
 
     /**
@@ -64,15 +65,15 @@ public class Billing extends javax.swing.JFrame {
     }
 
     public static String getSelectedPatient() {
-        return selectedPatient;
+        return pmi_no;
     }
     
     public static String getSelectedDate(){
-        return selectedDate;
+        return date;
     }
     
     public static String getSelectedOrderNo(){
-        return selectedOrderNo;
+        return orderNo;
     }
 
     /**
@@ -490,11 +491,11 @@ public class Billing extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Bill No", "Customer ID", "Amount", "Quantity"
+                "Bill No", "Customer ID", "Name", "IC", "Other ID", "Address", "Phone No.", "Quantity", "Amount"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -609,6 +610,11 @@ public class Billing extends javax.swing.JFrame {
 
         btn_Payment.setText("Payment");
         btn_Payment.setEnabled(false);
+        btn_Payment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_PaymentActionPerformed(evt);
+            }
+        });
 
         btn_PrintReceipt.setText("Print Receipt");
         btn_PrintReceipt.setEnabled(false);
@@ -1085,9 +1091,9 @@ public class Billing extends javax.swing.JFrame {
             rowIndex = jt_PatientInformation.getSelectedRow();
             rowIndex = jt_PatientInformation.convertRowIndexToModel(rowIndex);
             //Assign row value to select
-            selectedPatient = jt_PatientInformation.getModel().getValueAt(rowIndex, 2).toString();
-            selectedDate = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
-            selectedOrderNo = jt_PatientInformation.getModel().getValueAt(rowIndex, 1).toString();
+            pmi_no = jt_PatientInformation.getModel().getValueAt(rowIndex, 2).toString();
+            date = jt_PatientInformation.getModel().getValueAt(rowIndex, 0).toString();
+            orderNo = jt_PatientInformation.getModel().getValueAt(rowIndex, 1).toString();
 
             DateFormat dateFormat;
             dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 
@@ -1110,11 +1116,11 @@ public class Billing extends javax.swing.JFrame {
             + "pis_dispense_master pdm "
             + "WHERE pe.PMI_NO = pom.PMI_NO "
             + "AND pom.ORDER_NO = pdd.ORDER_NO "
-            + "AND pom.ORDER_NO = '"+ selectedOrderNo +"' "
+            + "AND pom.ORDER_NO = '"+ orderNo +"' "
             + "AND pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
             + "AND pe.PMI_NO = pb.PMI_NO "
             + "AND DATE(date_format(str_to_date(pe.episode_date, '%d/%m/%Y'), '%Y-%m-%d')) = DATE(pdm.order_date) "
-            + "AND pe.episode_date = '"+ selectedDate +"' "
+            + "AND pe.episode_date = '"+ Billing.date +"' "
             + "GROUP BY pom.ORDER_NO, mdc.UD_MDC_CODE ";
 
             //Execute query
@@ -1158,6 +1164,9 @@ public class Billing extends javax.swing.JFrame {
     private void btn_GenerateBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GenerateBillActionPerformed
         // TODO add your handling code here:
         Generate generate = new Generate(); //set new window
+        generate.setPmiNo(pmi_no);
+        generate.setOrderNo(orderNo);
+        generate.billDetails();
         generate.setVisible(true);//set new window visible
         dispose(); // for hide current window
     }//GEN-LAST:event_btn_GenerateBillActionPerformed
@@ -1218,6 +1227,8 @@ public class Billing extends javax.swing.JFrame {
                 jt_ListItemPerPatient.setValueAt(data.get(i).get(2), i, 2);
                 jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
                 jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
+                
+                totalPrice += Double.parseDouble(data.get(i).get(4));
             }
             
         } catch (Exception e) {
@@ -1259,7 +1270,7 @@ public class Billing extends javax.swing.JFrame {
         btn_DeleteItem.setEnabled(false);
         
         try{
-            String sql = "SELECT ch.bill_no, ch.customer_id, ch.item_amt, ch.quantity "
+            String sql = "SELECT ch.bill_no, ch.customer_id, pb.patient_name, pb.new_ic_no, pb.id_no, pb.home_address, pb.mobile_phone, ch.quantity, ch.item_amt "
                     + "FROM far_customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Paid' "
                     + "AND pb.pmi_no = ch.customer_id ";
@@ -1280,6 +1291,11 @@ public class Billing extends javax.swing.JFrame {
                 jt_ListPatientBill.setValueAt(data.get(i).get(1), i, 1);
                 jt_ListPatientBill.setValueAt(data.get(i).get(2), i, 2);
                 jt_ListPatientBill.setValueAt(data.get(i).get(3), i, 3);
+                jt_ListPatientBill.setValueAt(data.get(i).get(4), i, 4);
+                jt_ListPatientBill.setValueAt(data.get(i).get(5), i, 5);
+                jt_ListPatientBill.setValueAt(data.get(i).get(6), i, 6);
+                jt_ListPatientBill.setValueAt(data.get(i).get(7), i, 7);
+                jt_ListPatientBill.setValueAt(data.get(i).get(8), i, 8);
             }
             
             tablePatientBillSorter();
@@ -1297,6 +1313,16 @@ public class Billing extends javax.swing.JFrame {
         // TODO add your handling code here:
         tableListPatientBill();
     }//GEN-LAST:event_jrb_UnpaidActionPerformed
+
+    private void btn_PaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PaymentActionPerformed
+        // TODO add your handling code here:
+        Payment payment = new Payment();
+        payment.setCustId(custId);
+        payment.setBillNo(billNo);
+        payment.setTotalPrice(totalPrice);
+        payment.displayCurrentCredit();
+        payment.setVisible(true);
+    }//GEN-LAST:event_btn_PaymentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1435,7 +1461,7 @@ public class Billing extends javax.swing.JFrame {
      */
     public void tableListPatientBill(){
         try{
-            String sql = "SELECT ch.bill_no, ch.customer_id, ch.item_amt, ch.quantity "
+            String sql = "SELECT ch.bill_no, ch.customer_id, pb.patient_name, pb.new_ic_no, pb.id_no, pb.home_address, pb.mobile_phone, ch.quantity, ch.item_amt "
                     + "FROM far_customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Unpaid' "
                     + "AND pb.pmi_no = ch.customer_id ";
@@ -1456,6 +1482,11 @@ public class Billing extends javax.swing.JFrame {
                 jt_ListPatientBill.setValueAt(data.get(i).get(1), i, 1);
                 jt_ListPatientBill.setValueAt(data.get(i).get(2), i, 2);
                 jt_ListPatientBill.setValueAt(data.get(i).get(3), i, 3);
+                jt_ListPatientBill.setValueAt(data.get(i).get(4), i, 4);
+                jt_ListPatientBill.setValueAt(data.get(i).get(5), i, 5);
+                jt_ListPatientBill.setValueAt(data.get(i).get(6), i, 6);
+                jt_ListPatientBill.setValueAt(data.get(i).get(7), i, 7);
+                jt_ListPatientBill.setValueAt(data.get(i).get(8), i, 8);
             }
             
             tablePatientBillSorter();

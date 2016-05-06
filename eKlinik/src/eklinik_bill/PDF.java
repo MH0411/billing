@@ -26,7 +26,7 @@ import main.RMIConnector;
 
 /**
  * This class help print pdf file
- * @author user
+ * @author Ho Zhen Hong
  */
 public class PDF {
     

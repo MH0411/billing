@@ -3,20 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eklinik_bill;
+
 
 import java.awt.event.KeyEvent;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import main.RMIConnector;
 
 /**
  *
- * @author Ho Zhen Hong
+ * @author user
  */
-public class Payment extends javax.swing.JFrame {
-    
+public class BillPayment extends javax.swing.JFrame {
+
     //Call library
     RMIConnector rc = new RMIConnector();
     private ServerDetail sd = new ServerDetail();
@@ -24,63 +23,19 @@ public class Payment extends javax.swing.JFrame {
     private String host = sd.getHost();
     private int port = sd.getPort();
     
-    private DecimalFormat df = new DecimalFormat("0.00");
     private Month currentMonth = new Month();
     private String custId;
     private String billNo;
-    private double totalPrice;
-   
+    
     /**
-     * Creates new form Payment
+     * Creates new form BillPayment
      */
-    public Payment() {
+    public BillPayment() {
         initComponents();
         super.pack();
         super.setLocationRelativeTo(null);
         super.setVisible(true);
         super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    /**
-     * @return the custId
-     */
-    public String getCustId() {
-        return custId;
-    }
-
-    /**
-     * @param custId the custId to set
-     */
-    public void setCustId(String custId) {
-        this.custId = custId;
-    }
-
-    /**
-     * @return the billNo
-     */
-    public String getBillNo() {
-        return billNo;
-    }
-
-    /**
-     * @param billNo the billNo to set
-     */
-    public void setBillNo(String billNo) {
-        this.billNo = billNo;
-    }
-
-    /**
-     * @return the totalPrice
-     */
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    /**
-     * @param totalPrice the totalPrice to set
-     */
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     /**
@@ -94,23 +49,20 @@ public class Payment extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jl_Price = new javax.swing.JLabel();
+        jl_Credit = new javax.swing.JLabel();
         jcb_PaymentMethod = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jtf_Amount = new javax.swing.JTextField();
         btn_MakePayment = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jl_Credit = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
-        jLabel3.setText("Total Price of Bill :");
+        jLabel3.setText("Total Price :");
 
-        jl_Price.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jl_Price.setText("price");
+        jl_Credit.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jl_Credit.setText("credit");
 
         jcb_PaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit Card", "Cheque" }));
 
@@ -134,11 +86,6 @@ public class Payment extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel2.setText("Payment");
 
-        jl_Credit.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jl_Credit.setText("credit");
-
-        jLabel5.setText("Credit of Month :");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -153,18 +100,12 @@ public class Payment extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jl_Credit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jl_Price, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                            .addComponent(jl_Credit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(16, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,25 +121,21 @@ public class Payment extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addComponent(jLabel2)
-                .addGap(36, 36, 36)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jl_Credit)
-                    .addComponent(jLabel5))
-                .addGap(20, 20, 20)
+                .addGap(46, 46, 46)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jl_Price))
-                .addGap(20, 20, 20)
+                    .addComponent(jl_Credit))
+                .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(20, 20, 20)
+                    .addComponent(jLabel4)
+                    .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jtf_Amount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
+                .addGap(34, 34, 34)
                 .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -209,70 +146,83 @@ public class Payment extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 27, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * Make payment update the customer ledger
-     * @param evt 
-     */
+    private void jtf_AmountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_AmountKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+
+        if (!(Character.isDigit(c) || c == KeyEvent.VK_PERIOD
+            || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+
+        evt.consume();
+        }
+    }//GEN-LAST:event_jtf_AmountKeyTyped
+
     private void btn_MakePaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_MakePaymentActionPerformed
         // TODO add your handling code here:
         //cash = csh
         //credit card = crc
         //cheque = chq
-        
+
         String debit = jtf_Amount.getText();
         String method = jcb_PaymentMethod.getSelectedItem().toString();
-        
+
         if (method != null){
             switch (method){
-                
-                case "Cash": 
-                    method = "csh";
-                    break;
+
+                case "Cash":
+                method = "csh";
+                break;
                 case "Credit Card":
-                    method = "crc";
-                    break;
+                method = "crc";
+                break;
                 case "Cheque":
-                    method = "chq";
-                    break;
+                method = "chq";
+                break;
             }
         }
-        
+
         if (debit.equals("")){
             String infoMessage = "Please insert an amount first.";
             JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
-            
+
         } else {
-            
+
             try{
                 //Get current debit from customer ledger
                 String sql1 = "SELECT cl."+ currentMonth.getDebitMonth() +" "
-                        + "FROM far_customer_ledger cl, pms_patient_biodata pb "
-                        + "WHERE cl.customer_id = '"+ custId +"' "
-                        + "AND pb.pmi_no = '"+ custId +"'";
+                + "FROM far_customer_ledger cl, pms_patient_biodata pb "
+                + "WHERE cl.customer_id = '"+ custId +"' "
+                + "AND pb.pmi_no = '"+ custId +"'";
                 ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
-                
                 String debitMonth = data.get(0).get(0);
-                debitMonth = String.valueOf(Double.parseDouble(debitMonth) + Double.parseDouble(debit));
                 
+                if(debitMonth == null){
+                    debitMonth = "0";
+                }
+                
+                debitMonth = String.valueOf(Double.parseDouble(debitMonth) + Double.parseDouble(debit));
+
                 //Update customer ledger debit
                 String sql2 = "UPDATE far_customer_ledger "
-                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"' "
-                        + "where customer_id = '"+ custId  +"' ";
+                + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"' "
+                + "where customer_id = '"+ custId  +"' ";
                 rc.setQuerySQL(host, port, sql2);
 
                 System.out.println(currentMonth.getDebitMonth());
                 System.out.println(method);
-                
+
                 //Update customer hdr bill
                 String sql3 = "UPDATE far_customer_hdr "
-                        + "SET payment = 'Paid' "
-                        + "WHERE bill_no = '"+ billNo +"'";
+                + "SET payment = 'Paid' "
+                + "WHERE bill_no = '"+ billNo +"'";
                 rc.setQuerySQL(host, port, sql3);
 
                 String infoMessage = "Success add data.";
@@ -280,26 +230,13 @@ public class Payment extends javax.swing.JFrame {
             } catch (Exception e){
                 JOptionPane.showMessageDialog(null, e);
             }
-            
+
             dispose();
         }
     }//GEN-LAST:event_btn_MakePaymentActionPerformed
 
-    /**
-     * Allow only numerical value and dot
-     * @param evt 
-     */
-    private void jtf_AmountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_AmountKeyTyped
-        // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_PERIOD
-                || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-                
-            evt.consume();
-        }
-    }//GEN-LAST:event_jtf_AmountKeyTyped
-
+//    public void displayBillTotal
+    
     /**
      * @param args the command line arguments
      */
@@ -317,46 +254,22 @@ public class Payment extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BillPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BillPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BillPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BillPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Payment().setVisible(true);
+                new BillPayment().setVisible(true);
             }
         });
-    }
-    
-    /**
-     * Display current credit of current month
-     */
-    public void displayCurrentCredit(){
-        
-        try{
-            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +" "
-                    + "FROM far_customer_ledger cl, pms_patient_biodata pb "
-                    + "WHERE cl.customer_id = '"+ custId +"' "
-                    + "AND pb.pmi_no = '"+ custId +"' ";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-            
-            String credit = data.get(0).get(0);
-            if (credit == null){
-                credit = "0.00";
-            }
-            
-            jl_Credit.setText("RM" + credit);
-            jl_Price.setText("RM" + String.valueOf(df.format(totalPrice)));
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -365,11 +278,9 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JComboBox<String> jcb_PaymentMethod;
     private javax.swing.JLabel jl_Credit;
-    private javax.swing.JLabel jl_Price;
     private javax.swing.JTextField jtf_Amount;
     // End of variables declaration//GEN-END:variables
 }
