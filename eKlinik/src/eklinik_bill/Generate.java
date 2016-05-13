@@ -37,15 +37,17 @@ public final class Generate extends javax.swing.JFrame {
     private DateFormat dateFormat1 = new SimpleDateFormat("MMyyyy");
     private DateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
     private Date date = new Date();
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+    private String txnDate = dateFormat.format(date);
     private String date1 = dateFormat1.format(date);
     private String date2 = dateFormat2.format(date);
 
     DecimalFormat df = new DecimalFormat("0.00");
    
-    public String pmiNo;
-    public String billNo;
-    public String orderNo;
-    public double totalPrice;
+    private String pmiNo;
+    private String billNo;
+    private String orderNo;
+    private double totalPrice;
     
     /**
      * Creates new form generate
@@ -309,8 +311,8 @@ public final class Generate extends javax.swing.JFrame {
                     .addComponent(jtf_address, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jtf_ic))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtf_ic, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,10 +333,9 @@ public final class Generate extends javax.swing.JFrame {
                     .addComponent(btn_Payment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -362,6 +363,7 @@ public final class Generate extends javax.swing.JFrame {
             pdf.print();
             //Open the generated receipt
             Desktop.getDesktop().open(new File("Receipt.pdf"));
+            dispose();
             Billing billing = new Billing();
             billing.setVisible(true);
         } catch (Exception ex) {
@@ -407,20 +409,15 @@ public final class Generate extends javax.swing.JFrame {
         
         try {
             String name = (String) jtf_name.getText();
-            String address = (String) jtf_address.getText();
-            String ic = (String) jtf_ic.getText();
-            String id = (String) jtf_id.getText();
-            String telNo = (String) jtf_telNo.getText();
             String billNo = (String) jtf_billNo.getText();
             String stringDate = (String) jtf_date.getText();
-            String last_seq = substring(billNo, 1, 10);
 
             DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
             
             //Loop to insert to cus dtl
             int rowCount = model.getRowCount();
             setTotalPrice(0);
-            int datasize = 0;
+            int itemQuantity = 0;
             for (int i = 0; i < rowCount; i++) {
                 String itemCode = (jt_BillDetails.getModel().getValueAt(i, 0).toString());
                 String itemDesc = (jt_BillDetails.getModel().getValueAt(i, 1).toString());
@@ -428,18 +425,18 @@ public final class Generate extends javax.swing.JFrame {
                 String unitPrice = (jt_BillDetails.getModel().getValueAt(i, 3).toString());
                 String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
    
-                String sql1 = "INSERT into far_customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id )"
+                String sql1 = "INSERT into far_customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id) "
                         + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ pmiNo +"' )";
                 rc.setQuerySQL(host, port, sql1);
                 
                 //Calculate total items and total price of items
                 double subtol = Double.parseDouble(String.valueOf(subTotal));
-                datasize++;
+                itemQuantity += Integer.parseInt(quantity);
                 setTotalPrice(getTotalPrice() + subtol);
             } 
            
             String sql2 = "INSERT into far_customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no, payment)"
-                    + "VALUES('"+ pmiNo +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ datasize +"' , '"+ orderNo +"', 'Unpaid')";
+                    + "VALUES('"+ pmiNo +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ itemQuantity +"' , '"+ orderNo +"', 'Unpaid')";
             rc.setQuerySQL(host, port, sql2);
                 
             //Get customer_ledger current month credit add to current bill total
@@ -478,6 +475,7 @@ public final class Generate extends javax.swing.JFrame {
         payment.setCustId(pmiNo);
         payment.setBillNo(billNo);
         payment.setTotalPrice(totalPrice);
+        payment.displayCurrentCredit();
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
@@ -587,7 +585,7 @@ public final class Generate extends javax.swing.JFrame {
             jtf_ic.setText(data.get(0).get(2));
             jtf_id.setText(data.get(0).get(3));
             jtf_telNo.setText(data.get(0).get(4));
-            jtf_billNo.setText(getBillNo());
+            jtf_billNo.setText(billNo);
             jtf_date.setText(data.get(0).get(5));
 
             DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
@@ -609,16 +607,16 @@ public final class Generate extends javax.swing.JFrame {
 
             //Search and add miscellaneous item to table.
             String type = data.get(0).get(11);
-            if (type.equals("1")) {
-                type = "staff";
-            } else if (type.equals("2")) {
-                type = "student";
+            if (type.equals("2")) {
+                type = "RG00001";
+            } else if (type.equals("1")) {
+                type = "RG00002";
             } else if (type.equals("3")) {
-                type = "other";
+                type = "RG00003";
             }
             String sqlItem = "SELECT * "
                     + "FROM far_miscellaneous_item "
-                    + "where item_desc = '"+ type +"'";
+                    + "where item_code = '"+ type +"'";
             ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
             String code = dataItem.get(0).get(1);
             String desc = dataItem.get(0).get(2);

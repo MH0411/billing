@@ -125,8 +125,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel3" pref="32" max="32767" attributes="0"/>
-                      <Component id="jtf_ic" max="32767" attributes="0"/>
+                      <Component id="jLabel3" max="32767" attributes="0"/>
+                      <Component id="jtf_ic" pref="32" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -151,12 +151,11 @@
                       <Component id="btn_Payment" alignment="1" min="-2" pref="33" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="btn_Print" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                          <Component id="btn_Confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                           <Component id="btnAddItem" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                           <Component id="btn_Cancel" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="btn_Confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

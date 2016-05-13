@@ -6,8 +6,11 @@
 package eklinik_bill;
 
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import main.RMIConnector;
 
@@ -25,6 +28,8 @@ public class Payment extends javax.swing.JFrame {
     private int port = sd.getPort();
     
     private DecimalFormat df = new DecimalFormat("0.00");
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+    private String txnDate = dateFormat.format(new Date());
     private Month currentMonth = new Month();
     private String custId;
     private String billNo;
@@ -226,7 +231,8 @@ public class Payment extends javax.swing.JFrame {
         //cheque = chq
         
         String debit = jtf_Amount.getText();
-        String method = jcb_PaymentMethod.getSelectedItem().toString();
+        String method = "Cash";
+        method = jcb_PaymentMethod.getSelectedItem().toString();
         
         if (method != null){
             switch (method){
@@ -256,22 +262,25 @@ public class Payment extends javax.swing.JFrame {
                         + "WHERE cl.customer_id = '"+ custId +"' "
                         + "AND pb.pmi_no = '"+ custId +"'";
                 ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
-                
                 String debitMonth = data.get(0).get(0);
+                
+                if(debitMonth == null){
+                    debitMonth = "0";
+                }
+                
                 debitMonth = String.valueOf(Double.parseDouble(debitMonth) + Double.parseDouble(debit));
                 
                 //Update customer ledger debit
                 String sql2 = "UPDATE far_customer_ledger "
-                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"' "
+                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"', txn_date = '"+ txnDate +"' "
                         + "where customer_id = '"+ custId  +"' ";
                 rc.setQuerySQL(host, port, sql2);
 
-                System.out.println(currentMonth.getDebitMonth());
                 System.out.println(method);
                 
                 //Update customer hdr bill
                 String sql3 = "UPDATE far_customer_hdr "
-                        + "SET payment = 'Paid' "
+                        + "SET payment = 'Paid', txn_date = '"+ txnDate +"' "
                         + "WHERE bill_no = '"+ billNo +"'";
                 rc.setQuerySQL(host, port, sql3);
 
@@ -341,18 +350,22 @@ public class Payment extends javax.swing.JFrame {
     public void displayCurrentCredit(){
         
         try{
-            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +" "
+            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +", cl."+ currentMonth.getDebitMonth() +" "
                     + "FROM far_customer_ledger cl, pms_patient_biodata pb "
                     + "WHERE cl.customer_id = '"+ custId +"' "
                     + "AND pb.pmi_no = '"+ custId +"' ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             
             String credit = data.get(0).get(0);
+            String debit = data.get(0).get(1);
             if (credit == null){
                 credit = "0.00";
             }
+            if (debit == null){
+                debit = "0.00";
+            }
             
-            jl_Credit.setText("RM" + credit);
+            jl_Credit.setText("RM" + String.valueOf(df.format(Double.parseDouble(credit) - Double.parseDouble(debit))));
             jl_Price.setText("RM" + String.valueOf(df.format(totalPrice)));
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, e);

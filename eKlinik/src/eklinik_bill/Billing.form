@@ -38,7 +38,7 @@
               <Component id="btn_Back" min="-2" pref="152" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
           </Group>
-          <Component id="jTabbedPane3" alignment="1" min="-2" pref="1200" max="-2" attributes="0"/>
+          <Component id="tab" alignment="1" min="-2" pref="1200" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -50,19 +50,22 @@
                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane3" min="-2" pref="720" max="-2" attributes="0"/>
+              <Component id="tab" min="-2" pref="720" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JTabbedPane" name="jTabbedPane3">
+    <Container class="javax.swing.JTabbedPane" name="tab">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tabMousePressed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="Billing_jTabbedPane3"/>
       </AuxValues>
@@ -243,21 +246,18 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane5" alignment="0" pref="1153" max="32767" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jScrollPane5" alignment="0" pref="1153" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jtf_SearchPatient" min="-2" pref="220" max="-2" attributes="0"/>
-                                  <EmptySpace min="29" pref="943" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btn_RefreshPatient" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -267,7 +267,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jtf_SearchPatient" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jtf_SearchPatient" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="btn_RefreshPatient" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jScrollPane5" pref="156" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -361,6 +364,14 @@
                     <Property name="toolTipText" type="java.lang.String" value="Example : Patient Name, IC No. Other ID"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JButton" name="btn_RefreshPatient">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Refresh"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_RefreshPatientActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -419,11 +430,13 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtf_mm_SearchItem" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
-                                      <Component id="jLabel9" min="-2" pref="151" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jLabel9" min="-2" pref="151" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jtf_mm_SearchItem" min="-2" pref="220" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btn_RefreshMM" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -436,7 +449,10 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jtf_mm_SearchItem" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jtf_mm_SearchItem" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="btn_RefreshMM" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jScrollPane1" min="-2" pref="225" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
@@ -455,21 +471,15 @@
                     <Component class="javax.swing.JTable" name="jt_MM">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="5" rowCount="0">
+                          <Table columnCount="4" rowCount="0">
                             <Column editable="false" title="Item Code" type="java.lang.Object"/>
                             <Column editable="false" title="Item Description" type="java.lang.Object"/>
                             <Column editable="false" title="Buying Price" type="java.lang.Object"/>
                             <Column editable="false" title="Selling Price" type="java.lang.Object"/>
-                            <Column editable="false" title="Discount" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
-                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                              <Title/>
-                              <Editor/>
-                              <Renderer/>
-                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
@@ -515,6 +525,14 @@
                     <Property name="text" type="java.lang.String" value="Enter Item Information:"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JButton" name="btn_RefreshMM">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Refresh"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_RefreshMMActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="jPanel2">
@@ -536,10 +554,9 @@
                           <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jLabel3" alignment="0" pref="124" max="32767" attributes="0"/>
                               <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
                               <Component id="jLabel5" max="32767" attributes="0"/>
-                              <Component id="jLabel6" min="-2" pref="124" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -554,7 +571,6 @@
                               </Group>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jtf_mm_itemDesc" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jtf_mm_disc" alignment="1" max="32767" attributes="0"/>
                                   <Component id="jtf_mm_itemCd" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jtf_mm_buyPrice" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jtf_mm_sellPrice" min="-2" pref="300" max="-2" attributes="0"/>
@@ -587,12 +603,7 @@
                               <Component id="jLabel5" max="32767" attributes="0"/>
                               <Component id="jtf_mm_sellPrice" min="-2" pref="38" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jtf_mm_disc" min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="jLabel6" min="-2" pref="36" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btn_mm_update" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                               <Component id="btn_mm_delete" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
@@ -607,17 +618,19 @@
                 <Component class="javax.swing.JTextField" name="jtf_mm_itemDesc">
                 </Component>
                 <Component class="javax.swing.JTextField" name="jtf_mm_itemCd">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtf_mm_itemCdKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jtf_mm_buyPrice">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtf_mm_buyPriceKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jtf_mm_sellPrice">
-                </Component>
-                <Component class="javax.swing.JTextField" name="jtf_mm_disc">
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel6">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Discount"/>
-                  </Properties>
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtf_mm_sellPriceKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
@@ -641,7 +654,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btn_mm_cancel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Cancel"/>
+                    <Property name="text" type="java.lang.String" value="Clear"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_mm_cancelActionPerformed"/>
@@ -743,6 +756,8 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jtf_mb_SearchBill" min="-2" pref="220" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btn_RefreshBill" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jrb_Unpaid" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jrb_Paid" min="-2" max="-2" attributes="0"/>
@@ -762,6 +777,7 @@
                               <Component id="jtf_mb_SearchBill" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                               <Component id="jrb_Paid" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jrb_Unpaid" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btn_RefreshBill" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jScrollPane2" pref="156" max="32767" attributes="0"/>
@@ -882,6 +898,14 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrb_UnpaidActionPerformed"/>
                   </Events>
                 </Component>
+                <Component class="javax.swing.JButton" name="btn_RefreshBill">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Refresh"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_RefreshBillActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="jPanel7">
@@ -945,7 +969,8 @@
                     <Component class="javax.swing.JTable" name="jt_ListItemPerPatient">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="5" rowCount="0">
+                          <Table columnCount="6" rowCount="0">
+                            <Column editable="false" title="Transaction Date" type="java.lang.Object"/>
                             <Column editable="false" title="Item Code" type="java.lang.Object"/>
                             <Column editable="false" title="Item Description" type="java.lang.Object"/>
                             <Column editable="false" title="Item Quantity" type="java.lang.Object"/>
@@ -955,6 +980,11 @@
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
