@@ -46,19 +46,32 @@ public class PDF {
     public String receiptNo;
     private String custId;
     private String billNo;
-    private String cash = "";
-    private String change = "";
+    private String subtotal;
+    private String grandTotal;
+    private String amount;
+    private String change;
+    private String gst;
+    private String serviceCharge;
+    private String discount;
+    private String rounding;
     
     public PDF(String custId, String billNo){
         this.custId = custId;
         this.billNo = billNo;
     }
     
-    public PDF(String custId, String billNo, String cash, String change){
+    public PDF(String custId, String billNo, String subtotal, String grandTotal, String amount,
+            String change, String gst, String serviceCharge, String discount, String rounding){
         this.custId = custId;
         this.billNo = billNo;
-        this.cash = cash;
+        this.subtotal = subtotal;
+        this.grandTotal = grandTotal;
+        this.amount = amount;
         this.change = change;
+        this.gst = gst;
+        this.serviceCharge = serviceCharge;
+        this.discount = discount;
+        this.rounding = rounding;
     }
     
      /**
@@ -310,7 +323,6 @@ public class PDF {
             table.addCell(cell65);
             table.addCell(cell66);
 
-            double tmpGrandTotal = 0;
             for (int i = 0; i < data1.size() ; i++) {
 
                 String no = Integer.toString(num);
@@ -320,8 +332,6 @@ public class PDF {
                 String quantity = data1.get(i).get(9);
                 String price = data1.get(i).get(10);
                 String total = data1.get(i).get(11);
-                
-                tmpGrandTotal += Double.parseDouble(total);
 
                 PdfPCell cell71 = new PdfPCell(new Phrase(no, rectemja));
                 cell71.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -359,21 +369,73 @@ public class PDF {
             total.setTotalWidth(document.right() - document.left());
             
             //--------------------------table bill------------------------------------------>
-            String gt2 = data1.get(0).get(12);
-            PdfPCell cell81 = new PdfPCell(new Phrase("Grand Total : RM  ", rectem));
+            PdfPCell cell81 = new PdfPCell(new Phrase("Sub-Total : RM  ", rectem));
             cell81.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell81.setColspan(5);
             cell81.setBorder(Rectangle.TOP);
-            PdfPCell cell86 = new PdfPCell(new Phrase(String.valueOf(decimalFormat.format(tmpGrandTotal)), rectemjabold));
+            PdfPCell cell86 = new PdfPCell(new Phrase(String.valueOf(subtotal), rectemjabold));
             cell86.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell86.setBorder(Rectangle.TOP);
-
             total.addCell(cell81);
             total.addCell(cell86);
             
-            if (!cash.isEmpty() && !change.isEmpty()){
-                JOptionPane.showMessageDialog(null, "Empty", "Empty",JOptionPane.INFORMATION_MESSAGE);
-            }
+            PdfPCell cell91 = new PdfPCell(new Phrase("Service Charge : RM  ", rectem));
+            cell91.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell91.setColspan(5);
+            PdfPCell cell96 = new PdfPCell(new Phrase(String.valueOf(serviceCharge), rectemjabold));
+            cell96.setHorizontalAlignment(Element.ALIGN_CENTER);
+            total.addCell(cell91);
+            total.addCell(cell96);
+            
+            PdfPCell cell101 = new PdfPCell(new Phrase("GST : RM  ", rectem));
+            cell101.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell101.setColspan(5);
+            PdfPCell cell106 = new PdfPCell(new Phrase(String.valueOf(gst), rectemjabold));
+            cell106.setHorizontalAlignment(Element.ALIGN_CENTER);
+            total.addCell(cell101);
+            total.addCell(cell106);
+            
+            PdfPCell cell111 = new PdfPCell(new Phrase("Discount : RM  ", rectem));
+            cell111.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell111.setColspan(5);
+            PdfPCell cell116 = new PdfPCell(new Phrase(String.valueOf(discount), rectemjabold));
+            cell116.setHorizontalAlignment(Element.ALIGN_CENTER);
+            total.addCell(cell111);
+            total.addCell(cell116);
+            
+            PdfPCell cell121 = new PdfPCell(new Phrase("Rounding : RM  ", rectem));
+            cell121.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell121.setColspan(5);
+            PdfPCell cell126 = new PdfPCell(new Phrase(String.valueOf(rounding), rectemjabold));
+            cell126.setHorizontalAlignment(Element.ALIGN_CENTER);
+            total.addCell(cell121);
+            total.addCell(cell126);
+            
+            PdfPCell cell131 = new PdfPCell(new Phrase("Grand Total : RM  ", rectem));
+            cell131.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell131.setColspan(5);
+            cell131.setBorder(Rectangle.TOP);
+            PdfPCell cell136 = new PdfPCell(new Phrase(String.valueOf(grandTotal), rectemjabold));
+            cell136.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell136.setBorder(Rectangle.TOP);
+            total.addCell(cell131);
+            total.addCell(cell136);
+            
+            PdfPCell cell141 = new PdfPCell(new Phrase("Cash : RM  ", rectem));
+            cell141.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell141.setColspan(5);
+            PdfPCell cell146 = new PdfPCell(new Phrase(String.valueOf(amount), rectemjabold));
+            cell146.setHorizontalAlignment(Element.ALIGN_CENTER);
+            total.addCell(cell141);
+            total.addCell(cell146);
+            
+            PdfPCell cell151 = new PdfPCell(new Phrase("Change : RM  ", rectem));
+            cell151.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell151.setColspan(5);
+            PdfPCell cell156 = new PdfPCell(new Phrase(String.valueOf(change), rectemjabold));
+            cell156.setHorizontalAlignment(Element.ALIGN_CENTER);
+            total.addCell(cell151);
+            total.addCell(cell156);
             
             //----------------------------table footer--------------------------------------->
 
@@ -384,15 +446,15 @@ public class PDF {
             
             String message1 = "****Thank You****";
             String message2 = "Please Come Again";
-            PdfPCell cell100 = new PdfPCell(new Phrase(message1, rectemja));
-            cell100.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell100.setBorder(Rectangle.TOP);
-            PdfPCell cell101 = new PdfPCell(new Phrase(message2, rectemja));
-            cell101.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell101.setBorder(Rectangle.NO_BORDER);
+            PdfPCell cell160 = new PdfPCell(new Phrase(message1, rectemja));
+            cell160.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell160.setBorder(Rectangle.TOP);
+            PdfPCell cell170 = new PdfPCell(new Phrase(message2, rectemja));
+            cell170.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell170.setBorder(Rectangle.NO_BORDER);
             
-            footer.addCell(cell100);
-            footer.addCell(cell101);
+            footer.addCell(cell160);
+            footer.addCell(cell170);
             //---------------------------------------------------------------------------->
             document.add(header);
             document.add(table);

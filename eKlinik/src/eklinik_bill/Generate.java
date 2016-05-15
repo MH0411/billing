@@ -475,7 +475,7 @@ public final class Generate extends javax.swing.JFrame {
         payment.setCustId(pmiNo);
         payment.setBillNo(billNo);
         payment.setTotalPrice(totalPrice);
-        payment.displayCurrentCredit();
+//        payment.displayCurrentCredit();
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 

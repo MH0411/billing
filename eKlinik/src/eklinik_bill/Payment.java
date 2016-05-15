@@ -5,6 +5,7 @@
  */
 package eklinik_bill;
 
+import com.sun.webkit.dom.EventImpl;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -34,6 +35,15 @@ public class Payment extends javax.swing.JFrame {
     private String custId;
     private String billNo;
     private double totalPrice;
+    private double grandTotal;
+    private double gst = 0;
+    private double serviceCharge = 0;
+    private double discount = 0;
+    private double gstAmount = 0;
+    private double serviceChargeAmount = 0;
+    private double amount = 0;
+    private double change = 0;
+    private double rounding = 0;
    
     /**
      * Creates new form Payment
@@ -44,6 +54,11 @@ public class Payment extends javax.swing.JFrame {
         super.setLocationRelativeTo(null);
         super.setVisible(true);
         super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        
+        jtf_Subtotal.setEditable(false);
+        jtf_GrandTotal.setEditable(false);
+        jtf_Change.setEditable(false);
+        displayBillDetail();
     }
 
     /**
@@ -97,37 +112,28 @@ public class Payment extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToggleButton1 = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jl_Price = new javax.swing.JLabel();
-        jcb_PaymentMethod = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jtf_Amount = new javax.swing.JTextField();
         btn_MakePayment = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jl_Credit = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jtf_Subtotal = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jtf_GrandTotal = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jcb_PaymentMethod = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jtf_Amount = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jtf_Change = new javax.swing.JTextField();
+
+        jToggleButton1.setText("jToggleButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jLabel3.setText("Total Price of Bill :");
-
-        jl_Price.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jl_Price.setText("price");
-
-        jcb_PaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit Card", "Cheque" }));
-
-        jLabel4.setText("Payment Method :");
-
-        jLabel1.setText("Amount :");
-
-        jtf_Amount.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jtf_AmountKeyTyped(evt);
-            }
-        });
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         btn_MakePayment.setText("Make Payment");
         btn_MakePayment.addActionListener(new java.awt.event.ActionListener() {
@@ -139,78 +145,112 @@ public class Payment extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel2.setText("Payment");
 
-        jl_Credit.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jl_Credit.setText("credit");
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jLabel5.setText("Credit of Month :");
+        jLabel3.setText("Subtotal :");
+
+        jLabel6.setText("Grand Total :");
+
+        jLabel4.setText("Payment Method :");
+
+        jcb_PaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit Card", "Cheque" }));
+
+        jLabel1.setText("Amount :");
+
+        jtf_Amount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtf_AmountKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtf_AmountKeyTyped(evt);
+            }
+        });
+
+        jLabel5.setText("Change :");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5))
+                .addGap(43, 43, 43)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtf_Amount, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtf_Subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtf_GrandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtf_Change, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtf_Subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jtf_GrandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtf_Amount, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jtf_Change, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        jtf_Subtotal.getAccessibleContext().setAccessibleName("");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43)
-                        .addComponent(jtf_Amount))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jl_Credit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jl_Price, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))))))
-                .addContainerGap(20, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
                         .addComponent(jLabel2)
-                        .addGap(97, 97, 97))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 20, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(36, 36, 36)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jl_Credit)
-                    .addComponent(jLabel5))
                 .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jl_Price))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcb_PaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jtf_Amount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,6 +326,19 @@ public class Payment extends javax.swing.JFrame {
 
                 String infoMessage = "Success add data.";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                PDF pdf = new PDF(custId,
+                                                billNo, 
+                                                String.valueOf(df.format(totalPrice)),
+                                                String.valueOf(df.format(grandTotal)),
+                                                String.valueOf(df.format(amount)),
+                                                String.valueOf(df.format(change)),
+                                                String.valueOf(df.format(gst)),
+                                                String.valueOf(df.format(serviceCharge)),
+                                                String.valueOf(df.format(discount)),
+                                                String.valueOf(df.format(rounding))
+                                                );
+                
             } catch (Exception e){
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -301,13 +354,24 @@ public class Payment extends javax.swing.JFrame {
     private void jtf_AmountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_AmountKeyTyped
         // TODO add your handling code here:
         char c = evt.getKeyChar();
-        
         if (!(Character.isDigit(c) || c == KeyEvent.VK_PERIOD
                 || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-                
             evt.consume();
+        } else{
+            if (jtf_Amount.getText().length() > 6)
+                evt.consume();
         }
     }//GEN-LAST:event_jtf_AmountKeyTyped
+
+    private void jtf_AmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_AmountKeyReleased
+        // TODO add your handling code here:
+        if(jtf_Amount.getText().toString().equals(""))
+            amount = 0;
+        else
+            amount = Double.parseDouble(jtf_Amount.getText().toString());
+        change = amount - grandTotal;
+        jtf_Change.setText(String.valueOf(df.format(change)));
+    }//GEN-LAST:event_jtf_AmountKeyReleased
 
     /**
      * @param args the command line arguments
@@ -345,32 +409,76 @@ public class Payment extends javax.swing.JFrame {
     }
     
     /**
-     * Display current credit of current month
+     * Display patient's bill details.
      */
-    public void displayCurrentCredit(){
-        
-        try{
-            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +", cl."+ currentMonth.getDebitMonth() +" "
-                    + "FROM far_customer_ledger cl, pms_patient_biodata pb "
-                    + "WHERE cl.customer_id = '"+ custId +"' "
-                    + "AND pb.pmi_no = '"+ custId +"' ";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+    public void displayBillDetail(){
+        try {
+//            //Uncomment this if GST apply
+//            String sql1 = "SELECT param_percent "
+//                    + "FROM far_billing_parameter "
+//                    + "WHERE param_name = 'GST'";
+//            ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+//            gst = Double.parseDouble(data1.get(0).get(0));
             
-            String credit = data.get(0).get(0);
-            String debit = data.get(0).get(1);
-            if (credit == null){
-                credit = "0.00";
-            }
-            if (debit == null){
-                debit = "0.00";
-            }
+//            //Uncomment this if service charge apply
+//            String sql2 = "SELECT param_percent "
+//                    + "FROM far_billing_parameter "
+//                    + "WHERE param_name = 'Service Charge'";
+//            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
+//            serviceCharge = Double.parseDouble(data2.get(0).get(0));
+
+//                //Uncomment this if discount apply
+//                String sql3 = "SELECT param_percent "
+//                        + "FROM far_billing_parameter "
+//                        + "WHERE param_name = 'Discount'";
+//                ArrayList<ArrayList<String>> data3 = rc.getQuerySQL(host, port, sql3);
+//                discount = Double.parseDouble(data3.get(0).get(0));
+                
+            totalPrice =  totalPrice - (totalPrice * discount);
+            gstAmount = totalPrice * gst;
+            serviceChargeAmount = totalPrice * serviceCharge;
+            grandTotal = totalPrice + gstAmount + serviceChargeAmount;
+            //Round the grand total
+            double tmp = Math.round(10.08 * 20) / 20.0;
+            rounding = tmp - grandTotal;
+            grandTotal = tmp;
             
-            jl_Credit.setText("RM" + String.valueOf(df.format(Double.parseDouble(credit) - Double.parseDouble(debit))));
-            jl_Price.setText("RM" + String.valueOf(df.format(totalPrice)));
-        } catch (Exception e){
+            
+            jtf_Subtotal.setText(String.valueOf(df.format(totalPrice)));
+            jtf_GrandTotal.setText(String.valueOf(df.format(grandTotal)));
+            
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
+    
+//    /**
+//     * Display current credit of current month
+//     */
+//    public void displayCurrentCredit(){
+//        
+//        try{
+//            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +", cl."+ currentMonth.getDebitMonth() +" "
+//                    + "FROM far_customer_ledger cl, pms_patient_biodata pb "
+//                    + "WHERE cl.customer_id = '"+ custId +"' "
+//                    + "AND pb.pmi_no = '"+ custId +"' ";
+//            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+//            
+//            String credit = data.get(0).get(0);
+//            String debit = data.get(0).get(1);
+//            if (credit == null){
+//                credit = "0.00";
+//            }
+//            if (debit == null){
+//                debit = "0.00";
+//            }
+//            
+//            jl_Credit.setText("RM" + String.valueOf(df.format(Double.parseDouble(credit) - Double.parseDouble(debit))));
+//            jl_Price.setText("RM" + String.valueOf(df.format(totalPrice)));
+//        } catch (Exception e){
+//            JOptionPane.showMessageDialog(null, e);
+//        }
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_MakePayment;
@@ -379,10 +487,14 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JComboBox<String> jcb_PaymentMethod;
-    private javax.swing.JLabel jl_Credit;
-    private javax.swing.JLabel jl_Price;
     private javax.swing.JTextField jtf_Amount;
+    private javax.swing.JTextField jtf_Change;
+    private javax.swing.JTextField jtf_GrandTotal;
+    private javax.swing.JTextField jtf_Subtotal;
     // End of variables declaration//GEN-END:variables
 }

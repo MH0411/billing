@@ -1346,8 +1346,8 @@ public class Billing extends javax.swing.JFrame {
         Payment payment = new Payment();
         payment.setCustId(custId);
         payment.setBillNo(billNo);
-        payment.setTotalPrice(totalPrice);
-        payment.displayCurrentCredit();
+        payment.setTotalPrice(totalPrice); 
+        payment.displayBillDetail();
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
@@ -1528,7 +1528,7 @@ public class Billing extends javax.swing.JFrame {
     private void tableManageMiscellaneous() {
         try {
             String sql = "SELECT * FROM far_miscellaneous_item";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);// execute query
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_MM.getModel();
 
             //remove all row
@@ -1545,7 +1545,6 @@ public class Billing extends javax.swing.JFrame {
                 jt_MM.setValueAt(data.get(i).get(2), i, 1);
                 jt_MM.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 2);
                 jt_MM.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 3);
-                jt_MM.setValueAt(data.get(i).get(5), i, 4);
             }
             
             tableMiscellaneousItemSorter();

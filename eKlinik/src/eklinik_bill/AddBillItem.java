@@ -132,6 +132,9 @@ public class AddBillItem extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jt_MiscellaneousItem);
+        if (jt_MiscellaneousItem.getColumnModel().getColumnCount() > 0) {
+            jt_MiscellaneousItem.getColumnModel().getColumn(2).setHeaderValue("Price");
+        }
 
         jtf_mm_SearchItem1.setToolTipText("Example : Patient Name, IC No. Other ID");
 
@@ -288,6 +291,11 @@ public class AddBillItem extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_Cancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel2ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btn_Cancel2ActionPerformed
+
     private void btn_AddDItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddDItemActionPerformed
         // TODO add your handling code here:
         int quantity = 0;
@@ -312,8 +320,8 @@ public class AddBillItem extends javax.swing.JFrame {
                     try {
                         //Get current month credit and add the item price
                         String sql1 = "SELECT "+ month +" "
-                                + "FROM far_customer_ledger "
-                                + "WHERE customer_id = '"+ custId +"' ";
+                        + "FROM far_customer_ledger "
+                        + "WHERE customer_id = '"+ custId +"' ";
                         ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
                         String currentCredit = data1.get(0).get(0);
 
@@ -322,20 +330,20 @@ public class AddBillItem extends javax.swing.JFrame {
 
                         //Update customer ledger
                         String sql2 = "UPDATE far_customer_ledger "
-                                + "SET "+ month +" = '"+ currentCredit +"' "
-                                + "WHERE customer_id = '"+ custId +"' ";
+                        + "SET "+ month +" = '"+ currentCredit +"' "
+                        + "WHERE customer_id = '"+ custId +"' ";
                         rc.setQuerySQL(host, port, sql2);
 
                         //Update customer dtl
                         String sql3 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
-                                + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ totalPrice +"','"+ quantity +"','"+ billNo +"')";
+                        + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ totalPrice +"','"+ quantity +"','"+ billNo +"')";
                         rc.setQuerySQL(host, port, sql3);
 
                         //Get current bill_amt and add item price;
                         String sql4 = "SELECT item_amt, quantity "
-                                + "FROM far_customer_hdr "
-                                + "WHERE customer_id = '"+ custId +"' "
-                                + "AND bill_no = '"+ billNo +"'";
+                        + "FROM far_customer_hdr "
+                        + "WHERE customer_id = '"+ custId +"' "
+                        + "AND bill_no = '"+ billNo +"'";
                         ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
                         String itemAmt = data2.get(0).get(0);
                         String qty = data2.get(0).get(1);
@@ -345,14 +353,14 @@ public class AddBillItem extends javax.swing.JFrame {
 
                         //Update customer hdr
                         String sql5 = "UPDATE far_customer_hdr "
-                                + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ qty +"' "
-                                + "WHERE bill_no = '"+ billNo +"' "
-                                + "AND customer_id = '"+ custId +"'";
+                        + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ qty +"' "
+                        + "WHERE bill_no = '"+ billNo +"' "
+                        + "AND customer_id = '"+ custId +"'";
                         rc.setQuerySQL(host, port, sql5);
 
                         String infoMessage = "Success add data";
                         JOptionPane.showMessageDialog(null, infoMessage, "Success",
-                                JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.INFORMATION_MESSAGE);
 
                         dispose();
                     } catch (Exception e) {
@@ -364,58 +372,63 @@ public class AddBillItem extends javax.swing.JFrame {
             }
         }catch(NumberFormatException nfe) {
             JOptionPane.showMessageDialog(null, "Please enter number only.");
-        } 
+        }
     }//GEN-LAST:event_btn_AddDItemActionPerformed
 
-    private void btn_Cancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel2ActionPerformed
+    private void jt_DrugsItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_DrugsItemMousePressed
+        // TODO add your handling code here:
+        btn_AddDItem.setEnabled(true);
+    }//GEN-LAST:event_jt_DrugsItemMousePressed
+
+    private void btn_Cancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel1ActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_btn_Cancel2ActionPerformed
+    }//GEN-LAST:event_btn_Cancel1ActionPerformed
 
     private void btn_AddMItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddMItemActionPerformed
         // TODO add your handling code here:
-        
+
         //Get no of row
         int rowIndex = -1;
         rowIndex = jt_MiscellaneousItem.getSelectedRow();
         rowIndex = jt_MiscellaneousItem.convertRowIndexToModel(rowIndex);
-        
+
         String itemCode = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 0).toString();
         String name = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 1).toString();
         String unitPrice = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 2).toString();
-               
+
         String month = new Month().getCreditMonth();
-        
+
         try {
             //Get current month credit and add the item price
             String sql1 = "SELECT "+ month +" "
-                    + "FROM far_customer_ledger "
-                    + "WHERE customer_id = '"+ custId +"' ";
+            + "FROM far_customer_ledger "
+            + "WHERE customer_id = '"+ custId +"' ";
             ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
             String currentCredit = data1.get(0).get(0);
-            
+
             if (currentCredit == null){
                 currentCredit = "0";
             }
-            
+
             currentCredit = String.valueOf(Double.parseDouble(currentCredit) + Double.parseDouble(unitPrice));
 
             //Update customer ledger
             String sql2 = "UPDATE far_customer_ledger "
-                    + "SET "+ month +" = '"+ currentCredit +"' "
-                    + "WHERE customer_id = '"+ custId +"' ";
+            + "SET "+ month +" = '"+ currentCredit +"' "
+            + "WHERE customer_id = '"+ custId +"' ";
             rc.setQuerySQL(host, port, sql2);
 
             //Update customer dtl
             String sql3 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no, customer_id) "
-                    + "VALUES('"+ txnDate +"', '"+ itemCode +"','"+ name +"','"+ Double.parseDouble(unitPrice) +"','"+ 1 +"','"+ billNo +"','"+ custId +"')";
+            + "VALUES('"+ txnDate +"', '"+ itemCode +"','"+ name +"','"+ Double.parseDouble(unitPrice) +"','"+ 1 +"','"+ billNo +"','"+ custId +"')";
             rc.setQuerySQL(host, port, sql3);
 
             //Get current bill_amt and add item price;
             String sql4 = "SELECT item_amt, quantity "
-                    + "FROM far_customer_hdr "
-                    + "WHERE customer_id = '"+ custId +"' "
-                    + "AND bill_no = '"+ billNo +"'";
+            + "FROM far_customer_hdr "
+            + "WHERE customer_id = '"+ custId +"' "
+            + "AND bill_no = '"+ billNo +"'";
             ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
             String itemAmt = data2.get(0).get(0);
             String quantity = data2.get(0).get(1);
@@ -425,31 +438,21 @@ public class AddBillItem extends javax.swing.JFrame {
 
             //Update customer hdr
             String sql5 = "UPDATE far_customer_hdr "
-                    + "SET txn_date = '"+ txnDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ quantity +"' "
-                    + "WHERE bill_no = '"+ billNo +"' "
-                    + "AND customer_id = '"+ custId +"'";
+            + "SET txn_date = '"+ txnDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ quantity +"' "
+            + "WHERE bill_no = '"+ billNo +"' "
+            + "AND customer_id = '"+ custId +"'";
             rc.setQuerySQL(host, port, sql5);
 
             String infoMessage = "Success add data";
             JOptionPane.showMessageDialog(null, infoMessage, "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
-            
+                JOptionPane.INFORMATION_MESSAGE);
+
             dispose();
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btn_AddMItemActionPerformed
-
-    private void btn_Cancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Cancel1ActionPerformed
-        // TODO add your handling code here:
-        dispose();
-    }//GEN-LAST:event_btn_Cancel1ActionPerformed
-
-    private void jt_DrugsItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_DrugsItemMousePressed
-        // TODO add your handling code here:
-        btn_AddDItem.setEnabled(true);
-    }//GEN-LAST:event_jt_DrugsItemMousePressed
 
     private void jt_MiscellaneousItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_MiscellaneousItemMousePressed
         // TODO add your handling code here:
