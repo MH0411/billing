@@ -359,7 +359,7 @@ public final class Generate extends javax.swing.JFrame {
     private void btn_PrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintActionPerformed
         // TODO add your handling code here:
         try {
-            PDF pdf = new PDF(pmiNo, getBillNo());
+            PDF pdf = new PDF(pmiNo, billNo, String.valueOf(df.format(totalPrice)));
             pdf.print();
             //Open the generated receipt
             Desktop.getDesktop().open(new File("Receipt.pdf"));
