@@ -792,6 +792,30 @@ public class Billing extends javax.swing.JFrame {
 
         jLabel14.setText("Value");
 
+        jtf_mp_Code.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtf_mp_CodeKeyTyped(evt);
+            }
+        });
+
+        jtf_mp_Name.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtf_mp_NameKeyTyped(evt);
+            }
+        });
+
+        jtf_mp_Type.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtf_mp_TypeKeyTyped(evt);
+            }
+        });
+
+        jtf_mp_Value.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtf_mp_ValueKeyTyped(evt);
+            }
+        });
+
         jcb_Enable.setBackground(new java.awt.Color(255, 255, 255));
         jcb_Enable.setText("Enable");
 
@@ -1470,7 +1494,7 @@ public class Billing extends javax.swing.JFrame {
             String subtotal = jt_ListPatientBill.getModel().getValueAt(rowIndex, 8).toString();
             
             PDF pdf = new PDF(custId, billNo, subtotal);
-            pdf.print();
+            pdf.printPaidBill();
             Desktop.getDesktop().open(new File("Receipt.pdf"));
         } catch (Exception ex) {
             Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
@@ -1540,7 +1564,7 @@ public class Billing extends javax.swing.JFrame {
         Payment payment = new Payment();
         payment.setCustId(custId);
         payment.setBillNo(billNo);
-        payment.setTotalPrice(totalPrice); 
+        payment.setSubtotal(totalPrice); 
         payment.displayBillDetail();
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
@@ -1650,36 +1674,38 @@ public class Billing extends javax.swing.JFrame {
      */
     private void btn_mp_AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mp_AddActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_mp_AddActionPerformed
-
-    /**
-     * Update billing parameter
-     * @param evt 
-     */
-    private void btn_mp_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mp_UpdateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_mp_UpdateActionPerformed
-
-    /**
-     * Delete selected billing parameter
-     * @param evt 
-     */
-    private void btn_mp_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mp_DeleteActionPerformed
-        // TODO add your handling code here:
-        String paramCode = jtf_mp_Code.getText().toString();
-        int response = JOptionPane.showConfirmDialog(null, "Do you sure to delete selected item?", "Confirm",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-        if (response == JOptionPane.NO_OPTION) {
-        } else if (response == JOptionPane.YES_OPTION) {
-
+        String paramCode = jtf_mp_Code.getText();
+        String paramName = jtf_mp_Name.getText();
+        String paramType = jtf_mp_Type.getText();
+        String paramValue  = jtf_mp_Value.getText();
+        String enable = "no";
+        if (jcb_Enable.isSelected())
+            enable = "yes";
+        else 
+            enable = "no";
+        
+        if (paramCode.equals("")){
+            String infoMessage = "Please insert data in Code text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+            
+        } else  if (paramName.equals("")){
+            String infoMessage = "Please insert data in Name text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (paramType.equals("")){
+            String infoMessage = "Please insert data in Type text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (paramValue.equals("")){
+            String infoMessage = "Please insert data in Value text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
             try {
-                String sql = "DELETE FROM far_billing_parameter WHERE param_code = '"+ paramCode +"'";
+                String sql = "INSERT INTO far_billing_parameter(param_code, param_name, param_type, param_value, enable) "
+                        + "VALUES('"+ paramCode +"', '"+ paramName +"', '"+ paramType +"', '"+ paramValue +"', '"+ enable +"')";
                 rc.setQuerySQL(host, port, sql);
-                
-                String infoMessage = "Success delete data";
-                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
 
+                String infoMessage = "Success add data";
+                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                
                 //Refresh miscellaneous item table
                 tableBillingParameter();
 
@@ -1689,10 +1715,105 @@ public class Billing extends javax.swing.JFrame {
                 jtf_mp_Value.setText("");
                 jcb_Enable.setSelected(false);
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
-        }    
+        }
+    }//GEN-LAST:event_btn_mp_AddActionPerformed
+
+    /**
+     * Update billing parameter
+     * @param evt 
+     */
+    private void btn_mp_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mp_UpdateActionPerformed
+        // TODO add your handling code here:
+        String paramCode = jtf_mp_Code.getText();
+        String paramName = jtf_mp_Name.getText();
+        String paramType = jtf_mp_Type.getText();
+        String paramValue  = jtf_mp_Value.getText();
+        String enable = "no";
+        if (jcb_Enable.isSelected())
+            enable = "yes";
+        else 
+            enable = "no";
+        
+        if (paramCode.equals("")){
+            String infoMessage = "Please insert data in Code text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+            
+        } else  if (paramName.equals("")){
+            String infoMessage = "Please insert data in Name text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (paramType.equals("")){
+            String infoMessage = "Please insert data in Type text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (paramValue.equals("")){
+            String infoMessage = "Please insert data in Value text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            try {
+                String sql = "UPDATE far_billing_parameter "
+                        + "SET param_code = '"+ paramCode +"', param_name = '"+ paramName +"', param_type = '"+ paramType +"', param_value = '"+ paramValue +"', enable = '"+ enable +"' "
+                        + "WHERE param_code = '"+ paramCode +"'";
+                rc.setQuerySQL(host, port, sql);
+
+                String infoMessage = "Success update data";
+                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                //Refresh miscellaneous item table
+                tableBillingParameter();
+
+                jtf_mp_Code.setText("");
+                jtf_mp_Name.setText("");
+                jtf_mp_Type.setText("");
+                jtf_mp_Value.setText("");
+                jcb_Enable.setSelected(false);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }//GEN-LAST:event_btn_mp_UpdateActionPerformed
+
+    /**
+     * Delete selected billing parameter
+     * @param evt 
+     */
+    private void btn_mp_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mp_DeleteActionPerformed
+        // TODO add your handling code here:
+        String paramCode = jtf_mp_Code.getText();
+        if (paramCode.equals("")){
+            String infoMessage = "Please insert data in Code text field.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int response = JOptionPane.showConfirmDialog(null, "Do you sure to delete selected item?", "Confirm",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (response == JOptionPane.NO_OPTION) {
+            } else if (response == JOptionPane.YES_OPTION) {
+
+                try {
+                    String sql = "DELETE FROM far_billing_parameter "
+                            + "WHERE param_code = '"+ paramCode +"'";
+                    rc.setQuerySQL(host, port, sql);
+
+                    String infoMessage = "Success delete data";
+                    JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    //Refresh miscellaneous item table
+                    tableBillingParameter();
+
+                    jtf_mp_Code.setText("");
+                    jtf_mp_Name.setText("");
+                    jtf_mp_Type.setText("");
+                    jtf_mp_Value.setText("");
+                    jcb_Enable.setSelected(false);
+
+                } catch (Exception e){
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }    
+        }
     }//GEN-LAST:event_btn_mp_DeleteActionPerformed
 
     /**
@@ -1727,6 +1848,53 @@ public class Billing extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_jt_BillingParameterMouseClicked
+
+    /**
+     * Set input char limit
+     * @param evt 
+     */
+    private void jtf_mp_CodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_mp_CodeKeyTyped
+        // TODO add your handling code here:
+        if (jtf_mp_Code.getText().length() >4)
+            evt.consume();
+    }//GEN-LAST:event_jtf_mp_CodeKeyTyped
+
+    /**
+     * Set input char limit
+     * @param evt 
+     */
+    private void jtf_mp_NameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_mp_NameKeyTyped
+        // TODO add your handling code here:
+        if (jtf_mp_Name.getText().length() > 20)
+            evt.consume();
+    }//GEN-LAST:event_jtf_mp_NameKeyTyped
+
+    /**
+     * Set input char limit
+     * @param evt 
+     */
+    private void jtf_mp_TypeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_mp_TypeKeyTyped
+        // TODO add your handling code here:
+        if (jtf_mp_Type.getText().length() > 10)
+            evt.consume();
+    }//GEN-LAST:event_jtf_mp_TypeKeyTyped
+
+    /**
+     * Set input value limit
+     * @param evt 
+     */
+    private void jtf_mp_ValueKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_mp_ValueKeyTyped
+        // TODO add your handling code here:
+        if(jtf_mp_Value.getText().length() > 4){
+            evt.consume();
+        }
+        
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || c == KeyEvent.VK_PERIOD
+                || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jtf_mp_ValueKeyTyped
 
     /**
      * @param args the command line arguments

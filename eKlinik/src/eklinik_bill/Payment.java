@@ -32,18 +32,24 @@ public class Payment extends javax.swing.JFrame {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
     private String txnDate = dateFormat.format(new Date());
     private Month currentMonth = new Month();
+    
     private String custId;
     private String billNo;
+    private double subtotal;
     private double totalPrice;
     private double grandTotal;
+    
     private double gst = 0;
     private double serviceCharge = 0;
     private double discount = 0;
     private double gstAmount = 0;
     private double serviceChargeAmount = 0;
+    private double discountAmount = 0;
     private double amount = 0;
     private double change = 0;
     private double rounding = 0;
+    
+    private ArrayList<ArrayList<String>> billingParameters;
    
     /**
      * Creates new form Payment
@@ -92,15 +98,15 @@ public class Payment extends javax.swing.JFrame {
     /**
      * @return the totalPrice
      */
-    public double getTotalPrice() {
-        return totalPrice;
+    public double getSubtotal() {
+        return subtotal;
     }
 
     /**
-     * @param totalPrice the totalPrice to set
+     * @param subtotal the totalPrice to set
      */
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
     }
 
     /**
@@ -297,47 +303,64 @@ public class Payment extends javax.swing.JFrame {
             
             try{
                 //Get current debit from customer ledger
-                String sql1 = "SELECT cl."+ currentMonth.getDebitMonth() +" "
+                String sql1 = "SELECT cl."+ currentMonth.getDebitMonth() +", cl."+ currentMonth.getCreditMonth() +" "
                         + "FROM far_customer_ledger cl, pms_patient_biodata pb "
                         + "WHERE cl.customer_id = '"+ custId +"' "
                         + "AND pb.pmi_no = '"+ custId +"'";
                 ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
                 String debitMonth = data.get(0).get(0);
+                String creditMonth = data.get(0).get(1);
                 
                 if(debitMonth == null){
                     debitMonth = "0";
                 }
                 
+                if(creditMonth == null){
+                    creditMonth = "0";
+                }
+                
                 debitMonth = String.valueOf(Double.parseDouble(debitMonth) + Double.parseDouble(debit));
+                creditMonth = String.valueOf(Double.parseDouble(creditMonth) - subtotal + grandTotal);
                 
                 //Update customer ledger debit
                 String sql2 = "UPDATE far_customer_ledger "
-                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"', txn_date = '"+ txnDate +"' "
+                        + "SET pay_method = '"+ method +"', "+currentMonth.getDebitMonth()+" = '"+ debitMonth +"', txn_date = '"+ txnDate +"', "+currentMonth.getCreditMonth()+" = '"+ creditMonth +"' "
                         + "where customer_id = '"+ custId  +"' ";
                 rc.setQuerySQL(host, port, sql2);
-
-                System.out.println(method);
                 
                 //Update customer hdr bill
                 String sql3 = "UPDATE far_customer_hdr "
-                        + "SET payment = 'Paid', txn_date = '"+ txnDate +"' "
+                        + "SET payment = 'Paid', txn_date = '"+ txnDate +"', item_amt = '"+ grandTotal +"' "
                         + "WHERE bill_no = '"+ billNo +"'";
                 rc.setQuerySQL(host, port, sql3);
-
+                
+                for (int i = 0; i < billingParameters.size(); i++){
+                    
+                    String code = billingParameters.get(i).get(0);
+                    String name = billingParameters.get(i).get(1);
+                    String value = billingParameters.get(i).get(2);
+                    
+                    //Update customer dtl
+                    String sql4 = "INSERT into far_customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id) "
+                            + "VALUES('"+ billNo +"','"+ txnDate +"','"+ code +"', '"+ name +"', '"+ value +"',  '1', '"+ custId +"' )";
+                    rc.setQuerySQL(host, port, sql4);
+                }
+                
                 String infoMessage = "Success add data.";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 
                 PDF pdf = new PDF(custId,
                                                 billNo, 
-                                                String.valueOf(df.format(totalPrice)),
+                                                String.valueOf(df.format(subtotal)),
                                                 String.valueOf(df.format(grandTotal)),
                                                 String.valueOf(df.format(amount)),
                                                 String.valueOf(df.format(change)),
-                                                String.valueOf(df.format(gst)),
-                                                String.valueOf(df.format(serviceCharge)),
-                                                String.valueOf(df.format(discount)),
+                                                String.valueOf(df.format(gstAmount)),
+                                                String.valueOf(df.format(serviceChargeAmount)),
+                                                String.valueOf(df.format(discountAmount)),
                                                 String.valueOf(df.format(rounding))
                                                 );
+                pdf.printPaidBill();
                 
             } catch (Exception e){
                 JOptionPane.showMessageDialog(null, e);
@@ -363,6 +386,10 @@ public class Payment extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jtf_AmountKeyTyped
 
+    /**
+     * Calculate the change
+     * @param evt 
+     */
     private void jtf_AmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtf_AmountKeyReleased
         // TODO add your handling code here:
         if(jtf_Amount.getText().toString().equals(""))
@@ -413,36 +440,29 @@ public class Payment extends javax.swing.JFrame {
      */
     public void displayBillDetail(){
         try {
-//            //Uncomment this if GST apply
-//            String sql1 = "SELECT param_percent "
-//                    + "FROM far_billing_parameter "
-//                    + "WHERE param_name = 'GST'";
-//            ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
-//            gst = Double.parseDouble(data1.get(0).get(0));
+            String sql1 = "SELECT param_code, param_name, param_value "
+                    + "FROM far_billing_parameter "
+                    + "WHERE enable = 'yes'";
+            billingParameters = rc.getQuerySQL(host, port, sql1);
             
-//            //Uncomment this if service charge apply
-//            String sql2 = "SELECT param_percent "
-//                    + "FROM far_billing_parameter "
-//                    + "WHERE param_name = 'Service Charge'";
-//            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
-//            serviceCharge = Double.parseDouble(data2.get(0).get(0));
-
-//                //Uncomment this if discount apply
-//                String sql3 = "SELECT param_percent "
-//                        + "FROM far_billing_parameter "
-//                        + "WHERE param_name = 'Discount'";
-//                ArrayList<ArrayList<String>> data3 = rc.getQuerySQL(host, port, sql3);
-//                discount = Double.parseDouble(data3.get(0).get(0));
+            for (int i = 0; i < billingParameters.size(); i++){
+                if (billingParameters.get(i).get(1).equalsIgnoreCase("GST"))
+                    gst = Double.parseDouble(billingParameters.get(i).get(2));
+                else if (billingParameters.get(i).get(1).equalsIgnoreCase("Service Charge"))
+                    serviceCharge = Double.parseDouble(billingParameters.get(i).get(2));
+                else if (billingParameters.get(i).get(1).equalsIgnoreCase("Discount"))
+                    discount = Double.parseDouble(billingParameters.get(i).get(2));
+            }
                 
-            totalPrice =  totalPrice - (totalPrice * discount);
+            discountAmount = subtotal * discount;
+            totalPrice =  subtotal - discountAmount;
             gstAmount = totalPrice * gst;
             serviceChargeAmount = totalPrice * serviceCharge;
             grandTotal = totalPrice + gstAmount + serviceChargeAmount;
             //Round the grand total
-            double tmp = Math.round(10.08 * 20) / 20.0;
+            double tmp = Math.round(grandTotal * 20) / 20.0;
             rounding = tmp - grandTotal;
             grandTotal = tmp;
-            
             
             jtf_Subtotal.setText(String.valueOf(df.format(totalPrice)));
             jtf_GrandTotal.setText(String.valueOf(df.format(grandTotal)));
@@ -451,34 +471,6 @@ public class Payment extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    
-//    /**
-//     * Display current credit of current month
-//     */
-//    public void displayCurrentCredit(){
-//        
-//        try{
-//            String sql = "SELECT DISTINCT cl."+ currentMonth.getCreditMonth() +", cl."+ currentMonth.getDebitMonth() +" "
-//                    + "FROM far_customer_ledger cl, pms_patient_biodata pb "
-//                    + "WHERE cl.customer_id = '"+ custId +"' "
-//                    + "AND pb.pmi_no = '"+ custId +"' ";
-//            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
-//            
-//            String credit = data.get(0).get(0);
-//            String debit = data.get(0).get(1);
-//            if (credit == null){
-//                credit = "0.00";
-//            }
-//            if (debit == null){
-//                debit = "0.00";
-//            }
-//            
-//            jl_Credit.setText("RM" + String.valueOf(df.format(Double.parseDouble(credit) - Double.parseDouble(debit))));
-//            jl_Price.setText("RM" + String.valueOf(df.format(totalPrice)));
-//        } catch (Exception e){
-//            JOptionPane.showMessageDialog(null, e);
-//        }
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_MakePayment;

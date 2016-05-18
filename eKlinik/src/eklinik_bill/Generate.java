@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import main.RMIConnector;
-import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
  *
@@ -47,7 +46,18 @@ public final class Generate extends javax.swing.JFrame {
     private String pmiNo;
     private String billNo;
     private String orderNo;
-    private double totalPrice;
+    private double subtotal;
+    private double grandTotal;
+    private double rounding;
+    private double gst = 0;
+    private double serviceCharge = 0;
+    private double discount = 0;
+    private double gstAmount = 0;
+    private double serviceChargeAmount = 0;
+    private double discountAmount = 0;
+    
+    
+    private ArrayList<ArrayList<String>> billingParameters;
     
     /**
      * Creates new form generate
@@ -58,6 +68,8 @@ public final class Generate extends javax.swing.JFrame {
         super.pack();
         super.setLocationRelativeTo(null);
         super.setVisible(true);
+        
+        receiptNo();
     }
 
     /**
@@ -106,14 +118,14 @@ public final class Generate extends javax.swing.JFrame {
      * @return the totalPrice
      */
     public double getTotalPrice() {
-        return totalPrice;
+        return subtotal;
     }
 
     /**
      * @param totalPrice the totalPrice to set
      */
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setSubtotal(double totalPrice) {
+        this.subtotal = totalPrice;
     }
 
     /**
@@ -143,7 +155,6 @@ public final class Generate extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jt_BillDetails = new javax.swing.JTable();
-        btn_Print = new javax.swing.JButton();
         btn_Confirm = new javax.swing.JButton();
         btnAddItem = new javax.swing.JButton();
         btn_Cancel = new javax.swing.JButton();
@@ -215,14 +226,6 @@ public final class Generate extends javax.swing.JFrame {
         jt_BillDetails.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jt_BillDetails);
 
-        btn_Print.setText("Print Receipt");
-        btn_Print.setEnabled(false);
-        btn_Print.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_PrintActionPerformed(evt);
-            }
-        });
-
         btn_Confirm.setText("Confirm");
         btn_Confirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,9 +296,7 @@ public final class Generate extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
@@ -309,33 +310,36 @@ public final class Generate extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jtf_address, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jtf_ic, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jtf_id, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jtf_billNo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtf_telNo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jtf_date, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_Payment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtf_ic, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jtf_id, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jtf_billNo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jtf_telNo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtf_date, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -351,25 +355,6 @@ public final class Generate extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Print receipt and display receipt
-     * @param evt 
-     */
-    private void btn_PrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PrintActionPerformed
-        // TODO add your handling code here:
-        try {
-            PDF pdf = new PDF(pmiNo, billNo, String.valueOf(df.format(totalPrice)));
-            pdf.print();
-            //Open the generated receipt
-            Desktop.getDesktop().open(new File("Receipt.pdf"));
-            dispose();
-            Billing billing = new Billing();
-            billing.setVisible(true);
-        } catch (Exception ex) {
-            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btn_PrintActionPerformed
 
     /**
      * Cancel confirmation of bill
@@ -402,7 +387,6 @@ public final class Generate extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         btn_Payment.setEnabled(true);
-        btn_Print.setEnabled(true);
         btn_Confirm.setEnabled(false);
         btnAddItem.setEnabled(true);
         btn_Cancel.setEnabled(false);
@@ -416,27 +400,27 @@ public final class Generate extends javax.swing.JFrame {
             
             //Loop to insert to cus dtl
             int rowCount = model.getRowCount();
-            setTotalPrice(0);
+            setSubtotal(0);
             int itemQuantity = 0;
             for (int i = 0; i < rowCount; i++) {
                 String itemCode = (jt_BillDetails.getModel().getValueAt(i, 0).toString());
                 String itemDesc = (jt_BillDetails.getModel().getValueAt(i, 1).toString());
                 String quantity = (jt_BillDetails.getModel().getValueAt(i, 2).toString());
                 String unitPrice = (jt_BillDetails.getModel().getValueAt(i, 3).toString());
-                String subTotal = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
+                String total = (jt_BillDetails.getModel().getValueAt(i, 4).toString());
    
                 String sql1 = "INSERT into far_customer_dtl(bill_no, txn_date, item_cd, item_desc, item_amt, quantity, customer_id) "
                         + "VALUES('"+ billNo +"','"+ stringDate +"','"+ itemCode +"','"+ itemDesc +"','"+ unitPrice +"','"+ quantity +"','"+ pmiNo +"' )";
                 rc.setQuerySQL(host, port, sql1);
                 
                 //Calculate total items and total price of items
-                double subtol = Double.parseDouble(String.valueOf(subTotal));
+                double subtol = Double.parseDouble(String.valueOf(total));
                 itemQuantity += Integer.parseInt(quantity);
-                setTotalPrice(getTotalPrice() + subtol);
+                setSubtotal(subtotal + subtol);
             } 
            
             String sql2 = "INSERT into far_customer_hdr(customer_id, bill_no, txn_date, item_desc, item_amt, quantity, order_no, payment)"
-                    + "VALUES('"+ pmiNo +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ totalPrice +"','"+ itemQuantity +"' , '"+ orderNo +"', 'Unpaid')";
+                    + "VALUES('"+ pmiNo +"','"+ billNo +"','"+ stringDate +"','"+ name +"','"+ subtotal +"','"+ itemQuantity +"' , '"+ orderNo +"', 'Unpaid')";
             rc.setQuerySQL(host, port, sql2);
                 
             //Get customer_ledger current month credit add to current bill total
@@ -449,14 +433,14 @@ public final class Generate extends javax.swing.JFrame {
             if (data.isEmpty()) {
                 //When no current month credit exist insert
                 String sql4 = "INSERT into far_customer_ledger(customer_id, bill_no, txn_date, bill_desc, bill_amt, "+ creditMonth +" )"
-                        + "VALUES('"+ pmiNo +"', '"+ billNo +"', '"+ stringDate +"', '"+ name +"', '"+ totalPrice +"', '"+ totalPrice +"' )";
+                        + "VALUES('"+ pmiNo +"', '"+ billNo +"', '"+ stringDate +"', '"+ name +"', '"+ subtotal +"', '"+ subtotal +"' )";
                 rc.setQuerySQL(host, port, sql4);
             
             } else {
                 //When current month credit exist update
-                setTotalPrice(Double.parseDouble(data.get(0).get(0)) + totalPrice);
+                setSubtotal(Double.parseDouble(data.get(0).get(0)) + subtotal);
                 String sql5 = "UPDATE far_customer_ledger "
-                        + "SET "+ creditMonth +" = '"+ totalPrice +"', bill_amt = '"+ totalPrice +"', txn_date = '"+ stringDate +"' "
+                        + "SET "+ creditMonth +" = '"+ subtotal +"', bill_amt = '"+ subtotal +"', txn_date = '"+ stringDate +"' "
                         + "WHERE customer_id = '"+ pmiNo +"' ";
                 rc.setQuerySQL(host, port, sql5);
             }
@@ -474,7 +458,7 @@ public final class Generate extends javax.swing.JFrame {
         Payment payment = new Payment();
         payment.setCustId(pmiNo);
         payment.setBillNo(billNo);
-        payment.setTotalPrice(totalPrice);
+        payment.setSubtotal(subtotal);
 //        payment.displayCurrentCredit();
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed
@@ -518,11 +502,154 @@ public final class Generate extends javax.swing.JFrame {
      * Display selected patient bill details
      */
     public void billDetails() {
-        //module name - > 
-        //B = Billing
-        //R = Receipt
-        //I = Invoice
+        
         try {
+            //Display selected patient bill info
+            String sql1 = "SELECT DISTINCT "
+                    + "pb.PATIENT_NAME, "
+                    + "pb.HOME_ADDRESS, "
+                    + "pb.NEW_IC_NO, "
+                    + "pb.ID_NO, "
+                    + "pb.MOBILE_PHONE, "
+                    + "NOW(), "
+                    + "pdd.DRUG_ITEM_CODE, "
+                    + "mdc.D_TRADE_NAME, "
+                    + "pdd.DISPENSED_QTY, "
+                    + "mdc.D_PRICE_PPACK, "
+                    + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL, "
+                    + "pb.PATIENT_TYPE "
+                    + "FROM pms_episode pe "
+                    + "INNER JOIN pms_patient_biodata pb "
+                    + "ON pe.PMI_NO = pb.PMI_NO "
+                    + "INNER JOIN pis_order_master pom "
+                    + "ON pe.PMI_NO = pom.PMI_NO "
+                    + "INNER JOIN pis_dispense_master pdm "
+                    + "ON pom.ORDER_NO = pdm.ORDER_NO "
+                    + "INNER JOIN pis_dispense_detail pdd "
+                    + "ON pdm.ORDER_NO = pdd.ORDER_NO "  
+                    + "INNER JOIN pis_mdc2 mdc "
+                    + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
+                    + "WHERE pe.PMI_NO = '"+ pmiNo +"' "
+                    + "AND pom.order_no = '"+ orderNo +"' ";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
+            
+            jtf_name.setText(data.get(0).get(0));
+            jtf_address.setText(data.get(0).get(1));
+            jtf_ic.setText(data.get(0).get(2));
+            jtf_id.setText(data.get(0).get(3));
+            jtf_telNo.setText(data.get(0).get(4));
+            jtf_billNo.setText(billNo);
+            jtf_date.setText(data.get(0).get(5));
+
+            DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
+            //Remove all previous row
+            int rowCount = model.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+
+            //Add row and show value
+            for (int i = 0; i < data.size(); i++) {
+                model.addRow(new Object[]{"", "", "", "", ""});
+                jt_BillDetails.setValueAt(data.get(i).get(6), i, 0);
+                jt_BillDetails.setValueAt(data.get(i).get(7), i, 1);
+                jt_BillDetails.setValueAt((int) Double.parseDouble(data.get(i).get(8)), i, 2);
+                jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(9))), i, 3);
+                jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(10))), i, 4);
+                
+                subtotal += Double.parseDouble(data.get(i).get(10));
+            }
+            
+            //Search and add miscellaneous item to table.
+            String type = data.get(0).get(11);
+            if (type.equals("2")) {
+                type = "RG00001";
+            } else if (type.equals("1")) {
+                type = "RG00002";
+            } else if (type.equals("3")) {
+                type = "RG00003";
+            }
+            
+            String sql2 = "SELECT * FROM far_miscellaneous_item WHERE item_code = '"+ type +"'";
+            ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sql2);
+            String code = dataItem.get(0).get(1);
+            String desc = dataItem.get(0).get(2);
+            String price = dataItem.get(0).get(4);
+            String total = dataItem.get(0).get(4);
+            Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
+            model.addRow(row);
+            subtotal = subtotal + Double.parseDouble(total);
+
+            String sql3 = "SELECT param_code, param_name, param_value FROM far_billing_parameter WHERE enable = 'yes'";
+            billingParameters = rc.getQuerySQL(host, port, sql3);
+            
+            for (int i = 0 ; i < billingParameters.size() ; i++){
+                if (billingParameters.get(i).get(1).equalsIgnoreCase("gst")){
+                    gst = Double.parseDouble(billingParameters.get(i).get(2));
+                } else if (billingParameters.get(i).get(1).equalsIgnoreCase("service charge")){
+                    serviceCharge = Double.parseDouble(billingParameters.get(i).get(2));
+                } else if (billingParameters.get(i).get(1).equalsIgnoreCase("discount")){
+                    discount = Double.parseDouble(billingParameters.get(i).get(2));
+                }
+            }
+            
+            //Calculate grand total
+            discountAmount = subtotal * discount;
+            discountAmount = Double.parseDouble(df.format(discountAmount));
+            subtotal =  subtotal - discountAmount;
+
+            serviceChargeAmount = subtotal * serviceCharge;
+            serviceChargeAmount = Double.parseDouble(df.format(serviceChargeAmount));
+            subtotal = subtotal + serviceChargeAmount;
+
+            gstAmount = subtotal * gst;
+            gstAmount = Double.parseDouble(df.format(gstAmount));
+            subtotal = subtotal + gstAmount;
+
+            //Round the grand total
+            grandTotal = subtotal;
+            grandTotal = Math.round(grandTotal * 20) / 20.0;
+
+            rounding = grandTotal - subtotal;
+            rounding = Double.parseDouble(df.format(rounding));
+
+            int rowNum = model.getRowCount();
+            //display to bill details table
+            for (int i = 0 ; i < billingParameters.size() ; i++){
+                model.addRow(new Object[]{"", "", "", "", ""});
+                jt_BillDetails.setValueAt(billingParameters.get(i).get(0), rowNum , 0);
+                jt_BillDetails.setValueAt(billingParameters.get(i).get(1), rowNum, 1);
+                jt_BillDetails.setValueAt("1", rowNum, 2);
+                
+                if (billingParameters.get(i).get(1).equalsIgnoreCase("gst")){
+                    jt_BillDetails.setValueAt(df.format(gstAmount), rowNum, 3);
+                    jt_BillDetails.setValueAt(df.format(gstAmount), rowNum, 4);
+                } else if (billingParameters.get(i).get(1).equalsIgnoreCase("service charge")){
+                    jt_BillDetails.setValueAt(df.format(serviceChargeAmount), rowNum, 3);
+                    jt_BillDetails.setValueAt(df.format(serviceChargeAmount), rowNum, 4);
+                } else if (billingParameters.get(i).get(1).equalsIgnoreCase("discount")){
+                    jt_BillDetails.setValueAt(df.format(discountAmount), rowNum, 3);
+                    jt_BillDetails.setValueAt(df.format(discountAmount), rowNum, 4);
+                }
+                
+                rowNum++;
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
+    /**
+     * Generate bill no
+     */
+    private void receiptNo(){
+        
+        try{
+            //module name - > 
+            //B = Billing
+            //R = Receipt
+            //I = Invoice
             String sql1 = "SELECT last_seq_no "
                     + "FROM far_last_seq_no "
                     + "WHERE module_name = 'B' "
@@ -551,81 +678,7 @@ public final class Generate extends javax.swing.JFrame {
             }
             setBillNo(num + date1);
             
-            //Display selected patient bill info
-            String sql3 = "SELECT DISTINCT "
-                    + "pb.PATIENT_NAME, "
-                    + "pb.HOME_ADDRESS, "
-                    + "pb.NEW_IC_NO, "
-                    + "pb.ID_NO, "
-                    + "pb.MOBILE_PHONE, "
-                    + "NOW(), "
-                    + "pdd.DRUG_ITEM_CODE, "
-                    + "mdc.D_TRADE_NAME, "
-                    + "pdd.DISPENSED_QTY, "
-                    + "mdc.D_PRICE_PPACK, "
-                    + "(pdd.DISPENSED_QTY * mdc.D_PRICE_PPACK) AS TOTAL, "
-                    + "pb.PATIENT_TYPE "
-                    + "FROM pms_episode pe "
-                    + "INNER JOIN pms_patient_biodata pb "
-                    + "ON pe.PMI_NO = pb.PMI_NO "
-                    + "INNER JOIN pis_order_master pom "
-                    + "ON pe.PMI_NO = pom.PMI_NO "
-                    + "INNER JOIN pis_dispense_master pdm "
-                    + "ON pom.ORDER_NO = pdm.ORDER_NO "
-                    + "INNER JOIN pis_dispense_detail pdd "
-                    + "ON pdm.ORDER_NO = pdd.ORDER_NO "  
-                    + "INNER JOIN pis_mdc2 mdc "
-                    + "ON pdd.DRUG_ITEM_CODE = mdc.UD_MDC_CODE "
-                    + "WHERE pe.PMI_NO = '"+ pmiNo +"' "
-                    + "AND pom.order_no = '"+ orderNo +"' ";
-            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql3);
-            
-            jtf_name.setText(data.get(0).get(0));
-            jtf_address.setText(data.get(0).get(1));
-            jtf_ic.setText(data.get(0).get(2));
-            jtf_id.setText(data.get(0).get(3));
-            jtf_telNo.setText(data.get(0).get(4));
-            jtf_billNo.setText(billNo);
-            jtf_date.setText(data.get(0).get(5));
-
-            DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
-            //Remove all previous row
-            int rowCount = model.getRowCount();
-            for (int i = rowCount - 1; i >= 0; i--) {
-                model.removeRow(i);
-            }
-
-            //Add row and show value
-            for (int i = 0; i < data.size(); i++) {
-                model.addRow(new Object[]{"", "", "", "", ""});
-                jt_BillDetails.setValueAt(data.get(i).get(6), i, 0);
-                jt_BillDetails.setValueAt(data.get(i).get(7), i, 1);
-                jt_BillDetails.setValueAt((int) Double.parseDouble(data.get(i).get(8)), i, 2);
-                jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(9))), i, 3);
-                jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(10))), i, 4);
-            }
-
-            //Search and add miscellaneous item to table.
-            String type = data.get(0).get(11);
-            if (type.equals("2")) {
-                type = "RG00001";
-            } else if (type.equals("1")) {
-                type = "RG00002";
-            } else if (type.equals("3")) {
-                type = "RG00003";
-            }
-            String sqlItem = "SELECT * "
-                    + "FROM far_miscellaneous_item "
-                    + "where item_code = '"+ type +"'";
-            ArrayList<ArrayList<String>> dataItem = rc.getQuerySQL(host, port, sqlItem);
-            String code = dataItem.get(0).get(1);
-            String desc = dataItem.get(0).get(2);
-            String price = dataItem.get(0).get(4);
-            String total = dataItem.get(0).get(4);
-            Object[] row = {code, desc, 1, df.format(Double.parseDouble(price)), df.format(Double.parseDouble(total))};
-            model.addRow(row);
-            
-        } catch (Exception e) {
+        } catch (Exception e){
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -635,7 +688,6 @@ public final class Generate extends javax.swing.JFrame {
     private javax.swing.JButton btn_Cancel;
     private javax.swing.JButton btn_Confirm;
     private javax.swing.JButton btn_Payment;
-    private javax.swing.JButton btn_Print;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
