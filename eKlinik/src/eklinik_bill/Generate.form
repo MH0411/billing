@@ -99,7 +99,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btn_Payment" min="-2" pref="105" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnAddItem" min="-2" pref="106" max="-2" attributes="0"/>
+                          <Component id="btn_AddItem" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btn_Confirm" min="-2" pref="106" max="-2" attributes="0"/>
                       </Group>
@@ -121,44 +121,37 @@
                       <Component id="jLabel2" max="32767" attributes="0"/>
                       <Component id="jtf_address" pref="31" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jLabel3" max="32767" attributes="0"/>
-                              <Component id="jtf_ic" pref="32" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel4" alignment="0" min="-2" pref="34" max="-2" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="jtf_id" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" alignment="3" max="32767" attributes="0"/>
-                              </Group>
-                              <Component id="jtf_billNo" min="-2" pref="34" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jtf_telNo" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="jtf_date" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="jLabel7" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
-                              <Component id="jLabel5" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" min="-2" pref="506" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btn_Confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="btnAddItem" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="btn_Payment" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="btn_Cancel" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="jLabel3" max="32767" attributes="0"/>
+                      <Component id="jtf_ic" pref="32" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabel4" alignment="0" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="jtf_id" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                          <Component id="jLabel6" alignment="3" max="32767" attributes="0"/>
+                      </Group>
+                      <Component id="jtf_billNo" min="-2" pref="34" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jtf_telNo" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="jtf_date" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="jLabel7" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="jLabel5" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="419" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btn_Confirm" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_AddItem" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_Payment" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="btn_Cancel" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -299,14 +292,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ConfirmActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnAddItem">
+        <Component class="javax.swing.JButton" name="btn_AddItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Add Item"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddItemActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AddItemActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn_Cancel">

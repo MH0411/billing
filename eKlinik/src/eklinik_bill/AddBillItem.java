@@ -6,6 +6,7 @@
 package eklinik_bill;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,9 +37,19 @@ public class AddBillItem extends javax.swing.JFrame {
     private DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
     private String txnDate = dateFormat1.format(date);
     private String strDate = dateFormat.format(date);
+    private DecimalFormat df = new DecimalFormat("0.00");
     
     private String custId;
     private String billNo;
+    private Month month = new Month();
+    private double gst = 0.0;
+    private double serviceCharge = 0.0;
+    private double discount = 0.0;
+    private double gstAmount = 0.0;
+    private double serviceChargeAmount = 0.0;
+    private double discountAmount = 0.0;
+    
+    private ArrayList<ArrayList<String>> billingParameters;
 
     /**
      * Creates new form AddBillItem
@@ -51,6 +62,7 @@ public class AddBillItem extends javax.swing.JFrame {
         
         tableMiscellaneousItem();
         tableDrugsItem();
+        
     }
 
     /**
@@ -115,11 +127,11 @@ public class AddBillItem extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item Code", "Item Name", "Price", "Discount"
+                "Item Code", "Item Name", "Price"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -132,9 +144,6 @@ public class AddBillItem extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jt_MiscellaneousItem);
-        if (jt_MiscellaneousItem.getColumnModel().getColumnCount() > 0) {
-            jt_MiscellaneousItem.getColumnModel().getColumn(2).setHeaderValue("Price");
-        }
 
         jtf_mm_SearchItem1.setToolTipText("Example : Patient Name, IC No. Other ID");
 
@@ -315,36 +324,43 @@ public class AddBillItem extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Please enter positive number.");
 
                 }else if ( quantity > 0){
-                    String month = new Month().getCreditMonth();
+                    
+                    double totalPrice = quantity * Double.parseDouble(unitPrice);
+                    double priceBeforeTax = totalPrice;
+                    calculateAmount(totalPrice);
 
                     try {
-                        //Get current month credit and add the item price
-                        String sql1 = "SELECT "+ month +" "
-                        + "FROM far_customer_ledger "
-                        + "WHERE customer_id = '"+ custId +"' ";
-                        ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+                        //Get bill's month credit and add the item price
+                        month.setMonth(billNo.substring(10,12));
+                        
+                        String sql2 = "SELECT cl."+ month.getCreditMonth() +" "
+                                + "FROM far_customer_ledger cl, pms_patient_biodata pb "
+                                + "WHERE cl.customer_id = '"+ custId +"' "
+                                + "AND pb.pmi_no = '"+ custId +"'";
+                        ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql2);
                         String currentCredit = data1.get(0).get(0);
-
-                        double totalPrice = quantity * Double.parseDouble(unitPrice);
+                        
                         currentCredit = String.valueOf(Double.parseDouble(currentCredit) + totalPrice);
 
                         //Update customer ledger
-                        String sql2 = "UPDATE far_customer_ledger "
-                        + "SET "+ month +" = '"+ currentCredit +"' "
-                        + "WHERE customer_id = '"+ custId +"' ";
-                        rc.setQuerySQL(host, port, sql2);
-
-                        //Update customer dtl
-                        String sql3 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
-                        + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ totalPrice +"','"+ quantity +"','"+ billNo +"')";
+                        String sql3 = "UPDATE far_customer_ledger "
+                                + "SET "+ month.getCreditMonth() +" = '"+ currentCredit +"', txn_date = '"+ txnDate +"' "
+                                + "WHERE customer_id = '"+ custId +"' ";
                         rc.setQuerySQL(host, port, sql3);
 
+                        //Update customer dtl
+                        String sql4 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no) "
+                        + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ priceBeforeTax +"','"+ quantity +"','"+ billNo +"')";
+                        rc.setQuerySQL(host, port, sql4);
+                        
+                       updateCustomerBillParameter();
+
                         //Get current bill_amt and add item price;
-                        String sql4 = "SELECT item_amt, quantity "
-                        + "FROM far_customer_hdr "
-                        + "WHERE customer_id = '"+ custId +"' "
-                        + "AND bill_no = '"+ billNo +"'";
-                        ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
+                        String sql5 = "SELECT item_amt, quantity "
+                                + "FROM far_customer_hdr "
+                                + "WHERE customer_id = '"+ custId +"' "
+                                + "AND bill_no = '"+ billNo +"'";
+                        ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql5);
                         String itemAmt = data2.get(0).get(0);
                         String qty = data2.get(0).get(1);
 
@@ -352,11 +368,11 @@ public class AddBillItem extends javax.swing.JFrame {
                         qty = String.valueOf(Integer.parseInt(qty) + quantity);
 
                         //Update customer hdr
-                        String sql5 = "UPDATE far_customer_hdr "
-                        + "SET txn_date = '"+ strDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ qty +"' "
-                        + "WHERE bill_no = '"+ billNo +"' "
-                        + "AND customer_id = '"+ custId +"'";
-                        rc.setQuerySQL(host, port, sql5);
+                        String sql6 = "UPDATE far_customer_hdr "
+                                + "SET item_amt = '"+ itemAmt +"', quantity = '"+ qty +"', payment = 'Unpaid' "
+                                + "WHERE bill_no = '"+ billNo +"' "
+                                + "AND customer_id = '"+ custId +"'";
+                        rc.setQuerySQL(host, port, sql6);
 
                         String infoMessage = "Success add data";
                         JOptionPane.showMessageDialog(null, infoMessage, "Success",
@@ -366,8 +382,6 @@ public class AddBillItem extends javax.swing.JFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, e);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Insufficient stock.");
                 }
             }
         }catch(NumberFormatException nfe) {
@@ -397,51 +411,55 @@ public class AddBillItem extends javax.swing.JFrame {
         String name = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 1).toString();
         String unitPrice = jt_MiscellaneousItem.getModel().getValueAt(rowIndex, 2).toString();
 
-        String month = new Month().getCreditMonth();
-
         try {
-            //Get current month credit and add the item price
-            String sql1 = "SELECT "+ month +" "
-            + "FROM far_customer_ledger "
-            + "WHERE customer_id = '"+ custId +"' ";
-            ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
+            double totalPrice = Double.parseDouble(unitPrice);
+            double priceBeforeTax = totalPrice;
+            
+            calculateAmount(totalPrice);
+                    
+            //Get bill's month credit and add the item price
+            month.setMonth(billNo.substring(10,12));
+            
+            String sql2 = "SELECT cl."+ month.getCreditMonth() +" "
+                    + "FROM far_customer_ledger cl, pms_patient_biodata pb "
+                    + "WHERE cl.customer_id = '"+ custId +"' "
+                    + "AND pb.pmi_no = '"+ custId +"'";
+            ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql2);
             String currentCredit = data1.get(0).get(0);
 
-            if (currentCredit == null){
-                currentCredit = "0";
-            }
-
-            currentCredit = String.valueOf(Double.parseDouble(currentCredit) + Double.parseDouble(unitPrice));
+            currentCredit = String.valueOf(Double.parseDouble(currentCredit) + totalPrice);
 
             //Update customer ledger
-            String sql2 = "UPDATE far_customer_ledger "
-            + "SET "+ month +" = '"+ currentCredit +"' "
+            String sql3 = "UPDATE far_customer_ledger "
+            + "SET "+ month.getCreditMonth() +" = '"+ currentCredit +"', txn_date = '"+ txnDate +"' "
             + "WHERE customer_id = '"+ custId +"' ";
-            rc.setQuerySQL(host, port, sql2);
-
-            //Update customer dtl
-            String sql3 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no, customer_id) "
-            + "VALUES('"+ txnDate +"', '"+ itemCode +"','"+ name +"','"+ Double.parseDouble(unitPrice) +"','"+ 1 +"','"+ billNo +"','"+ custId +"')";
             rc.setQuerySQL(host, port, sql3);
 
+            //Update customer dtl
+            String sql4 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no, customer_id) "
+            + "VALUES('"+ txnDate +"', '"+ itemCode +"','"+ name +"','"+ priceBeforeTax +"','"+ 1 +"','"+ billNo +"','"+ custId +"')";
+            rc.setQuerySQL(host, port, sql4);
+            
+            updateCustomerBillParameter();
+            
             //Get current bill_amt and add item price;
-            String sql4 = "SELECT item_amt, quantity "
+            String sql5 = "SELECT item_amt, quantity "
             + "FROM far_customer_hdr "
             + "WHERE customer_id = '"+ custId +"' "
             + "AND bill_no = '"+ billNo +"'";
-            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql4);
+            ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql5);
             String itemAmt = data2.get(0).get(0);
             String quantity = data2.get(0).get(1);
 
-            itemAmt = String.valueOf(Double.parseDouble(itemAmt) + Double.parseDouble(unitPrice));
+            itemAmt = String.valueOf(Double.parseDouble(itemAmt) + totalPrice);
             quantity = String.valueOf(Integer.parseInt(quantity) + 1);
 
             //Update customer hdr
-            String sql5 = "UPDATE far_customer_hdr "
-            + "SET txn_date = '"+ txnDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ quantity +"' "
+            String sql6 = "UPDATE far_customer_hdr "
+            + "SET txn_date = '"+ txnDate +"', item_amt = '"+ itemAmt +"', quantity = '"+ quantity +"', payment = 'Unpaid' "
             + "WHERE bill_no = '"+ billNo +"' "
             + "AND customer_id = '"+ custId +"'";
-            rc.setQuerySQL(host, port, sql5);
+            rc.setQuerySQL(host, port, sql6);
 
             String infoMessage = "Success add data";
             JOptionPane.showMessageDialog(null, infoMessage, "Success",
@@ -482,7 +500,7 @@ public class AddBillItem extends javax.swing.JFrame {
                 jt_DrugsItem.setValueAt(data.get(i).get(0), i, 0);
                 jt_DrugsItem.setValueAt(data.get(i).get(1), i, 1);
                 jt_DrugsItem.setValueAt(data.get(i).get(2), i, 2);
-                jt_DrugsItem.setValueAt(data.get(i).get(3), i, 3);
+                jt_DrugsItem.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
             }
             
             tableDrugsItemSorter();
@@ -512,8 +530,7 @@ public class AddBillItem extends javax.swing.JFrame {
 
                 jt_MiscellaneousItem.setValueAt(data.get(i).get(1), i, 0);
                 jt_MiscellaneousItem.setValueAt(data.get(i).get(2), i, 1);
-                jt_MiscellaneousItem.setValueAt(data.get(i).get(4), i, 2);
-                jt_MiscellaneousItem.setValueAt(data.get(i).get(5), i, 3);
+                jt_MiscellaneousItem.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 2);
             }
             
             tableMiscellaneousItemSorter();
@@ -599,6 +616,83 @@ public class AddBillItem extends javax.swing.JFrame {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
+    }
+    
+    private void calculateAmount(double totalPrice){
+            //Search and add billing parameters
+            String sql1 = "SELECT param_code, param_name, param_value FROM far_billing_parameter WHERE enable = 'yes'";
+            billingParameters = rc.getQuerySQL(host, port, sql1);
+
+            for (int i = 0 ; i < billingParameters.size() ; i++){
+                if (billingParameters.get(i).get(1).equalsIgnoreCase("gst")){
+                    gst = Double.parseDouble(billingParameters.get(i).get(2));
+                } else if (billingParameters.get(i).get(1).equalsIgnoreCase("service charge")){
+                    serviceCharge = Double.parseDouble(billingParameters.get(i).get(2));
+                } else if (billingParameters.get(i).get(1).equalsIgnoreCase("discount")){
+                    discount = Double.parseDouble(billingParameters.get(i).get(2));
+                }
+            }
+
+            //Calculate grand total
+            discountAmount = totalPrice * discount;
+            discountAmount = Double.parseDouble(df.format(discountAmount));
+            totalPrice =  totalPrice - discountAmount;
+
+            serviceChargeAmount = totalPrice * serviceCharge;
+            serviceChargeAmount = Double.parseDouble(df.format(serviceChargeAmount));
+            totalPrice = totalPrice + serviceChargeAmount;
+
+            gstAmount = totalPrice * gst;
+            gstAmount = Double.parseDouble(df.format(gstAmount));
+            totalPrice = totalPrice + gstAmount;
+
+            //Round the grand total
+            totalPrice = Math.round(totalPrice * 20) / 20.0;
+    }
+    
+    private void updateCustomerBillParameter(){
+    
+        for (int i = 0 ; i < billingParameters.size() ; i++){
+            if (billingParameters.get(i).get(1).equalsIgnoreCase("gst")){
+                String sql5 = "SELECT cd.item_amt FROM far_billing_parameter "
+                        + "WHERE item_desc = 'gst' AND bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> itemAmt = rc.getQuerySQL(host, port, sql5);
+
+                gstAmount = gstAmount + Double.parseDouble(itemAmt.get(0).get(0));
+
+                String sql6 = "UPDATE far_customer_dtl "
+                        + "SET item_amt = '"+ gstAmount +"' "
+                        + "WHERE item_desc = 'gst' "
+                        + "AND bill_no = '"+ billNo +"'";
+                rc.setQuerySQL(host, port, sql6);
+
+            } else if (billingParameters.get(i).get(1).equalsIgnoreCase("service charge")){
+                String sql5 = "SELECT cd.item_amt FROM far_billing_parameter "
+                        + "WHERE item_desc = 'service charge' AND bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> itemAmt = rc.getQuerySQL(host, port, sql5);
+
+                serviceChargeAmount = serviceChargeAmount + Double.parseDouble(itemAmt.get(0).get(0));
+
+                String sql6 = "UPDATE far_customer_dtl "
+                        + "SET item_amt = '"+ serviceChargeAmount +"' "
+                        + "WHERE item_desc = 'service charge' "
+                        + "AND bill_no = '"+ billNo +"'";
+                rc.setQuerySQL(host, port, sql6);
+
+            } else if (billingParameters.get(i).get(1).equalsIgnoreCase("discount")){
+                String sql5 = "SELECT cd.item_amt FROM far_billing_parameter "
+                        + "WHERE item_desc = 'discount' AND bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> itemAmt = rc.getQuerySQL(host, port, sql5);
+
+                discountAmount = discountAmount + Double.parseDouble(itemAmt.get(0).get(0));
+
+                String sql6 = "UPDATE far_customer_dtl "
+                        + "SET item_amt = '"+ discountAmount +"' "
+                        + "WHERE item_desc = 'discount' "
+                        + "AND bill_no = '"+ billNo +"'";
+                rc.setQuerySQL(host, port, sql6);
+            }
+        }
     }
     
     /**

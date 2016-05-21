@@ -47,7 +47,6 @@ public class Billing extends javax.swing.JFrame {
     
     private String custId;
     private String billNo;
-    private double totalPrice = 0;
     private String itemCode;
 
     /**
@@ -1427,12 +1426,13 @@ public class Billing extends javax.swing.JFrame {
      */
     private void jt_ListPatientBillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_ListPatientBillMouseClicked
         // TODO add your handling code here:
-        btn_PrintReceipt.setEnabled(true);
         btn_DeleteItem.setEnabled(false);
         
         if (jrb_Unpaid.isSelected()){
             btn_AddItem.setEnabled(true);
             btn_Payment.setEnabled(true);   
+        } else if (jrb_Paid.isSelected()) {
+            btn_PrintReceipt.setEnabled(true);
         }
         
         try {
@@ -1447,7 +1447,7 @@ public class Billing extends javax.swing.JFrame {
             
             String sql = "SELECT txn_date, item_cd, item_desc, quantity, item_amt/quantity, item_amt "
                     + "FROM far_customer_dtl "
-                    + "WHERE bill_no = '"+ billNo +"'";
+                    + "WHERE bill_no = '"+ billNo +"' ";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             DefaultTableModel model = (DefaultTableModel) jt_ListItemPerPatient.getModel();
             
@@ -1457,7 +1457,6 @@ public class Billing extends javax.swing.JFrame {
                 model.removeRow(i);
             }
             
-            totalPrice = 0;
             //add row and show value
             for (int i = 0; i < data.size(); i++) {
                 model.addRow(new Object[]{"", "", "", "", ""});
@@ -1468,8 +1467,6 @@ public class Billing extends javax.swing.JFrame {
                 jt_ListItemPerPatient.setValueAt(data.get(i).get(3), i, 3);
                 jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
                 jt_ListItemPerPatient.setValueAt(df.format(Double.parseDouble(data.get(i).get(5))), i, 5);
-                
-                totalPrice += Double.parseDouble(data.get(i).get(4));
             }
             
         } catch (Exception e) {
@@ -1491,9 +1488,46 @@ public class Billing extends javax.swing.JFrame {
 
             billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
             custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 1).toString();
-            String subtotal = jt_ListPatientBill.getModel().getValueAt(rowIndex, 8).toString();
+            String grandTotal = jt_ListPatientBill.getModel().getValueAt(rowIndex, 8).toString();
             
-            PDF pdf = new PDF(custId, billNo, subtotal);
+            String sql = "SELECT item_cd, item_desc, item_amt "
+                    + "FROM far_customer_dtl "
+                    + "WHERE bill_no = '"+ billNo +"'";
+            ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+            
+            String gstAmount = "0.00";
+            String serviceChargeAmount = "0.00";
+            String discountAmount = "0.00";
+            double subtotalBeforeTax = 0;
+            double rounding = 0;
+            double subtotal = 0;
+            
+            for (int i = 0 ; i < data.size() ; i++){
+                if (data.get(i).get(0).contains("BP") == false){
+                    subtotalBeforeTax += Double.parseDouble(data.get(i).get(2));
+                } else {
+                    if (data.get(i).get(1).equalsIgnoreCase("gst")){
+                        gstAmount = data.get(i).get(2);
+                    } else if (data.get(i).get(1).equalsIgnoreCase("service charge")){
+                        serviceChargeAmount = data.get(i).get(2);
+                    } else if (data.get(i).get(1).equalsIgnoreCase("discount")){
+                        discountAmount = data.get(i).get(2);
+                    }
+                }
+                subtotal += Double.parseDouble(data.get(i).get(2));
+            }
+            
+            rounding = Double.parseDouble(grandTotal) - subtotal;
+            
+            PDF pdf = new PDF(custId,
+                    billNo,
+                    String.valueOf(df.format(subtotalBeforeTax)),
+                    String.valueOf(grandTotal),
+                    String.valueOf(gstAmount),
+                    String.valueOf(serviceChargeAmount),
+                    String.valueOf(discountAmount),
+                    String.valueOf(df.format(rounding))
+            );
             pdf.printPaidBill();
             Desktop.getDesktop().open(new File("Receipt.pdf"));
         } catch (Exception ex) {
@@ -1553,6 +1587,7 @@ public class Billing extends javax.swing.JFrame {
      */
     private void jrb_UnpaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrb_UnpaidActionPerformed
         // TODO add your handling code here:
+        btn_PrintReceipt.setEnabled(false);
         tableListPatientBill();
     }//GEN-LAST:event_jrb_UnpaidActionPerformed
 
@@ -1564,7 +1599,6 @@ public class Billing extends javax.swing.JFrame {
         Payment payment = new Payment();
         payment.setCustId(custId);
         payment.setBillNo(billNo);
-        payment.setSubtotal(totalPrice); 
         payment.displayBillDetail();
         payment.setVisible(true);
     }//GEN-LAST:event_btn_PaymentActionPerformed

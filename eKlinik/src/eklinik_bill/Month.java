@@ -15,11 +15,11 @@ import java.util.Date;
  */
 public class Month {
     
-    private DateFormat dateFormat;
+    private DateFormat dateFormat = new SimpleDateFormat("MM");
     private Date date = new Date();
     private String creditMonth = null;
     private String debitMonth = null;
-    private String month;
+    private String month = dateFormat.format(date);
     
     public Month(){
         determineCreditMonth();
@@ -33,18 +33,29 @@ public class Month {
     public String getDebitMonth(){
         return debitMonth;
     }
+
+    /**
+     * @return the month
+     */
+    public String getMonth() {
+        return month;
+    }
+
+    /**
+     * @param month the month to set
+     */
+    public void setMonth(String month) {
+        this.month = month;
+    }
     
     /**
      * Find month credit
      */
     public void determineCreditMonth(){
-    
-        dateFormat = new SimpleDateFormat("MM");
-        month = dateFormat.format(date);
         
         //Check current month
-        if (null != month) {
-            switch (month) {
+        if (null != getMonth()) {
+            switch (getMonth()) {
                 case "01":
                     creditMonth = "cr_amt_1";
                     break;
@@ -92,12 +103,9 @@ public class Month {
      */
     public void determineDebitMonth(){
         
-        dateFormat = new SimpleDateFormat("MM");
-        month = dateFormat.format(date);
-        
         //Check current month
-        if (null != month) {
-            switch (month) {
+        if (null != getMonth()) {
+            switch (getMonth()) {
                 case "01":
                     debitMonth = "dr_amt_1";
                     break;
