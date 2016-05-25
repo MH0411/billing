@@ -60,7 +60,7 @@ public class Billing extends javax.swing.JFrame {
         
         btnGroup.add(jrb_Unpaid);
         btnGroup.add(jrb_Paid);
-        System.out.println(txnDate);
+        
         tablePatientInformation();
         tableManageMiscellaneous();
         tableListPatientBill();
@@ -1492,7 +1492,8 @@ public class Billing extends javax.swing.JFrame {
             
             String sql = "SELECT item_cd, item_desc, item_amt "
                     + "FROM far_customer_dtl "
-                    + "WHERE bill_no = '"+ billNo +"'";
+                    + "WHERE bill_no = '"+ billNo +"' "
+                    + "AND customer_id = '"+ custId +"'";
             ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
             
             String gstAmount = "0.00";
@@ -1530,6 +1531,18 @@ public class Billing extends javax.swing.JFrame {
             );
             pdf.printPaidBill();
             Desktop.getDesktop().open(new File("Receipt.pdf"));
+            
+            SendEmail sendEmail = new SendEmail(custId,
+                    billNo,
+                    String.valueOf(df.format(subtotalBeforeTax)),
+                    String.valueOf(grandTotal),
+                    String.valueOf(gstAmount),
+                    String.valueOf(serviceChargeAmount),
+                    String.valueOf(discountAmount),
+                    String.valueOf(df.format(rounding))
+            );
+            sendEmail.send();
+            
         } catch (Exception ex) {
             Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1596,6 +1609,14 @@ public class Billing extends javax.swing.JFrame {
      */
     private void btn_PaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PaymentActionPerformed
         // TODO add your handling code here:
+        //Get no of row
+        int rowIndex = -1;
+        rowIndex = jt_ListPatientBill.getSelectedRow();
+        rowIndex = jt_ListPatientBill.convertRowIndexToModel(rowIndex);
+
+        billNo = jt_ListPatientBill.getModel().getValueAt(rowIndex, 0).toString();
+        custId = jt_ListPatientBill.getModel().getValueAt(rowIndex, 1).toString();
+        
         Payment payment = new Payment();
         payment.setCustId(custId);
         payment.setBillNo(billNo);

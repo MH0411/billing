@@ -41,7 +41,7 @@ public class PDF {
     private DateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yyyy"); 
     private Date date = new Date();
     private String date1 = dateFormat1.format(date);
-    private String date2 = dateFormat1.format(date);
+    private String date2 = dateFormat2.format(date);
     
     private String receiptNo;
     private String custId;
@@ -335,7 +335,7 @@ public class PDF {
 
                 if ((data1.get(i).get(7).charAt(0) == 'B') && (data1.get(i).get(7).charAt(1) == 'P')){
                 } else {
-                    String no = Integer.toString(num);
+                    String no = Integer.toString(num+1);
 
                     String item = data1.get(i).get(7);
                     String description = data1.get(i).get(8);

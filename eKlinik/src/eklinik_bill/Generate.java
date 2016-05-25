@@ -146,6 +146,7 @@ public final class Generate extends javax.swing.JFrame {
         btn_AddItem = new javax.swing.JButton();
         btn_Cancel = new javax.swing.JButton();
         btn_Payment = new javax.swing.JButton();
+        btn_Back = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
@@ -244,6 +245,14 @@ public final class Generate extends javax.swing.JFrame {
             }
         });
 
+        btn_Back.setText("Back");
+        btn_Back.setEnabled(false);
+        btn_Back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_BackActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -283,7 +292,9 @@ public final class Generate extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_AddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_Back, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
@@ -321,7 +332,8 @@ public final class Generate extends javax.swing.JFrame {
                     .addComponent(btn_Confirm, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_AddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Back, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -363,7 +375,26 @@ public final class Generate extends javax.swing.JFrame {
         addBillItem.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event){
-                billDetails();
+                String sql = "SELECT item_cd, item_desc, quantity, (item_amt/quantity), item_amt "
+                        + "FROM far_customer_dtl "
+                        + "WHERE bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+                
+                DefaultTableModel model = (DefaultTableModel) jt_BillDetails.getModel();
+                //Remove all previous row
+                int rowCount = model.getRowCount();
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    model.removeRow(i);
+                }
+                
+                for (int i = 0 ; i < data.size() ; i++){
+                    model.addRow(new Object[]{"", "", "", "", ""});
+                    jt_BillDetails.setValueAt(data.get(i).get(0), i, 0);
+                    jt_BillDetails.setValueAt(data.get(i).get(1), i, 1);
+                    jt_BillDetails.setValueAt((int) Double.parseDouble(data.get(i).get(2)), i, 2);
+                    jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(3))), i, 3);
+                    jt_BillDetails.setValueAt(df.format(Double.parseDouble(data.get(i).get(4))), i, 4);
+                }
             } 
         });
     }//GEN-LAST:event_btn_AddItemActionPerformed
@@ -375,6 +406,7 @@ public final class Generate extends javax.swing.JFrame {
     private void btn_ConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ConfirmActionPerformed
         // TODO add your handling code here:
         
+        btn_Back.setEnabled(true);
         btn_Payment.setEnabled(true);
         btn_Confirm.setEnabled(false);
         btn_AddItem.setEnabled(true);
@@ -445,7 +477,22 @@ public final class Generate extends javax.swing.JFrame {
         payment.setBillNo(billNo);
         payment.displayBillDetail();
         payment.setVisible(true);
+        payment.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event){
+                Billing billing = new Billing();
+                billing.setVisible(true);
+                dispose(); 
+            } 
+        });
     }//GEN-LAST:event_btn_PaymentActionPerformed
+
+    private void btn_BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BackActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        Billing billing = new Billing();
+        billing.setVisible(true);
+    }//GEN-LAST:event_btn_BackActionPerformed
 
     /**
      * @param args the command line arguments
@@ -670,6 +717,7 @@ public final class Generate extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_AddItem;
+    private javax.swing.JButton btn_Back;
     private javax.swing.JButton btn_Cancel;
     private javax.swing.JButton btn_Confirm;
     private javax.swing.JButton btn_Payment;
