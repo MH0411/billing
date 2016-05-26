@@ -353,9 +353,9 @@ public class AddBillItem extends javax.swing.JFrame {
                         String sql4 = "INSERT into far_customer_dtl (txn_date, item_cd, item_desc, item_amt, quantity, bill_no, customer_id) "
                         + "VALUES('"+ strDate +"', '"+ itemCode +"','"+ name +"','"+ priceBeforeTax +"','"+ quantity +"','"+ billNo +"', '"+ custId +"')";
                         rc.setQuerySQL(host, port, sql4);
-                        System.out.println("testing before update bill parameter");
+                        
                         updateCustomerBillParameter();
-                        System.out.println("testing after update bill parameter");
+                        
                         //Get current bill_amt and add item price;
                         String sql5 = "SELECT item_amt, quantity "
                                 + "FROM far_customer_hdr "
@@ -375,8 +375,8 @@ public class AddBillItem extends javax.swing.JFrame {
                                 + "AND customer_id = '"+ custId +"'";
                         rc.setQuerySQL(host, port, sql6);
 
-                        String infoMessage = "Success add data";
-                        JOptionPane.showMessageDialog(null, infoMessage, "Success",
+                        String infoMessage = "Selected item added to bill successfully.";
+                        JOptionPane.showMessageDialog(null, infoMessage, "Added",
                             JOptionPane.INFORMATION_MESSAGE);
 
                         dispose();
@@ -462,8 +462,8 @@ public class AddBillItem extends javax.swing.JFrame {
             + "AND customer_id = '"+ custId +"'";
             rc.setQuerySQL(host, port, sql6);
 
-            String infoMessage = "Success add data";
-            JOptionPane.showMessageDialog(null, infoMessage, "Success",
+            String infoMessage = "Selected item added to bill successfully.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Added",
                 JOptionPane.INFORMATION_MESSAGE);
 
             dispose();

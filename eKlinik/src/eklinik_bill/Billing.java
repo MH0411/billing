@@ -58,6 +58,7 @@ public class Billing extends javax.swing.JFrame {
         super.setLocationRelativeTo(null);
         super.setVisible(true);
         
+        jtf_mp_Code.setEditable(false);
         btnGroup.add(jrb_Unpaid);
         btnGroup.add(jrb_Paid);
         
@@ -216,10 +217,10 @@ public class Billing extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(7, 7, 7)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_GenerateBill, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -478,32 +479,32 @@ public class Billing extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(298, 298, 298)
-                .addComponent(btn_AddItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(89, 89, 89)
-                .addComponent(btn_DeleteItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(97, 97, 97)
-                .addComponent(btn_Payment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(92, 92, 92)
-                .addComponent(btn_PrintReceipt)
-                .addGap(293, 293, 293))
-            .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_AddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(btn_DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(btn_PrintReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(294, 294, 294))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Payment)
-                    .addComponent(btn_DeleteItem)
-                    .addComponent(btn_AddItem)
-                    .addComponent(btn_PrintReceipt))
-                .addGap(12, 12, 12))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(btn_AddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_DeleteItem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_PrintReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout jPanel_ManageBillLayout = new javax.swing.GroupLayout(jPanel_ManageBill);
@@ -512,7 +513,7 @@ public class Billing extends javax.swing.JFrame {
             jPanel_ManageBillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel_ManageBillLayout.createSequentialGroup()
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 1195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel_ManageBillLayout.setVerticalGroup(
@@ -594,8 +595,8 @@ public class Billing extends javax.swing.JFrame {
                     .addComponent(jtf_mm_SearchItem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_RefreshMM))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(108, 108, 108))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(127, 127, 127))
         );
 
         jtf_mm_SearchItem.getAccessibleContext().setAccessibleDescription("Example : Item Code, Description, Price ");
@@ -774,8 +775,8 @@ public class Billing extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
         );
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
@@ -1006,8 +1007,8 @@ public class Billing extends javax.swing.JFrame {
                         + "VALUES ('"+ itemCode +"','"+ itemDesc +"','"+ buyPrice +"','"+ sellPrice +"')";
 
                 rc.setQuerySQL(host, port, sql);
-                String infoMessage = "Success add data";
-                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                String infoMessage = "Item added successfully.";
+                JOptionPane.showMessageDialog(null, infoMessage, "Added", JOptionPane.INFORMATION_MESSAGE);
                 
                 //Refresh manage miscellaneous table
                 tableManageMiscellaneous();
@@ -1077,8 +1078,8 @@ public class Billing extends javax.swing.JFrame {
                         + "WHERE item_code = '" + mm_ItemCode + "'";
                 rc.setQuerySQL(host, port, sql);
                 
-                String infoMessage = "Success update data";
-                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                String infoMessage = "Selected item update successfully.";
+                JOptionPane.showMessageDialog(null, infoMessage, "Updated", JOptionPane.INFORMATION_MESSAGE);
                 
                 //Refresh manage miscellaneous table
                 tableManageMiscellaneous();
@@ -1165,8 +1166,8 @@ public class Billing extends javax.swing.JFrame {
                             + "WHERE item_code='" + mm_ItemCode + "'";
                     rc.setQuerySQL(host, port, sql);
 
-                    String infoMessage = "Success delete data";
-                    JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    String infoMessage = "Selected item deleted successfully..";
+                    JOptionPane.showMessageDialog(null, infoMessage, "Deleted", JOptionPane.INFORMATION_MESSAGE);
 
                     //Refresh miscellaneous item table
                     tableManageMiscellaneous();
@@ -1716,11 +1717,11 @@ public class Billing extends javax.swing.JFrame {
         btn_mp_Add.setEnabled(true);
         btn_mp_Update.setEnabled(false);
         btn_mp_Delete.setEnabled(false);
-        jtf_mp_Code.setEditable(true);
-        jtf_mp_Code.setText("");
         jtf_mp_Name.setText("");
         jtf_mp_Value.setText("");
         jtf_mp_Type.setText("");
+        
+        generateParamCode();
     }//GEN-LAST:event_btn_mp_ClearActionPerformed
 
     /**
@@ -1758,8 +1759,8 @@ public class Billing extends javax.swing.JFrame {
                         + "VALUES('"+ paramCode +"', '"+ paramName +"', '"+ paramType +"', '"+ paramValue +"', '"+ enable +"')";
                 rc.setQuerySQL(host, port, sql);
 
-                String infoMessage = "Success add data";
-                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                String infoMessage = "Item added successfully.";
+                JOptionPane.showMessageDialog(null, infoMessage, "Added", JOptionPane.INFORMATION_MESSAGE);
                 
                 //Refresh miscellaneous item table
                 tableBillingParameter();
@@ -1770,6 +1771,8 @@ public class Billing extends javax.swing.JFrame {
                 jtf_mp_Value.setText("");
                 jcb_Enable.setSelected(false);
 
+                generateParamCode();
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -1812,8 +1815,8 @@ public class Billing extends javax.swing.JFrame {
                         + "WHERE param_code = '"+ paramCode +"'";
                 rc.setQuerySQL(host, port, sql);
 
-                String infoMessage = "Success update data";
-                JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                String infoMessage = "Selected item updated successfully.";
+                JOptionPane.showMessageDialog(null, infoMessage, "Updated", JOptionPane.INFORMATION_MESSAGE);
                 
                 //Refresh miscellaneous item table
                 tableBillingParameter();
@@ -1852,8 +1855,8 @@ public class Billing extends javax.swing.JFrame {
                             + "WHERE param_code = '"+ paramCode +"'";
                     rc.setQuerySQL(host, port, sql);
 
-                    String infoMessage = "Success delete data";
-                    JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    String infoMessage = "Selected item deleted successfully.";
+                    JOptionPane.showMessageDialog(null, infoMessage, "Added", JOptionPane.INFORMATION_MESSAGE);
 
                     //Refresh miscellaneous item table
                     tableBillingParameter();
@@ -2087,7 +2090,8 @@ public class Billing extends javax.swing.JFrame {
      */
     public void tableListPatientBill(){
         try{
-            String sql = "SELECT ch.bill_no, ch.customer_id, pb.patient_name, pb.new_ic_no, pb.id_no, pb.home_address, pb.mobile_phone, ch.quantity, ch.item_amt "
+            String sql = "SELECT ch.bill_no, ch.customer_id, pb.patient_name, pb.new_ic_no, pb.id_no, "
+                    + "pb.home_address, pb.mobile_phone, ch.quantity, (ch.item_amt-ch.amt_paid)"
                     + "FROM far_customer_hdr ch, pms_patient_biodata pb "
                     + "WHERE ch.payment = 'Unpaid' "
                     + "AND pb.pmi_no = ch.customer_id ";
@@ -2112,7 +2116,7 @@ public class Billing extends javax.swing.JFrame {
                 jt_ListPatientBill.setValueAt(data.get(i).get(5), i, 5);
                 jt_ListPatientBill.setValueAt(data.get(i).get(6), i, 6);
                 jt_ListPatientBill.setValueAt(data.get(i).get(7), i, 7);
-                jt_ListPatientBill.setValueAt(data.get(i).get(8), i, 8);
+                jt_ListPatientBill.setValueAt(df.format(Double.parseDouble(data.get(i).get(8))), i, 8);
             }
             
             tablePatientBillSorter();
@@ -2147,6 +2151,9 @@ public class Billing extends javax.swing.JFrame {
                 jt_BillingParameter.setValueAt(data.get(i).get(3), i, 3);
                 jt_BillingParameter.setValueAt(data.get(i).get(5), i, 4);
             }
+            
+            generateParamCode();
+            
         } catch (Exception e){
              JOptionPane.showMessageDialog(null, e);
         }
@@ -2270,6 +2277,19 @@ public class Billing extends javax.swing.JFrame {
             }
 
         });
+    }
+    
+    /**
+     * Auto generate parameter code.
+     */
+    private void generateParamCode(){
+        String code = "BP";
+        for (int i = 0 ; i < 2 ; i++){
+            code = code + "0";
+        }
+        DefaultTableModel model = (DefaultTableModel) jt_BillingParameter.getModel();
+        code = code + (model.getRowCount()+1);
+        jtf_mp_Code.setText(code);
     }
 
 

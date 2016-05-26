@@ -152,6 +152,7 @@ public final class Generate extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Bill Details"));
@@ -374,7 +375,8 @@ public final class Generate extends javax.swing.JFrame {
         addBillItem.setVisible(true);
         addBillItem.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent event){
+            public void windowClosed(WindowEvent event){
+                System.out.println("refresh");
                 String sql = "SELECT item_cd, item_desc, quantity, (item_amt/quantity), item_amt "
                         + "FROM far_customer_dtl "
                         + "WHERE bill_no = '"+ billNo +"'";
@@ -462,8 +464,8 @@ public final class Generate extends javax.swing.JFrame {
                 rc.setQuerySQL(host, port, sql5);
             }
 
-            String infoMessage = "Success add data";
-            JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+            String infoMessage = "Bill created successfully.";
+            JOptionPane.showMessageDialog(null, infoMessage, "Created", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -477,14 +479,6 @@ public final class Generate extends javax.swing.JFrame {
         payment.setBillNo(billNo);
         payment.displayBillDetail();
         payment.setVisible(true);
-        payment.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent event){
-                Billing billing = new Billing();
-                billing.setVisible(true);
-                dispose(); 
-            } 
-        });
     }//GEN-LAST:event_btn_PaymentActionPerformed
 
     private void btn_BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BackActionPerformed

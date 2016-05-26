@@ -131,7 +131,7 @@ public class Payment extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setText("Payment");
+        jLabel2.setText("Payment Calculator");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -143,7 +143,7 @@ public class Payment extends javax.swing.JFrame {
 
         jcb_PaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit Card", "Cheque" }));
 
-        jLabel1.setText("Amount :");
+        jLabel1.setText("Amount Received :");
 
         jtf_Amount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -210,24 +210,23 @@ public class Payment extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(jLabel2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 20, Short.MAX_VALUE))))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jLabel2)))
+                .addGap(0, 20, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(24, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(20, 20, 20)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(btn_MakePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -238,7 +237,7 @@ public class Payment extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,11 +287,11 @@ public class Payment extends javax.swing.JFrame {
                 month.setMonth(billNo.substring(10,12));
                 
                 //Get current debit from customer ledger
-                String sql1 = "SELECT cl." + month.getDebitMonth() + " "
+                String sql = "SELECT cl." + month.getDebitMonth() + " "
                         + "FROM far_customer_ledger cl, pms_patient_biodata pb "
                         + "WHERE cl.customer_id = '" + custId + "' "
                         + "AND pb.pmi_no = '" + custId + "'";
-                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql1);
+                ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
                 String debitMonth = data.get(0).get(0);
                 
                 if (debitMonth == null){
@@ -302,10 +301,10 @@ public class Payment extends javax.swing.JFrame {
                 debitMonth = String.valueOf(Double.parseDouble(debitMonth) + Double.parseDouble(amount));
                 
                 //Update customer ledger debit
-                String sql2 = "UPDATE far_customer_ledger "
+                String sql1 = "UPDATE far_customer_ledger "
                         + "SET pay_method = '" + method + "', " + month.getDebitMonth() + " = '" + debitMonth + "', txn_date = '" + txnDate + "' "
                         + "where customer_id = '" + custId + "' ";
-                rc.setQuerySQL(host, port, sql2);
+                rc.setQuerySQL(host, port, sql1);
                 
                 cash = Double.parseDouble(jtf_Amount.getText());
                 String payment;
@@ -316,14 +315,23 @@ public class Payment extends javax.swing.JFrame {
                     amtPaid = cash;
                     payment = "Unpaid";
                 }
-
+                
+                //Get amt_paid from customer
+                String sql2 = "SELECT amt_paid "
+                        + "FROM far_customer_hdr "
+                        + "WHERE bill_no = '"+ billNo +"'";
+                ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql2);
+                double amountPaid = Double.parseDouble(data1.get(0).get(0));
+                
+                amtPaid = amountPaid + amtPaid;
+                
                 //Update customer hdr bill 
                 String sql3 = "UPDATE far_customer_hdr "
-                        + "SET payment = '"+ payment +"', txn_date = '" + txnDate + "', item_amt = '" + grandTotal + "', amt_paid = '"+ amtPaid +"' "
+                        + "SET payment = '"+ payment +"', txn_date = '" + txnDate + "', amt_paid = '"+ amtPaid +"' "
                         + "WHERE bill_no = '" + billNo + "'";
                 rc.setQuerySQL(host, port, sql3);
 
-                String infoMessage = "Success add data.";
+                String infoMessage = "Payment success.";
                 JOptionPane.showMessageDialog(null, infoMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
                 
                 String sql4 = "SELECT cd.item_desc, cd.item_amt "
@@ -379,7 +387,11 @@ public class Payment extends javax.swing.JFrame {
                         String.valueOf(df.format(rounding))
                 );
                 sendEmail.send();
-
+                
+                Billing billing = new Billing();
+                billing.setVisible(true);
+                dispose(); 
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -460,18 +472,33 @@ public class Payment extends javax.swing.JFrame {
      */
     public void displayBillDetail() {
         
-        String sql = "SELECT item_cd, item_desc, item_amt "
+        String sql1 = "SELECT item_cd, item_desc, item_amt "
                 + "FROM far_customer_dtl "
                 + "WHERE bill_no = '"+ billNo +"' ";
-        ArrayList<ArrayList<String>> data = rc.getQuerySQL(host, port, sql);
+        ArrayList<ArrayList<String>> data1 = rc.getQuerySQL(host, port, sql1);
         
-        for(int i = 0 ; i < data.size() ; i++){
-            grandTotal += Double.parseDouble(data.get(i).get(2));
-            if (data.get(i).get(0).contains("BP")){
+        for(int i = 0 ; i < data1.size() ; i++){
+            grandTotal += Double.parseDouble(data1.get(i).get(2));
+            if (data1.get(i).get(0).contains("BP")){
             } else {
-                subtotal += Double.parseDouble(data.get(i).get(2));
+                subtotal += Double.parseDouble(data1.get(i).get(2));
             }
         }
+        
+        String sql2 = "SELECT item_amt, amt_paid "
+                + "FROM far_customer_hdr "
+                + "WHERE bill_no = '"+ billNo +"'";
+        ArrayList<ArrayList<String>> data2 = rc.getQuerySQL(host, port, sql2);
+        grandTotal = Double.parseDouble(data2.get(0).get(0));
+        amtPaid = Double.parseDouble(data2.get(0).get(1));
+        
+        double outstandingBalance = grandTotal-amtPaid;
+        
+        if (outstandingBalance != 0){
+            subtotal = outstandingBalance;
+            grandTotal = outstandingBalance;
+        }
+        
         grandTotal = Math.round(grandTotal * 20) / 20.0;
         jtf_Subtotal.setText(String.valueOf(df.format(subtotal)));
         jtf_GrandTotal.setText(String.valueOf(df.format(grandTotal)));
