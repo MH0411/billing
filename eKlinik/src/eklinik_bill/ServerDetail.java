@@ -18,7 +18,8 @@ public class ServerDetail {
     private final int port;
     
     public ServerDetail(){
-        this.host = "10.73.32.200";
+//        this.host = "10.73.32.200";
+        this.host = "ecss.utem.edu.my";
         this.port = 1099;
     }
     
